@@ -1,0 +1,124 @@
+<?= $this->include('partials/header') ?>
+   
+  <!-- Featured Collections -->
+  <section class="max-w-7xl mx-auto px-6 py-16">
+   <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">
+    Our Collections
+   </h2>
+   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <a class="group relative overflow-hidden rounded-lg shadow-lg" href="#">
+     <img alt="Herbal collection with green leaves and glass bottle on a soft green background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="600" loading="lazy" src="https://storage.googleapis.com/a1aa/image/4bc52558-e47d-4271-9db4-986d95267830.jpg" width="600"/>
+     <div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+      <h3 class="text-white text-2xl font-playfair font-semibold tracking-wide">
+       Herbal Collection
+      </h3>
+     </div>
+    </a>
+    <a class="group relative overflow-hidden rounded-lg shadow-lg" href="#">
+     <img alt="Floral collection with pink flowers and elegant bottle on a soft pink background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="600" loading="lazy" src="https://storage.googleapis.com/a1aa/image/3992b602-0f48-4062-0ed2-b5d717135746.jpg" width="600"/>
+     <div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+      <h3 class="text-white text-2xl font-playfair font-semibold tracking-wide">
+       Floral Collection
+      </h3>
+     </div>
+    </a>
+    <a class="group relative overflow-hidden rounded-lg shadow-lg" href="#">
+     <img alt="Woody collection with dark bottle and wood texture background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="600" loading="lazy" src="https://storage.googleapis.com/a1aa/image/7b016d74-31e0-4e2c-726a-0f5179acba5b.jpg" width="600"/>
+     <div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+      <h3 class="text-white text-2xl font-playfair font-semibold tracking-wide">
+       Woody Collection
+      </h3>
+     </div>
+    </a>
+   </div>
+  </section>
+  <!-- About Section -->
+  <section class="bg-gray-50 py-16 px-6">
+   <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    <div class="md:w-1/2">
+     <img alt="Artisan crafting fragrance with hands and natural elements on a light beige background" class="rounded-lg shadow-lg w-full object-cover" height="600" loading="lazy" src="https://storage.googleapis.com/a1aa/image/7c3d46d1-bafd-41c6-9ef6-70e28dcb86b5.jpg" width="600"/>
+    </div>
+    <div class="md:w-1/2 max-w-xl">
+     <h2 class="text-3xl font-playfair font-bold mb-6">
+      Our Story
+     </h2>
+     <p class="text-gray-700 mb-6 leading-relaxed">
+      At Karmakamet, we believe in the power of scent to transform your space and mood. Our fragrances are carefully crafted using natural ingredients and traditional methods to create unique aromatic experiences.
+     </p>
+     <a class="inline-block border border-black text-black uppercase tracking-widest px-8 py-3 text-sm hover:bg-black hover:text-white transition" href="#">
+      Learn More
+     </a>
+    </div>
+   </div>
+  </section>
+  <!-- Featured Products -->
+  <section class="max-w-7xl mx-auto px-6 py-16">
+   <h2 class="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">
+    Featured Products
+   </h2>
+   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <article class="group cursor-pointer">
+     <div class="overflow-hidden rounded-lg shadow-lg">
+      <img alt="Fragrance bottle with gold cap and white label on a soft cream background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="400" loading="lazy" src="https://storage.googleapis.com/a1aa/image/a372a110-0ec4-4d24-54ce-74bb3ef3965d.jpg" width="400"/>
+     </div>
+     <h3 class="mt-4 text-lg font-semibold font-playfair text-gray-900">
+      White Musk Eau de Parfum
+     </h3>
+     <p class="text-gray-700 mt-1">
+      $85.00
+     </p>
+    </article>
+    <article class="group cursor-pointer">
+     <div class="overflow-hidden rounded-lg shadow-lg">
+      <img alt="Amber scented candle in glass jar with wooden lid on a warm yellow background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="400" loading="lazy" src="https://storage.googleapis.com/a1aa/image/43d12d82-d5ef-454c-a59b-01aa541394d9.jpg" width="400"/>
+     </div>
+     <h3 class="mt-4 text-lg font-semibold font-playfair text-gray-900">
+      Amber Candle
+     </h3>
+     <p class="text-gray-700 mt-1">
+      $45.00
+     </p>
+    </article>
+    <article class="group cursor-pointer">
+     <div class="overflow-hidden rounded-lg shadow-lg">
+      <img alt="Herbal room spray with green label and botanical design on a fresh green background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="400" loading="lazy" src="https://storage.googleapis.com/a1aa/image/39a436f7-b1d5-4a2a-f7b8-64b42bcc419e.jpg" width="400"/>
+     </div>
+     <h3 class="mt-4 text-lg font-semibold font-playfair text-gray-900">
+      Herbal Room Spray
+     </h3>
+     <p class="text-gray-700 mt-1">
+      $30.00
+     </p>
+    </article>
+    <article class="group cursor-pointer">
+     <div class="overflow-hidden rounded-lg shadow-lg">
+      <img alt="Woody diffuser with black bottle and reed sticks on a dark wood background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" height="400" loading="lazy" src="https://storage.googleapis.com/a1aa/image/f5048a23-203a-414e-c554-47a11912dfa0.jpg" width="400"/>
+     </div>
+     <h3 class="mt-4 text-lg font-semibold font-playfair text-gray-900">
+      Woody Reed Diffuser
+     </h3>
+     <p class="text-gray-700 mt-1">
+      $60.00
+     </p>
+    </article>
+   </div>
+  </section>
+  <!-- Newsletter Signup -->
+  <section class="bg-gray-100 py-16 px-6">
+   <div class="max-w-3xl mx-auto text-center">
+    <h2 class="text-3xl font-playfair font-bold mb-4">
+     Subscribe to Our Newsletter
+    </h2>
+    <p class="text-gray-700 mb-8">
+     Get the latest updates on new products and exclusive offers.
+    </p>
+    <form class="flex flex-col sm:flex-row gap-4 justify-center">
+     <input aria-label="Email address" class="px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-black flex-grow" placeholder="Enter your email" required="" type="email"/>
+     <button class="bg-black text-white uppercase tracking-widest px-8 py-3 hover:bg-gray-900 transition" type="submit">
+      Subscribe
+     </button>
+    </form>
+   </div>
+  </section>
+
+  <?= $this->include('partials/footer') ?>
