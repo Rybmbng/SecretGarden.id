@@ -1,4 +1,4 @@
-<footer class="py-10 px-6 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto">
+<footer class="py-10 px-6 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto" id="ordernow">
    <div class="mb-6 md:mb-0 max-w-xs">
     <h3 class="text-xl font-semibold mb-2">
      SGV

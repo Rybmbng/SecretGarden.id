@@ -1,23 +1,19 @@
 <?php echo view('partials/header'); ?>
 
-<section class="relative w-full h-full aspect-video overflow-hidden" id="slide-main">
-  <div class="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out opacity-100" data-index="0">
-    <video autoplay loop muted playsinline class="w-full h-full object-cover">
-      <source src="<?= base_url('assets/sgv/video/slide1.mp4') ?>" type="video/mp4" />
-    </video>
-  </div>
-  <div class="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out opacity-0" data-index="1">
-    <video autoplay loop muted playsinline class="w-full h-full object-cover">
-      <source src="//vci.co.id/wp-content/uploads/2021/05/Skin-Care-Herborist-Nu-Face-Cosmetics-Miranda-Hair-HOME-BANNER-VIDEO-1.mp4" type="video/mp4" />
-    </video>
-  </div>
-  <div class="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out opacity-0" data-index="2">
-    <video autoplay loop muted playsinline class="w-full h-full object-cover">
-      <source src="<?= base_url('assets/sgv/video/slide2.mp4') ?>" type="video/mp4" />
-    </video>
-  </div>
+<section class="relative h-[90%] w-full aspect-video overflow-hidden" id="slide-main">
+  <?php foreach ($sliders as $index => $slide): ?>
+    <div class="absolute aspect-video inset-0 w-[100%] h-full transition-opacity duration-1000 ease-in-out <?= $index === 0 ? 'opacity-100' : 'opacity-0' ?>" data-index="<?= $index ?>">
+      <?php if ($slide['type'] === 'video'): ?>
+        <video autoplay loop muted playsinline class="w-[100%] h-full object-cover">
+          <source src="<?= base_url($slide['src']) ?>" type="video/mp4" />
+        </video>
+      <?php elseif ($slide['type'] === 'image'): ?>
+        <img src="<?= base_url($slide['src']) ?>" alt="<?= esc($slide['alt']) ?>" class="w-[100%] h-full object-cover" />
+      <?php endif; ?>
+    </div>
+  <?php endforeach; ?>
 </section>
-
+<div id="trigger"></div>
 <section class="page flex flex-col md:flex-row items-center justify-center bg-white" id="sample-category">
     <div class="w-full md:w-1/2 flex justify-center items-center p-4" style="perspective: 1500px;">
         <div class="tilt-parallax max-w-md rounded-lg overflow-hidden" id="tiltSample">
@@ -42,40 +38,29 @@
     </div>
 </section>
 
-<section class="page relative w-full h-auto" id="fullwide1">
-    <img alt="Full width image of SGV luxury spa treatment room" class="w-full h-auto object-cover" height="1080" loading="lazy" src="<?= base_url('assets/sgv/slide1.jpg') ?>" />
+<section class="page relative w-full h-[70%]" id="fullwide1">
+    <img alt="Full width image of SGV luxury spa treatment room" class="w-full h-full object-cover"  loading="lazy" src="<?= base_url('assets/sgv/home/home1.jpg') ?>" />
 </section>
-
-<section class="page relative w-full h-auto" id="fullwide2">
-    <img alt="Full width image of SGV skincare products" class="w-full h-auto object-cover" height="1080" loading="lazy" src="<?= base_url('assets/sgv/slide2.jpg') ?>" />
-</section>
-
-<section class="page relative aspect-video w-full h-full" id="video-full">
-    <video autoplay class="w-full h-full object-cover" loop muted playsinline preload="auto">
-        <source src="<?= base_url('assets/sgv/video/slide1.mp4') ?>" type="video/mp4"/>
-        Your browser does not support the video tag.
-    </video>
+<section class="page relative w-full h-[70%]" id="fullwide1">
+    <img alt="Full width image of SGV luxury spa treatment room" class="w-full h-full object-cover"  loading="lazy" src="<?= base_url('assets/sgv/home/home2.jpg') ?>" />
 </section>
 
 <section class="page relative w-full h-auto">
     <img alt="Elegant Karmakamet style fragrance display" class="w-full object-cover max-h-[700px]" height="700" loading="lazy" src="<?= base_url('assets/sgv/fragrance.jpeg') ?>" width="1920"/>
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/70 to-white flex flex-col justify-center items-center text-center px-6 md:px-12">
         <h1 class="text-4xl md:text-6xl font-playfair font-bold text-gray-900 max-w-4xl leading-tight mb-6">
-            Discover the Art of Fragrance
+            About Us
         </h1>
         <p class="max-w-2xl text-gray-700 text-lg md:text-xl mb-8">
-            Handcrafted aromatic experiences inspired by nature and tradition.
+            Experience the Essence of Bali with Secret Garden Founded in Bali in 2016, Secret Garden offers natural body and wellness products inspired by the island’s rich botanical heritage. Our mission is to bring the calm and spirit of Bali into your daily rituals through sustainably crafted, plant-based skincare and aromatherapy. Each product reflects our deep respect for nature and commitment to holistic well-being.
         </p>
-        <a class="inline-block bg-black text-white uppercase tracking-widest px-8 py-3 text-sm md:text-base hover:bg-gray-800 transition" href="/products">
-            Shop Now
-        </a>
     </div>
 </section>
 
 
 <script>
   const slides = document.querySelectorAll("#slide-main > div");
-  const durations = [8000, 12000, 10000]; 
+  const durations = [28000, 12000, 10000, 8000]; 
   let current = 0;
 
   function showSlide(index) {
@@ -87,7 +72,7 @@
     setTimeout(() => {
       current = (index + 1) % slides.length;
       showSlide(current);
-    }, durations[index]);
+    }, durations[index] || 8000);
   }
   showSlide(current);
 </script>

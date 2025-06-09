@@ -7,18 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="https://www.secretgarden.co.id/skins/secret//img/logo/favicon.png" type="image/x-icon">
     <link rel="icon" href="https://www.secretgarden.co.id/skins/secret//img/logo/favicon.png" type="image/x-icon">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <style>
       html, body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
       scroll-behavior: smooth;
-      background-color: #ffffff;
       color: #0a2540;
     }
     video {
@@ -48,8 +53,14 @@
     section {
       margin: 0;
       padding: 0;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      will-change: transform;
+      perspective: 1000px;
+      overflow: visible
     }
-    /* Parallax container */
     .parallax {
       perspective: 1000px;
       overflow-x: hidden;
@@ -57,7 +68,6 @@
       height: 100vh;
       scroll-snap-type: y mandatory;
     }
-    /* Each page full viewport height */
     .page {
       scroll-snap-align: start;
       height: 100vh;
@@ -68,7 +78,6 @@
       justify-content: center;
       align-items: center;
     }
-    /* Tilt Parallax effect container */
     .tilt-parallax {
       transform-style: preserve-3d;
       transition: transform 0.2s ease-out;
@@ -100,12 +109,7 @@
     video::-internal-media-controls {
       display:none;
     }
-        nav {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: saturate(180%) blur(10px);
-            color: #0a2540;
-            box-shadow: 0 2px 8px rgba(10, 37, 64, 0.1);
-        }
+      
         nav a {
             color: #0a2540;
             font-weight: 600;
@@ -137,86 +141,232 @@
   }
   [x-cloak] 
   { display: none; }
+  .brand {
+     transform-style: preserve-3d;
+      perspective: 1000px;
+      will-change: transform;
+      transition: transform 0.1s ease-out;
+    }
+
+    /* Scroll indicator track */
+    #scroll-track {
+      width: 4px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 50;
+    }
+
+    /* Scroll indicator bar */
+    #scroll-bar {
+      width: 4px;
+      background: white;
+      border-radius: 9999px;
+      height: 0;
+      transition: height 0.2s ease;
+    }
+
+    /* Intro overlay */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: opacity 1s ease;
+    }
+    #intro.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .story-section {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1500px;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: visible;
+  }
+
+  .content-wrapper {
+    background: rgba(0,0,0,0.6);
+    padding: 3rem;
+    border-radius: 1rem;
+    max-width: 800px;
+    color: white;
+    transform-style: preserve-3d;
+  }
+  #background-container {
+      padding-top: 10px;
+      object-fit: cover;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100vh;
+      overflow: hidden;
+      filter: brightness(0.4) saturate(1.1);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: opacity 1s ease-in-out;
+      opacity: 0;
+    }
+    #background-container video {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      top: 0; left: 0;
+      z-index: -1;
+    }
+    .brand-story {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+      scroll-snap-type: y mandatory;
+      scroll-padding-top: 0;
+      color: white; 
+      transition: color 1s ease-in-out;     
+
+    }
+    .brand-story:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .typing-text {
+      font-size: 5vw;
+      max-width: auto;
+      line-height: 1;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.85);
+      white-space: pre-wrap;
+      user-select: none;
+      /* background: rgba(0, 0, 0, 0.9);  */
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 3rem;
+      min-height: 50px; /* jaga space supaya gak lompat */
+      color: black; /* teks putih di typing */
+      transition: color 1s ease-in-out;
+
+    }
+    typing-text:hover {
+      color: white;
+    }
+
+    #welcome-text {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 3rem;
+      text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
+      color: white; 
+    }
+
+   
     </style>
 </head>
+<body x-data="{ mobileMenuOpen: false, searchOpen: false, isScrolled: false }"
+      x-init="
+        const trigger = document.getElementById('trigger');
+        const observer = new IntersectionObserver(
+          ([entry]) => isScrolled = !entry.isIntersecting,
+          { threshold: 0 }
+        );
+        observer.observe(trigger);
+      ">
+      
+  <header class="sticky top-0 z-50 bg-white shadow transition duration-300 ease-in-out"
+    :class="{
+      'bg-white/80 backdrop-blur-md shadow-md': isScrolled,
+      'bg-transparent shadow-none': !isScrolled
+    }">
 
-<body class="overflow-y-scroll parallax">
-  <header class="sticky top-0 z-50 w-full transition-all duration-300"
-    :class="{ 'bg-white shadow-lg': isScrolled, 'bg-transparent shadow-none': !isScrolled }"
-    x-data="{ mobileMenuOpen: false, searchOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 items-center justify-between">
-
-      <a href="/" class="text-xl sm:text-2xl font-bold text-black-600 hover:text-black-500 transition-colors">
-        <span class="text-black-700 light:text-black-200">SGV</span>
-      </a>
-
-      <nav class="hidden  lg:flex space-x-4 xl:space-x-12 bg-white rounded-lg p-2 shadow-md">
-        <a href="/" class="text-gray-700 light:text-gray-200 hover:text-8c9464-600 transition text-lg xl:text-base">Brand</a>
-        <a href="/products" class="text-gray-700 light:text-gray-200 hover:text-8c9464-600 transition text-lg xl:text-base">Products</a>
-        <a href="/" class="text-gray-700 light:text-gray-200 hover:text-8c9464-600 transition text-lg xl:text-base">Services</a>
-        <a href="/" class="text-gray-700 light:text-gray-200 hover:text-8c9464-600 transition text-lg xl:text-base">FindUs</a>
-      </nav>
-
-      <div class="flex items-center space-x-2">
-        <button @click="searchOpen = !searchOpen" class="p-2 rounded hover:bg-gray-100 light:hover:bg-gray-800">
-          <i data-lucide="search" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-        </button>
-
-        <button class="relative p-2 rounded hover:bg-gray-100 light:hover:bg-gray-800">
-          <i data-lucide="shopping-cart" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-          <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-[10px] sm:text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-        </button>
-        <a href="/profile" class="p-2 rounded hover:bg-gray-100 light:hover:bg-gray-800">
-          <i data-lucide="user" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        <!-- Logo -->
+        <a href="/" class="text-xl sm:text-2xl font-bold text-gray-800 hover:text-gray-600 transition-colors">
+          SGV
         </a>
-        <button
-          class="lg:hidden p-2 rounded hover:bg-gray-100 light:hover:bg-gray-800"
-          @click="mobileMenuOpen = !mobileMenuOpen"
-          x-init="x$watch('mobileMenuOpen', () => lucide.createIcons())"
-        >
-          <i :data-lucide="mobileMenuOpen ? 'x' : 'menu'" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-        </button>
+
+        <!-- Desktop Menu -->
+        <nav class="hidden lg:flex space-x-6">
+          <a href="/brand" class="text-gray-700 hover:text-[#8c9464] transition">Brand</a>
+          <a href="/products" class="text-gray-700 hover:text-[#8c9464] transition">Products</a>
+          <a href="/services" class="text-gray-700 hover:text-[#8c9464] transition">Services</a>
+          <a href="/findus" class="text-gray-700 hover:text-[#8c9464] transition">Find Us</a>
+        </nav>
+
+        <!-- Right Icons -->
+        <div class="flex items-center space-x-3">
+          <button @click="searchOpen = !searchOpen" class="p-2 rounded hover:bg-gray-100">
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </button>
+
+          <button class="relative p-2 rounded hover:bg-gray-100">
+            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+            <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+          </button>
+
+          <a href="/profile" class="p-2 rounded hover:bg-gray-100">
+            <i data-lucide="user" class="w-5 h-5"></i>
+          </a>
+
+          <!-- Hamburger -->
+          <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2 rounded hover:bg-gray-100">
+            <i :data-lucide="mobileMenuOpen ? 'x' : 'menu'" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div x-show="searchOpen" x-cloak x-transition class="mt-2 border-t pt-3">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"></i>
+          <input
+            type="search"
+            placeholder="Search products..."
+            class="w-full py-2 pl-10 pr-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            autofocus
+          />
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div x-show="mobileMenuOpen" x-cloak x-transition class="lg:hidden mt-3 border-t pt-3 space-y-2 pb-4">
+        <a href="/brand" class="block py-2 px-3 rounded hover:bg-gray-100">Brand</a>
+        <a href="/products" class="block py-2 px-3 rounded hover:bg-gray-100">Products</a>
+        <a href="/services" class="block py-2 px-3 rounded hover:bg-gray-100">Services</a>
+        <a href="/findus" class="block py-2 px-3 rounded hover:bg-gray-100">Find Us</a>
       </div>
     </div>
-
-    <div x-show="searchOpen" x-cloak x-transition class="mt-2 border-t pt-3">
-      <div class="relative">
-        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"></i>
-        <input
-          type="search"
-          placeholder="Search products..."
-          class="w-full py-2 pl-10 pr-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-          autofocus
-        />
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div x-show="mobileMenuOpen" x-cloak x-transition class="lg:hidden mt-3 border-t pt-3 space-y-2 pb-4">
-      <a href="/" class="block text-lg xl:text-base py-2 px-3 rounded hover:bg-gray-100 light:hover:bg-gray-800">Brand</a>
-      <a href="/products" class="block text-lg xl:text-base py-2 px-3 rounded hover:bg-gray-100 light:hover:bg-gray-800">Products</a>
-      <a href="/" class="block text-lg xl:text-base py-2 px-3 rounded hover:bg-gray-100 light:hover:bg-gray-800">Services</a>
-      <a href="/" class="block text-lg xl:text-base py-2 px-3 rounded hover:bg-gray-100 light:hover:bg-gray-800">Find Us</a>
-      <hr class="border-gray-200 light:border-gray-700" />
-      <!-- <a href="/" class="block py-2 px-3 rounded hover:bg-gray-100 light:hover:bg-gray-800">Sign In</a> -->
-      <!-- <a href="/" class="block py-2 px-3 rounded hover:bg-gray-100 light:hover:bg-gray-800">Register</a> -->
-    </div>
-  </div>
-</header>
+  </header>
 
   <script>
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('active');
-      mobileMenu.classList.toggle('hidden');
+    document.addEventListener('alpine:init', () => {
+      lucide.createIcons(); 
     });
 
-    function toggleDropdown(button) {
-      const ul = button.nextElementSibling;
-      ul.classList.toggle('hidden');
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+
+    document.addEventListener('alpine:mutate', () => {
+      lucide.createIcons();
+    });
   </script>
