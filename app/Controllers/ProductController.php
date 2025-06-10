@@ -96,10 +96,9 @@ class ProductController extends BaseController
             'details' => array_column($details, 'detail')
         ];
     }
-    $relatedProducts = [
-    ['slug' => 'product-1', 'name' => 'Sample 1', 'thumbnail' => 'thumb1.jpg'],
-    ['slug' => 'product-2', 'name' => 'Sample 2', 'thumbnail' => 'thumb2.jpg'],
-    ];
+
+
+
 
     $data = [
         'product'       => $product,
@@ -107,7 +106,6 @@ class ProductController extends BaseController
         'galleryImages' => $galleryImages,
         'category'      => $category,
         'sections'      => $sections,
-        'relatedProducts' => $relatedProducts, // Contoh data produk terkait
     ];
     
 

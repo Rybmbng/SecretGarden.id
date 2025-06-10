@@ -9,7 +9,7 @@
 </button>
 
 <audio id="audio-player" preload="auto" >
-  <source src="<?= base_url('assets/sgv/audio/0.mp3') ?>" type="audio/mp3">
+  <source src="<?= base_url('assets/SGV/audio/0.mp3') ?>" type="audio/mp3">
 </audio>
 
 <div id="background-container"></div>
@@ -20,7 +20,7 @@
 </main>
 
 <section class="page relative" id="ordernow" style="display:none;">
-  <img alt="Elegant Karmakamet style fragrance display" class="w-full object-cover max-h-[700px]" height="700" loading="lazy" src="<?= base_url('assets/sgv/fragrance.jpeg') ?>" width="1920"/>
+  <img alt="Elegant Karmakamet style fragrance display" class="w-full object-cover max-h-[700px]" height="700" loading="lazy" src="<?= base_url('assets/SGV/fragrance.jpeg') ?>" width="1920"/>
   <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/70 to-white flex flex-col justify-center items-center text-center px-6 md:px-12">
     <h1 class="text-4xl md:text-6xl font-playfair font-bold text-gray-900 max-w-4xl leading-tight mb-6">
       Discover the Art of Fragrance
@@ -45,17 +45,17 @@
 
   const sequence = [
     { type: 'text', content: "Welcome To SecretGarden.id" }, 
-    { type: 'video', content: '<?= base_url('assets/sgv/video/slide1.mp4') ?>', duration: 5000 },
-    { type: 'text', content: "Born in Bali in 2016, Secret Garden was founded with deep reverence for the beauty of nature and a commitment to harnessing its essence for your well-being.", audio:"<?= base_url('assets/sgv/audio/1.mp3') ?>" },
-    { type: 'video', content: '<?= base_url('assets/sgv/video/slide2_1.mp4') ?>', duration: 5000 },
-    { type: 'text', content: "Rooted in the lush landscapes of Bali, we have curated a line of body and wellness products that reflect the island’s rich botanical heritage." ,audio:"<?= base_url('assets/sgv/audio/2.mp3') ?>"  },
-    { type: 'video', content: '<?= base_url('assets/sgv/video/slide1_2.mp4') ?>', duration: 5000 },
-    { type: 'text', content: "From the very beginning, our mission has been to infuse the calm and spirit of Bali into your daily rituals—inviting you on a sensory journey that not only revitalizes your body, but also uplifts your spirit.", audio:"<?= base_url('assets/sgv/audio/3.mp3') ?>"  },
-    { type: 'video', content: '<?= base_url('assets/sgv/video/slide1_3.mp4') ?>', duration: 5000 },
-    { type: 'text', content: "As we grow, our dedication to sustainability remains unwavering. Every product you experience is crafted to align with your values and care for the planet we all call home.", audio:"<?= base_url('assets/sgv/audio/4.mp3') ?>" },
-    { type: 'video', content: '<?= base_url('assets/sgv/video/slide2_2.mp4') ?>', duration: 5000 },
-    { type: 'text', content: "Welcome to Secret Garden—where the beauty and tranquility of Bali come together to nurture your body and soul.", audio:"<?= base_url('assets/sgv/audio/5.mp3') ?>" },
-    { type: 'text', content: "Join us on this journey toward holistic wellness, where every drop and every scent is a tribute to the nature that has inspired us from the start.", audio:"<?= base_url('assets/sgv/audio/6.mp3') ?>" },
+    { type: 'video', content: '<?= base_url('assets/SGV/video/slide1.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "Born in Bali in 2016, Secret Garden was founded with deep reverence for the beauty of nature and a commitment to harnessing its essence for your well-being.", audio:"<?= base_url('assets/SGV/audio/1.mp3') ?>" },
+    { type: 'video', content: '<?= base_url('assets/SGV/video/slide2_1.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "Rooted in the lush landscapes of Bali, we have curated a line of body and wellness products that reflect the island’s rich botanical heritage." ,audio:"<?= base_url('assets/SGV/audio/2.mp3') ?>"  },
+    { type: 'video', content: '<?= base_url('assets/SGV/video/slide1_2.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "From the very beginning, our mission has been to infuse the calm and spirit of Bali into your daily rituals—inviting you on a sensory journey that not only revitalizes your body, but also uplifts your spirit.", audio:"<?= base_url('assets/SGV/audio/3.mp3') ?>"  },
+    { type: 'video', content: '<?= base_url('assets/SGV/video/slide1_3.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "As we grow, our dedication to sustainability remains unwavering. Every product you experience is crafted to align with your values and care for the planet we all call home.", audio:"<?= base_url('assets/SGV/audio/4.mp3') ?>" },
+    { type: 'video', content: '<?= base_url('assets/SGV/video/slide2_2.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "Welcome to Secret Garden—where the beauty and tranquility of Bali come together to nurture your body and soul.", audio:"<?= base_url('assets/SGV/audio/5.mp3') ?>" },
+    { type: 'text', content: "Join us on this journey toward holistic wellness, where every drop and every scent is a tribute to the nature that has inspired us from the start.", audio:"<?= base_url('assets/SGV/audio/6.mp3') ?>" },
     ];
 
   function showVideo(src) {

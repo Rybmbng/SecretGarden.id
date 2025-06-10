@@ -5,7 +5,7 @@
 <meta property="og:description" content="<?= esc($product['description']) ?>" />
 <?php
 $ogImage = !empty($galleryImages) 
-    ? base_url("assets/sgv/category/{$category['name']}/{$product['name']}/{$galleryImages[0]['image_path']}")
+    ? base_url("assets/SGV/Category/{$category['name']}/{$product['name']}/{$galleryImages[0]['image_path']}")
     : base_url("assets/default-image.jpg"); 
 ?>
 <meta property="og:image" content="<?= $ogImage ?>" />
@@ -17,7 +17,7 @@ $ogImage = !empty($galleryImages)
   <aside class="lg:col-span-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-x-visible" id="thumbnail-container">
     <?php foreach ($galleryImages as $img): ?>
       <img
-        src="<?= base_url("assets/sgv/category/{$category['name']}/{$product['name']}/{$img['image_path']}") ?>"
+        src="<?= base_url("assets/SGV/Category/{$category['name']}/{$product['name']}/{$img['image_path']}") ?>"
         alt="Thumbnail"
         class="thumb-img w-20 h-20 object-cover rounded-md border border-gray-300 hover:border-black cursor-pointer transition duration-200"
       />
@@ -25,14 +25,14 @@ $ogImage = !empty($galleryImages)
   </aside>
 
   <!-- Gambar Utama -->
-  <div class="lg:col-span-6 flex justify-center items-center">
+  <div class="lg:col-span-6 flex justify-center items-center  max-h-[700px] max-w-[700px] mx-auto">
     <div class="w-full border border-gray-300 rounded-md overflow-hidden relative max-h-[700px]">
       <div id="loading-spinner" class="absolute inset-0 flex items-center justify-center bg-white/70 hidden">
         <div class="w-6 h-6 border-2 border-gray-400 border-t-transparent animate-spin rounded-full"></div>
       </div>
       <img
         id="main-image"
-        src="<?= base_url("assets/sgv/category/{$category['name']}/{$product['name']}/" . ($galleryImages[0]['image_path'] ?? 'default.jpg')) ?>"
+        src="<?= base_url("assets/SGV/Category/{$category['name']}/{$product['name']}/" . ($galleryImages[0]['image_path'] ?? 'default.jpg')) ?>"
         class="w-full h-[auto] object-contain transition duration-500 ease-in-out"
         alt="<?= esc($product['name']) ?>"
         data-action="zoom"
@@ -60,7 +60,7 @@ $ogImage = !empty($galleryImages)
               data-id="<?= esc($variant['id']) ?>"
               data-price="<?= esc($variant['price']) ?>"
               data-desc="<?= esc($variant['desc']) ?>"
-              data-images='<?= json_encode(array_map(fn($img) => base_url("assets/sgv/category/{$category['name']}/{$product['name']}/$img"), $variant['images'])) ?>'
+              data-images='<?= json_encode(array_map(fn($img) => base_url("assets/SGV/Category/" . str_replace(" ", "-", $category["name"]) . "/" . str_replace(" ", "-", $product["name"]) . "/" . $img), $variant["images"])) ?>'
             >
               <?= esc($variant['name']) ?>
             </button>
@@ -84,7 +84,6 @@ $ogImage = !empty($galleryImages)
       </button>
     </div>
 
-    <!-- Deskripsi Tambahan -->
     <?php if (!empty($sections)): ?>
       <div class="max-w-4xl mx-auto mt-24 space-y-16 px-6">
         <?php foreach ($sections as $type => $sectionList): ?>
@@ -106,9 +105,9 @@ $ogImage = !empty($galleryImages)
     <div class="mt-24 border-t pt-12">
       <h2 class="text-xl font-semibold mb-6">You Might Also Like</h2>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-        <?php foreach ($relatedProducts ?? [] as $item): ?>
-          <a href="<?= site_url('product/' . $item['slug']) ?>" class="block group">
-            <img src="<?= base_url('assets/sgv/category/' . $category['name'] . '/' . $item['name'] . '/' . $item['thumbnail']) ?>" class="w-full h-48 object-cover rounded-md group-hover:opacity-80 transition" />
+        <?php foreach ($products ?? [] as $item): ?>
+          <a href="<?= site_url('products/' . $item['slug']) ?>" class="block group">
+            <img src="<?= base_url('assets/SGV/Category/' . $category['name'] . '/' . $item['name'] . '/' . $item['name']) ?>" class="w-full h-48 object-cover rounded-md group-hover:opacity-80 transition" />
             <p class="mt-2 text-sm"><?= esc($item['name']) ?></p>
           </a>
         <?php endforeach; ?>
