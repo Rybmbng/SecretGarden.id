@@ -41,24 +41,22 @@
   const orderNowSection = document.getElementById('ordernow');
   const startBtn = document.getElementById('start-btn');
 
-  // Simpan referensi audio global supaya tidak di-GC
   let currentAudio = null;
 
-  // Sequence seperti semula
   const sequence = [
     { type: 'text', content: "Welcome To SecretGarden.id" }, 
-    { type: 'video', content: 'http://localhost:8080/assets/sgv/video/slide1.mp4', duration: 5000 },
-    { type: 'text', content: "Born in Bali in 2016, Secret Garden was founded with deep reverence for the beauty of nature and a commitment to harnessing its essence for your well-being.", audio:"http://localhost:8080/assets/sgv/audio/1.mp3" },
-    { type: 'video', content: 'http://localhost:8080/assets/sgv/video/slide2_1.mp4', duration: 5000 },
-    { type: 'text', content: "Rooted in the lush landscapes of Bali, we have curated a line of body and wellness products that reflect the island’s rich botanical heritage." ,audio:"http://localhost:8080/assets/sgv/audio/2.mp3"  },
-    { type: 'video', content: 'http://localhost:8080/assets/sgv/video/slide1_2.mp4', duration: 5000 },
-    { type: 'text', content: "From the very beginning, our mission has been to infuse the calm and spirit of Bali into your daily rituals—inviting you on a sensory journey that not only revitalizes your body, but also uplifts your spirit.", audio:"http://localhost:8080/assets/sgv/audio/3.mp3"  },
-    { type: 'video', content: 'http://localhost:8080/assets/sgv/video/slide1_3.mp4', duration: 5000 },
-    { type: 'text', content: "As we grow, our dedication to sustainability remains unwavering. Every product you experience is crafted to align with your values and care for the planet we all call home.", audio:"http://localhost:8080/assets/sgv/audio/4.mp3" },
-    { type: 'video', content: 'http://localhost:8080/assets/sgv/video/slide2_2.mp4', duration: 5000 },
-    { type: 'text', content: "Welcome to Secret Garden—where the beauty and tranquility of Bali come together to nurture your body and soul.", audio:"http://localhost:8080/assets/sgv/audio/5.mp3" },
-    { type: 'text', content: "Join us on this journey toward holistic wellness, where every drop and every scent is a tribute to the nature that has inspired us from the start.", audio:"http://localhost:8080/assets/sgv/audio/6.mp3" },
-  ];
+    { type: 'video', content: '<?= base_url('assets/sgv/video/slide1.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "Born in Bali in 2016, Secret Garden was founded with deep reverence for the beauty of nature and a commitment to harnessing its essence for your well-being.", audio:"<?= base_url('assets/sgv/audio/1.mp3') ?>" },
+    { type: 'video', content: '<?= base_url('assets/sgv/video/slide2_1.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "Rooted in the lush landscapes of Bali, we have curated a line of body and wellness products that reflect the island’s rich botanical heritage." ,audio:"<?= base_url('assets/sgv/audio/2.mp3') ?>"  },
+    { type: 'video', content: '<?= base_url('assets/sgv/video/slide1_2.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "From the very beginning, our mission has been to infuse the calm and spirit of Bali into your daily rituals—inviting you on a sensory journey that not only revitalizes your body, but also uplifts your spirit.", audio:"<?= base_url('assets/sgv/audio/3.mp3') ?>"  },
+    { type: 'video', content: '<?= base_url('assets/sgv/video/slide1_3.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "As we grow, our dedication to sustainability remains unwavering. Every product you experience is crafted to align with your values and care for the planet we all call home.", audio:"<?= base_url('assets/sgv/audio/4.mp3') ?>" },
+    { type: 'video', content: '<?= base_url('assets/sgv/video/slide2_2.mp4') ?>', duration: 5000 },
+    { type: 'text', content: "Welcome to Secret Garden—where the beauty and tranquility of Bali come together to nurture your body and soul.", audio:"<?= base_url('assets/sgv/audio/5.mp3') ?>" },
+    { type: 'text', content: "Join us on this journey toward holistic wellness, where every drop and every scent is a tribute to the nature that has inspired us from the start.", audio:"<?= base_url('assets/sgv/audio/6.mp3') ?>" },
+    ];
 
   function showVideo(src) {
     return new Promise((resolve) => {
@@ -83,7 +81,6 @@
         video.play().then(() => {
           bgContainer.style.opacity = 1;
           video.style.opacity = 1;
-          // gunakan durasi manual dari sequence atau fallback 5 detik
           const duration = sequence.find(s => s.content === src)?.duration || 5000;
           setTimeout(() => {
             resolve();
@@ -104,7 +101,6 @@
     });
   }
 
-  // Fungsi typing text dengan delay per karakter
   async function typeText(text) {
     typingElem.textContent = '';
     for (let i = 0; i < text.length; i++) {
@@ -162,11 +158,9 @@
     orderNowSection.scrollIntoView({ behavior: 'smooth' });
   }
 
-  // Tombol start event listener
   startBtn.addEventListener('click', () => {
     startBtn.style.display = 'none';
 
-    // Set volume audio player utama (jika masih pakai <audio> tag)
     const audio = document.getElementById('audio-player');
     if(audio) {
       audio.volume = 0.1;

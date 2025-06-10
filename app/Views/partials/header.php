@@ -306,10 +306,10 @@
 
         <!-- Desktop Menu -->
         <nav class="hidden lg:flex space-x-6">
-          <a href="/brand" class="text-gray-700 hover:text-[#8c9464] transition">Brand</a>
-          <a href="/products" class="text-gray-700 hover:text-[#8c9464] transition">Products</a>
-          <a href="/services" class="text-gray-700 hover:text-[#8c9464] transition">Services</a>
-          <a href="/findus" class="text-gray-700 hover:text-[#8c9464] transition">Find Us</a>
+            <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Brand</a>
+            <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Products</a>
+            <a href="<?= base_url('services') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Services</a>
+            <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Find Us</a>
         </nav>
 
         <!-- Right Icons -->
@@ -349,10 +349,10 @@
 
       <!-- Mobile Menu -->
       <div x-show="mobileMenuOpen" x-cloak x-transition class="lg:hidden mt-3 border-t pt-3 space-y-2 pb-4">
-        <a href="/brand" class="block py-2 px-3 rounded hover:bg-gray-100">Brand</a>
-        <a href="/products" class="block py-2 px-3 rounded hover:bg-gray-100">Products</a>
-        <a href="/services" class="block py-2 px-3 rounded hover:bg-gray-100">Services</a>
-        <a href="/findus" class="block py-2 px-3 rounded hover:bg-gray-100">Find Us</a>
+        <a href="<?= base_url('brand') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Brand</a>
+        <a href="<?= base_url('products') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Products</a>
+        <a href="<?= base_url('services') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Services</a>
+        <a href="<?= base_url('findus') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Find Us</a>
       </div>
     </div>
   </header>
