@@ -96,10 +96,6 @@ class ProductController extends BaseController
             'details' => array_column($details, 'detail')
         ];
     }
-
-
-
-
     $data = [
         'product'       => $product,
         'variants'      => $variants,

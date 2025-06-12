@@ -12,4 +12,5 @@ class SliderModel extends Model
     {
         return $this->orderBy('order', 'ASC')->findAll();
     }
+
 }

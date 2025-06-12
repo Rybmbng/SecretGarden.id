@@ -9,7 +9,6 @@ class HomeController extends BaseController
     {
         $sliderModel = new SliderModel();
         $data['sliders'] = $sliderModel->getSliders();
-
         return view('home', $data);
     }
 }

@@ -318,10 +318,10 @@
             <i data-lucide="search" class="w-5 h-5"></i>
           </button>
 
-          <button class="relative p-2 rounded hover:bg-gray-100">
+          <a href="<?= base_url('cart') ?>" class="relative p-2 rounded hover:bg-gray-100">
             <i data-lucide="shopping-cart" class="w-5 h-5"></i>
             <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-          </button>
+          </a>
 
           <a href="/profile" class="p-2 rounded hover:bg-gray-100">
             <i data-lucide="user" class="w-5 h-5"></i>

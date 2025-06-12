@@ -12,25 +12,17 @@ class CategoryController extends BaseController
         $categoryModel = new CategoryModel();
         $productModel = new ProductModel();
 
-        $categoryName = str_replace('-', ' ', $slug);
-
-        $category = $categoryModel->where('name', $categoryName)->first();
-
+        $category = $categoryModel->where('slug', $slug)->first();
         if (!$category) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Category not found');
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Kategori tidak ditemukan");
         }
 
         $products = $productModel->where('category_id', $category['id'])->findAll();
 
-        foreach ($products as &$product) {
-            $product['img'] = $product['image'] ?? 'default-product.jpg';
-        }
-
-        $data = [
+        return view('category/detail', [
             'category' => $category,
             'products' => $products,
-        ];
+        ]);
 
-        echo view('category/index', $data);
     }
 }

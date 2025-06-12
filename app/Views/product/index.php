@@ -24,7 +24,7 @@
       <?php foreach ($images as $img): ?>
         <div class="flex-shrink-0 w-[240px] p-2 flex flex-col snap-center">
           <!-- Link ke halaman detail kategori -->
-          <a href="<?= site_url('Category/' . strtolower(str_replace(' ', '-', $img['name']))) ?>" class="overflow-hidden text-center">
+          <a href="<?= site_url('category/' . str_replace(' ', '-', $img['name'])) ?>" class="overflow-hidden text-center">
             <img src="<?= base_url('assets/SGV/Category/' . str_replace(' ', '-', $img['name']).'/'. $img['img']) ?>" alt="<?= esc($img['name']) ?>" class="h-[200px] object-cover rounded mx-auto">
             <p class="text-gray-700 font-bold text-lg md:text-xl mt-2"><?= esc($img['name']) ?></p>
           </a>
@@ -49,7 +49,7 @@
        <?= esc($category['description']) ?>
       </p>
 
-      <a href="<?= site_url('Category/' . strtolower(str_replace(' ', '-', $category['name']))) ?>" class="inline-block border border-black rounded-md px-3 py-2 text-xs xs:text-base hover:bg-white hover:text-[#f4e4cc] transition">
+      <a href="<?= site_url('category/' . strtolower(str_replace(' ', '-', $category['name']))) ?>" class="inline-block border border-black rounded-md px-3 py-2 text-xs xs:text-base hover:bg-white hover:text-[#f4e4cc] transition">
         See all
       </a>
     </div>
