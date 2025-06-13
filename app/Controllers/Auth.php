@@ -1,73 +1,61 @@
-<?php
+<?php namespace App\Controllers;
 
-namespace App\Controllers;
-
-use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\UserModel;
 
 class Auth extends BaseController
 {
-    public function index()
-    {
-        //
-    }
-
     public function login()
     {
-        // Logic for handling user login
-        return view('auth/login');
-    }
-    public function register()
-    {
-        // Logic for handling user registration
-        return view('auth/register');
-    }
-    public function logout()
-    {
-        // Logic for handling user logout
-        return redirect()->to('/login');
-    }
-    public function doLogin()
-    {
-        // Logic for processing login form submission
-        // Validate credentials, set session data, etc.
-        return redirect()->to('/');
-    }
-    public function doRegister()
-    {
-        // Logic for processing registration form submission
-        // Validate input, create user, set session data, etc.
-        return redirect()->to('/login');
-    }
-    public function forgotPassword()
-    {
-        // Logic for handling forgot password functionality
-        return view('auth/forgot_password');
-    }
-    public function resetPassword()
-    {
-        // Logic for handling password reset functionality
-        return view('auth/reset_password');
-    }
-    public function verifyEmail()
-    {
-        // Logic for handling email verification
-        return view('auth/verify_email');
-    }
-    public function resendVerificationEmail()
-    {
-        // Logic for resending verification email
-        return redirect()->to('/login')->with('message', 'Verification email sent.');
-    }
-    public function changePassword()
-    {
-        // Logic for handling password change functionality
-        return view('auth/change_password');
-    }
-    public function profile()
-    {
-        // Logic for displaying user profile
-        return view('auth/profile');
+        return view('login');
     }
 
+    public function register()
+    {
+        return view('login');
+    }
+
+    public function doRegister()
+    {
+        $userModel = new UserModel();
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'email' => $this->request->getPost('email'),
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role' => 'user'
+        ];
+        $userModel->save($data);
+        return redirect()->to('/login');
+    }
+
+    public function doLogin()
+    {
+        $userModel = new UserModel();
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+
+        $user = $userModel->where('email', $email)->first();
+
+        if ($user && password_verify($password, $user['password'])) {
+            session()->set('user', [
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'role' => $user['role']
+            ]);
+            if ($user['role'] == 'admin') {
+                return redirect()->to('/admin');
+            } else {
+                return redirect()->to('/');
+            }
+
+        }
+
+        return redirect()->back()->with('error', 'Login gagal');
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/login');
+    }
 }

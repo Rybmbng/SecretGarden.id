@@ -34,6 +34,8 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'role' => \App\Filters\RoleFilter::class,
+
     ];
 
     /**
@@ -79,6 +81,13 @@ class Filters extends BaseFilters
         ],
     ];
 
+
+public $routes = [
+    'admin' => ['before' => 'role:admin'],
+    'checkout' => ['before' => 'role:admin,user'],
+];
+
+
     /**
      * List of filter aliases that works on a
      * particular HTTP method (GET, POST, etc.).
@@ -104,4 +113,6 @@ class Filters extends BaseFilters
      * @var array<string, array<string, list<string>>>
      */
     public array $filters = [];
+
+    
 }

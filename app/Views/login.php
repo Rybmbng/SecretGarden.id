@@ -1,4 +1,3 @@
-<!-- /var/www/SecretGarden.id-1/app/Views/login.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,16 +20,25 @@
             <img src="https://www.secretgarden.co.id/frontsite/assets/img/logo.png" alt="SecretGarden Logo" class="h-14 mb-2">
             <h2 class="text-2xl font-semibold sg-green-text">Welcome to SecretGarden</h2>
         </div>
+        <!-- Flash message -->
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="mb-4 text-red-600 text-sm text-center"><?= session()->getFlashdata('error') ?></div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="mb-4 text-green-600 text-sm text-center"><?= session()->getFlashdata('success') ?></div>
+        <?php endif; ?>
+
         <div class="flex justify-center mb-6">
             <button id="loginTab" class="px-6 py-2 font-semibold sg-green-text border-b-4 sg-gold-border focus:outline-none transition">Login</button>
             <button id="registerTab" class="px-6 py-2 font-semibold text-gray-400 border-b-4 border-transparent focus:outline-none transition">Register</button>
         </div>
+
         <!-- Login Form -->
         <form id="loginForm" action="<?= site_url('auth/login') ?>" method="post" class="space-y-4">
             <?= csrf_field() ?>
             <div>
                 <label class="block text-gray-700">Email</label>
-                <input type="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
+                <input type="email" name="email" value="<?= old('email') ?>" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
             </div>
             <div>
                 <label class="block text-gray-700">Password</label>
@@ -38,24 +46,30 @@
             </div>
             <button type="submit" class="w-full sg-green py-2 rounded-lg hover:bg-[#5aa93a] transition font-semibold">Login</button>
         </form>
+
         <!-- Register Form -->
         <form id="registerForm" action="<?= site_url('auth/register') ?>" method="post" class="space-y-4 hidden">
             <?= csrf_field() ?>
             <div>
                 <label class="block text-gray-700">Name</label>
-                <input type="text" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
+                <input type="text" name="name" value="<?= old('name') ?>" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
             </div>
             <div>
                 <label class="block text-gray-700">Email</label>
-                <input type="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
+                <input type="email" name="email" value="<?= old('email') ?>" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
             </div>
             <div>
                 <label class="block text-gray-700">Password</label>
                 <input type="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
             </div>
+            <div>
+                <label class="block text-gray-700">Confirm Password</label>
+                <input type="password" name="password_confirm" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#6dbb43]">
+            </div>
             <button type="submit" class="w-full sg-green py-2 rounded-lg hover:bg-[#5aa93a] transition font-semibold">Register</button>
         </form>
     </div>
+
     <script>
         const loginTab = document.getElementById('loginTab');
         const registerTab = document.getElementById('registerTab');
@@ -78,6 +92,10 @@
             registerForm.classList.remove('hidden');
             loginForm.classList.add('hidden');
         };
+
+        <?php if (old('name')): ?>
+            registerTab.click();
+        <?php endif; ?>
     </script>
 </body>
 </html>
