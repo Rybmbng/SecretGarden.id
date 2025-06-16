@@ -5,33 +5,29 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-
- //home routes
 $routes->get('/', 'HomeController::index');
 
-// login routes
-// $routes->get('/login', 'LogNRegController::index');
-// $routes->post('/login', 'LogNRegController::login');
-// $routes->post('/auth/login', 'Auth::doLogin');
-// $routes->get('/forgot-password', 'Auth::forgotPassword');
-// $routes->post('/forgot-password', 'Auth::doForgotPassword');
-// $routes->get('/register', 'Auth::register');
-// $routes->post('/register', 'Auth::doRegister');
-// $routes->get('/logout', 'Auth::logout');
-
-// // product routes
-// $routes->get('products', 'ProductController::index');   
-// // $routes->get('category/(:segment)', 'CategoryController::index/$1');        
-// // $routes->get('products/(:segment)', 'ProductController::detail/$1');
-// // $routes->get('cart', 'ProductController::cart');
-
-// // brand routes
-// $routes->get('brand', 'BrandController::index');
+$routes->get('/login', 'Auth::login');
+$routes->post('/auth/login', 'Auth::doLogin');
+$routes->get('/register', 'Auth::register');
+$routes->post('/auth/register', 'Auth::doRegister');
+$routes->get('/logout', 'Auth::logout');
 
 
-// // profile routes
-// $routes->get('profile', 'ProfileController::index');
+$routes->get('products', 'ProductController::index');   
+$routes->get('category/(:segment)', 'CategoryController::index/$1');        
+$routes->get('products/(:segment)', 'ProductController::detail/$1');
+$routes->get('cart', 'Cart::index');
+$routes->get('cart/add/(:any)', 'Cart::add/$1');
+$routes->get('cart/min/(:any)', 'Cart::min/$1');
+$routes->get('cart/remove/(:any)', 'Cart::remove/$1');
+$routes->get('brand', 'BrandController::index');
 
 
-// // admin routes
-// $routes->get('admin', 'AdminController::index');
+//user Route
+$routes->get('profile', 'ProfileController::index');
+
+//admin Route
+$routes->group('admin', ['filter' => 'rolecheck'], function($routes) {
+    $routes->get('/', 'Admin\HomeController::index');
+});

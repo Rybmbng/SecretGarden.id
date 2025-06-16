@@ -82,4 +82,18 @@ public function getCategoryBySlug($slug)
     return $category;
 }
 
+public function getIdCategoryByName($name)
+{
+    $builder = $this->db->table($this->table);
+    $builder->select('id');
+    $builder->where('name', $name);
+    $query = $builder->get();
+
+    if ($query->getNumRows() > 0) {
+        return $query->getRow()->id;
+    }
+
+    return null;
+
+}
 }

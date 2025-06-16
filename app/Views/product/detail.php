@@ -10,7 +10,72 @@ $ogImage = !empty($galleryImages)
 ?>
 <meta property="og:image" content="<?= $ogImage ?>" />
 <meta name="description" content="<?= esc($product['description']) ?>">
+<style>
+/* From Uiverse.io by vinodjangid07 */ 
+.CartBtn {
+  width: 140px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background-color: rgb(255, 208, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: .5s;
+  overflow: hidden;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.103);
+  position: relative;
+}
 
+.IconContainer {
+  position: absolute;
+  left: -50px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: .5s;
+}
+
+.icon {
+  border-radius: 1px;
+}
+
+.text {
+  height: 100%;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(17, 17, 17);
+  z-index: 1;
+  transition-duration: .5s;
+  font-size: 1.04em;
+  font-weight: 600;
+}
+
+.CartBtn:hover .IconContainer {
+  transform: translateX(58px);
+  border-radius: 40px;
+  transition-duration: .5s;
+}
+
+.CartBtn:hover .text {
+  transform: translate(10px,0px);
+  transition-duration: .5s;
+}
+
+.CartBtn:active {
+  transform: scale(0.95);
+  transition-duration: .5s;
+}
+</style>
 <div class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
   <!-- Gallery Thumbnail -->
@@ -69,19 +134,23 @@ $ogImage = !empty($galleryImages)
       </div>
     <?php endif; ?>
 
-    <!-- Harga dan Aksi -->
     <div class="border-t pt-6">
       <p class="text-xs text-gray-500 uppercase mb-2 font-semibold">Price</p>
       <p id="price-display" class="text-3xl font-serif font-bold">
-        <?= esc($variants[0]['price'] ?? $product['price']) ?>
+      Rp. <?= number_format((float)($variants[0]['price'] ?? 0), 0, ',', '.') ?>
+
       </p>
       <p id="desc-display" class="mt-2 text-sm italic text-gray-600">
         <?= esc($variants[0]['desc'] ?? '') ?>
       </p>
-
-      <button class="mt-6 bg-black text-white px-6 py-3 rounded-md text-sm uppercase tracking-wide hover:bg-gray-900 transition w-full sm:w-auto">
-        Add to Cart
-      </button>
+   
+          <a href = '/cart/add/<?= esc($product['id'])?>' class="CartBtn" type="submit" >
+          <span class="IconContainer"> 
+            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" fill="rgb(17, 17, 17)" class="cart"><path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path></svg>
+          </span>
+          <p class="text">Add to Cart</p>
+        </a>
+     
     </div>
 
     <?php if (!empty($sections)): ?>
@@ -92,7 +161,7 @@ $ogImage = !empty($galleryImages)
               <h2 class="text-2xl font-serif font-semibold mb-4"><?= ucwords(esc($section['header'])) ?></h2>
               <div class="space-y-3 text-base text-gray-700 leading-relaxed">
                 <?php foreach ($section['details'] as $detail): ?>
-                  <p><?= nl2br(esc($detail)) ?></p>
+                  <p><i class="fa fa-circle mr-2"></i><?= nl2br(esc($detail)) ?></p>
                 <?php endforeach; ?>
               </div>
             </section>
@@ -118,7 +187,7 @@ $ogImage = !empty($galleryImages)
 
 <!-- Sticky Cart (Mobile) -->
 <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 z-50 lg:hidden flex justify-between items-center">
-  <span class="text-xl font-semibold" id="mobile-price"><?= esc($variants[0]['price'] ?? $product['price']) ?></span>
+  <span class="text-xl font-semibold" id="mobile-price"><?= esc($variants[0]['price'] ?? 0) ?></span>
   <button class="bg-black text-white px-5 py-2 rounded-md text-sm">Add to Cart</button>
 </div>
 

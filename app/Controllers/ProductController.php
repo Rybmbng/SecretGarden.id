@@ -38,6 +38,7 @@ class ProductController extends BaseController
             $images[] = [
                 'name' => $cat['name'],
                 'img'  => $cat['img'] ?? 'default-category.jpg',
+                'desc'  => $cat['description'] ?? 'No description available',
             ];
         }
 
@@ -79,13 +80,10 @@ class ProductController extends BaseController
         $variant['image_path'] = $variant['images'][0] ?? null;
     }
 
-    // Ambil gallery images non-variant
     $galleryImages = $imageModel->where('product_id', $product['id'])->where('variant_id', null)->findAll();
 
-    // Ambil kategori
     $category = $categoryModel->find($product['category_id']);
 
-    // Ambil sections (story, directions, characteristics)
     $sectionsRaw = $sectionModel->where('product_id', $product['id'])->findAll();
     $sections = [];
 
@@ -96,6 +94,10 @@ class ProductController extends BaseController
             'details' => array_column($details, 'detail')
         ];
     }
+
+
+
+
     $data = [
         'product'       => $product,
         'variants'      => $variants,
@@ -108,6 +110,28 @@ class ProductController extends BaseController
     return view('product/detail', $data);
 }
 
+public function search()
+{
+    $query = $this->request->getGet('q');
+    if (!$query) {
+        return redirect()->to('/product');
+    }
 
+    $productModel = new ProductModel();
+    $products = $productModel->like('name', $query)->findAll();
+
+    foreach ($products as &$product) {
+        $product['img'] = $product['image'] ?? 'default-product.jpg';
+    }
+
+    return view('product/search', ['products' => $products, 'query' => $query]);
+
+}
+
+public function cart()
+{
+    // Logic to retrieve cart items
+    return view('product/cart');
+}
 
 }

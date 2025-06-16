@@ -31,89 +31,79 @@
    </div>
   </footer>
   <script>
-   // 2. Main slider autoplay with smooth fade transitions
     (() => {
-      const slides = document.querySelectorAll('#mainSlider > div');
-      let current = 0;
-      const total = slides.length;
-      function showSlide(index) {
-        slides.forEach((slide, i) => {
-          slide.style.opacity = i === index ? '1' : '0';
-          slide.style.zIndex = i === index ? '10' : '1';
-        });
-      }
-      function nextSlide() {
-        current = (current + 1) % total;
-        showSlide(current);
-      }
-      showSlide(current);
-      setInterval(nextSlide, 7000);
-    })();
+  const slider = document.getElementById('categorySlider');
+  const prevBtn = document.getElementById('prevCategory');
+  const nextBtn = document.getElementById('nextCategory');
+  const totalItems = slider.children.length;
+  let currentIndex = 0;
 
-    // 3. Tilt parallax effect on sample image
-    (() => {
-      const tiltContainer = document.getElementById('tiltSample');
-      if (!tiltContainer) return;
-      tiltContainer.addEventListener('mousemove', (e) => {
-        const rect = tiltContainer.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * 10; // max 10deg
-        const rotateY = ((x - centerX) / centerX) * 10; // max 10deg
-        tiltContainer.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg) translateZ(30px)`;
-      });
-      tiltContainer.addEventListener('mouseleave', () => {
-        tiltContainer.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0)';
-      });
-    })();
+  let isDown = false;
+  let startX;
+  let scrollLeft;
 
-    // 3. Category slider with buttons
-    (() => {
-      const slider = document.getElementById('categorySlider');
-      const prevBtn = document.getElementById('prevCategory');
-      const nextBtn = document.getElementById('nextCategory');
-      const totalItems = slider.children.length;
-      let currentIndex = 0;
+  function updateSlider() {
+    slider.style.transition = 'transform 0.3s';
+    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
 
-      function updateSlider() {
-        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-      }
-      prevBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-        updateSlider();
-      });
-      nextBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % totalItems;
-        updateSlider();
-      });
-      updateSlider();
-    })();
+  prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    updateSlider();
+  });
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % totalItems;
+    updateSlider();
+  });
 
-    // 8. Fullwide slider with buttons
-    (() => {
-      const slider = document.getElementById('fullwideSlider');
-      const prevBtn = document.getElementById('prevFullwide');
-      const nextBtn = document.getElementById('nextFullwide');
-      const totalItems = slider.children.length;
-      let currentIndex = 0;
+  // Mouse events
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX;
+    slider.style.cursor = 'grabbing';
+  });
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.style.cursor = '';
+  });
+  slider.addEventListener('mouseup', (e) => {
+    if (!isDown) return;
+    isDown = false;
+    slider.style.cursor = '';
+    const diff = e.pageX - startX;
+    if (diff > 50) {
+      currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    } else if (diff < -50) {
+      currentIndex = (currentIndex + 1) % totalItems;
+    }
+    updateSlider();
+  });
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    // Optionally, you can add visual feedback here
+  });
 
-      function updateSlider() {
-        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-      }
-      prevBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-        updateSlider();
-      });
-      nextBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % totalItems;
-        updateSlider();
-      });
-      updateSlider();
-    })();
+  // Touch events
+  slider.addEventListener('touchstart', (e) => {
+    isDown = true;
+    startX = e.touches[0].pageX;
+  });
+  slider.addEventListener('touchend', (e) => {
+    if (!isDown) return;
+    isDown = false;
+    const endX = e.changedTouches[0].pageX;
+    const diff = endX - startX;
+    if (diff > 50) {
+      currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    } else if (diff < -50) {
+      currentIndex = (currentIndex + 1) % totalItems;
+    }
+    updateSlider();
+  });
 
-    // Parallax scroll effect for background images on full width sections
+  updateSlider();
+})();
+
     (() => {
       const parallaxSections = [
         document.getElementById('fullwide1'),
@@ -143,10 +133,10 @@
       });
     })();
   </script>
-   <script>
-      lucide.createIcons();
-  </script>
- </body>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    lucide.createIcons();
+  });
+</script>
+</body>
 </html>
-
-

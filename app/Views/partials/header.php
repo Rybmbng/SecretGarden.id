@@ -1,3 +1,11 @@
+<?php
+//  $user = session()->get('user');
+//         if ($user['role'] == 'admin')
+//     {
+//         return view('admin/index');
+//     }
+?>
+
 <html class="scroll-smooth" lang="en" lang="en" x-data="{ mobileMenuOpen: false, searchOpen: false, isScrolled: false }"
   x-init="window.addEventListener('scroll', () => isScrolled = window.scrollY > 50)">
 <head>
@@ -11,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="https://www.secretgarden.co.id/skins/secret//img/logo/favicon.png" type="image/x-icon">
     <link rel="icon" href="https://www.secretgarden.co.id/skins/secret//img/logo/favicon.png" type="image/x-icon">
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
@@ -25,6 +33,9 @@
       font-family: 'Poppins', sans-serif;
       scroll-behavior: smooth;
       color: #0a2540;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; 
     }
     video {
       width: 100%;
@@ -289,84 +300,72 @@
         );
         observer.observe(trigger);
       ">
-      
-  <header class="sticky top-0 z-50 bg-white shadow transition duration-300 ease-in-out"
-    :class="{
-      'bg-white/80 backdrop-blur-md shadow-md': isScrolled,
-      'bg-transparent shadow-none': !isScrolled
-    }">
+<!-- Header -->
+<header class="bg-white shadow" x-data="{ mobileOpen: false }">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    
+    <!-- Logo -->
+    <a href="/" class="text-xl font-bold text-[#8c9464]">SecretGarden</a>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
+    <!-- Desktop Menu -->
+    <nav class="hidden lg:flex items-center space-x-6">
+      <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Brand</a>
+      <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Products</a>
+      <a href="<?= base_url('services') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Services</a>
+      <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Find Us</a>
+    </nav>
 
-        <!-- Logo -->
-        <a href="/" class="text-xl sm:text-2xl font-bold text-gray-800 hover:text-gray-600 transition-colors">
-          SGV
-        </a>
+    <!-- Icons -->
+    <div class="flex items-center space-x-4">
+      <!-- Cart -->
+      <a href="<?= base_url('cart') ?>" class="p-2 rounded hover:bg-gray-100">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      </a>
 
-        <!-- Desktop Menu -->
-        <nav class="hidden lg:flex space-x-6">
-            <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Brand</a>
-            <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Products</a>
-            <a href="<?= base_url('services') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Services</a>
-            <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Find Us</a>
-        </nav>
-
-        <!-- Right Icons -->
-        <div class="flex items-center space-x-3">
-          <button @click="searchOpen = !searchOpen" class="p-2 rounded hover:bg-gray-100">
-            <i data-lucide="search" class="w-5 h-5"></i>
-          </button>
-
-          <a href="<?= base_url('cart') ?>" class="relative p-2 rounded hover:bg-gray-100">
-            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-            <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-          </a>
-
-          <a href="/profile" class="p-2 rounded hover:bg-gray-100">
-            <i data-lucide="user" class="w-5 h-5"></i>
-          </a>
-
-          <!-- Hamburger -->
-          <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2 rounded hover:bg-gray-100">
-            <i :data-lucide="mobileMenuOpen ? 'x' : 'menu'" class="w-6 h-6"></i>
-          </button>
+      <!-- Profile Dropdown -->
+      <div class="relative" x-data="{ showProfile: false }">
+        <button @click="showProfile = !showProfile" class="p-2 rounded hover:bg-gray-100">
+          <i data-lucide="user" class="w-5 h-5"></i>
+        </button>
+        <div x-show="showProfile" @click.outside="showProfile = false" x-cloak x-transition
+             class="absolute right-0 mt-2 w-40 bg-white shadow-md rounded z-50 py-2">
+          <?php if (session()->has('user')): ?>
+            <a href="<?= base_url('profile') ?>" class="block px-4 py-2 hover:bg-gray-100">My Account</a>
+            <a href="<?= base_url('order') ?>" class="block px-4 py-2 hover:bg-gray-100">My Orders</a>
+            <a href="<?= base_url('logout') ?>" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+          <?php else: ?>
+            <a href="<?= base_url('profile') ?>" class="block px-4 py-2 hover:bg-gray-100">My Account</a>
+          <?php endif; ?>
         </div>
       </div>
 
-      <!-- Search Box -->
-      <div x-show="searchOpen" x-cloak x-transition class="mt-2 border-t pt-3">
-        <div class="relative">
-          <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"></i>
-          <input
-            type="search"
-            placeholder="Search products..."
-            class="w-full py-2 pl-10 pr-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            autofocus
-          />
-        </div>
-      </div>
+      <!-- Hamburger (Mobile only) -->
+      <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2 rounded hover:bg-gray-100">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
 
-      <!-- Mobile Menu -->
-      <div x-show="mobileMenuOpen" x-cloak x-transition class="lg:hidden mt-3 border-t pt-3 space-y-2 pb-4">
-        <a href="<?= base_url('brand') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Brand</a>
-        <a href="<?= base_url('products') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Products</a>
-        <a href="<?= base_url('services') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Services</a>
-        <a href="<?= base_url('findus') ?>" class="block py-2 px-3 rounded hover:bg-gray-100">Find Us</a>
+  <!-- Mobile Menu -->
+  <div x-show="mobileOpen" x-cloak x-transition class="lg:hidden px-4 pb-4">
+    <a href="<?= base_url('brand') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464]">Brand</a>
+
+    <!-- Dropdown mobile -->
+    <div x-data="{ dropdown: false }" class="py-2">
+      <button @click="dropdown = !dropdown" class="w-full text-left text-gray-700 hover:text-[#8c9464]">
+        Products
+      </button>
+      <div x-show="dropdown" x-cloak x-transition class="pl-4 mt-1 space-y-1">
+        <a href="<?= base_url('products/skincare') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464]">Skincare</a>
+        <a href="<?= base_url('products/fragrance') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464]">Fragrance</a>
+        <a href="<?= base_url('products/haircare') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464]">Haircare</a>
       </div>
     </div>
-  </header>
 
-  <script>
-    document.addEventListener('alpine:init', () => {
-      lucide.createIcons(); 
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
-
-    document.addEventListener('alpine:mutate', () => {
-      lucide.createIcons();
-    });
-  </script>
+    <a href="<?= base_url('services') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464]">Services</a>
+    <a href="<?= base_url('findus') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464]">Find Us</a>
+  </div>
+</header>
