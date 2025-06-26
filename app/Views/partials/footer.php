@@ -1,3 +1,64 @@
+<!-- Modal Cart PHP Up -->
+<!-- Removed redundant Open Cart Modal button -->
+
+<?php if (isset($cart) && !empty($cart)): ?>
+<div id="modalCart" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <button id="closeCartModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+      &times;
+    </button>
+    <h2 class="text-lg font-semibold mb-4">Your Cart</h2>
+    <ul class="divide-y divide-gray-200 mb-4">
+      <?php foreach ($cart as $item): ?>
+        <li class="py-2 flex justify-between items-center">
+          <span><?php echo htmlspecialchars($item['name']); ?></span>
+          <span>x<?php echo (int)$item['qty']; ?></span>
+          <span class="font-semibold"><?php echo number_format($item['price'] * $item['qty'], 0, ',', '.'); ?></span>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+    <div class="flex justify-between items-center mb-4">
+      <span class="font-semibold">Total:</span>
+      <span class="font-bold text-[#0a2540]">
+        <?php
+          $total = 0;
+          foreach ($cart as $item) {
+            $total += $item['price'] * $item['qty'];
+          }
+          echo number_format($total, 0, ',', '.');
+        ?>
+      </span>
+    </div>
+    <a href="/cart/checkout" class="block w-full text-center bg-[#0a2540] text-white py-2 rounded hover:bg-[#183b6b] transition">Checkout</a>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('modalCart');
+    const closeBtn = document.getElementById('closeCartModal');
+    window.showCartModal = function() {
+      modal.classList.remove('hidden');
+    };
+    closeBtn.addEventListener('click', function() {
+      modal.classList.add('hidden');
+    });
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+  });
+</script>
+<?php endif; ?>
+
+<button onclick="showCartModal()" class="fixed bottom-6 right-6 z-40 bg-[#0a2540] text-white rounded-full shadow-lg p-4 hover:bg-[#183b6b] transition flex items-center group">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.5 17h9a1 1 0 00.9-1.45L17 13M7 13V6h13" />
+  </svg>
+  <span class="hidden md:inline group-hover:inline">Cart</span>
+  <?php if (isset($cart) && count($cart) > 0): ?>
+    <span class="ml-2 bg-red-500 text-white rounded-full px-2 py-0.5 text-xs"><?php echo count($cart); ?></span>
+  <?php endif; ?>
+</button>
+
 <footer class="py-10 px-6 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto" id="ordernow">
    <div class="mb-6 md:mb-0 max-w-xs">
     <h3 class="text-xl font-semibold mb-2">

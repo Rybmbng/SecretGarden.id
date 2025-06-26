@@ -9,15 +9,11 @@ class ProductVariantModel extends Model
     protected $table      = 'product_variants';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = [
-        'product_id',
-        'name',      // contoh: '150g', '190g', '250g', atau warna, ukuran, dll
-        'price',
-        'sku',       // opsional, kode varian
-        'stock',     // opsional, stok varian
-    ];
+   protected $allowedFields = [
+    'product_id', 'name', 'price', 'sku', 'stock', 'desc', 'main'
+];
 
-    protected $useTimestamps = true; // kalau pakai created_at dan updated_at
+    protected $useTimestamps = false; // kalau pakai created_at dan updated_at
 }
 
 class ProductImageModel extends Model

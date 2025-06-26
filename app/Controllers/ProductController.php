@@ -10,19 +10,19 @@ use App\Models\ProductImageModel;
 
 class ProductController extends BaseController
 {
+    
     public function index()
     {
         $categoryModel = new CategoryModel();
         $productModel = new ProductModel();
-
+        $sectionModel   = new \App\Models\ProductSectionModel();
+        $detailModel    = new \App\Models\ProductSectionDetailModel();
         $categories = $categoryModel->findAll();
 
         foreach ($categories as &$category) {
             $category['products'] = $productModel->where('category_id', $category['id'])->findAll();
 
-            // Untuk tiap produk, tambahkan gambar utama (primary)
             foreach ($category['products'] as &$product) {
-                // Load gambar utama
                 $productImageModel = new ProductImageModel();
                 $primaryImage = $productImageModel
                     ->where('product_id', $product['id'])
@@ -41,16 +41,29 @@ class ProductController extends BaseController
                 'desc'  => $cat['description'] ?? 'No description available',
             ];
         }
+        $sectionsRaw = $sectionModel->where('product_id', $product['id'])->findAll();
+        $sections = [];
+        foreach ($sectionsRaw as $section) {
+            $details = $detailModel->where('section_id', $section['id'])->findAll();
+            $sections[$section['type']][] = [
+                'header'  => $section['type'],
+                'details' => array_column($details, 'detail')
+            ];
+        }
 
         $data = [
             'categories' => $categories,
+            'sections'      => $sections,
             'images' => $images,
+            'pageTitle'=> 'Products',
+
         ];
 
         echo view('product/index', $data);
     }
 
-   public function detail($slug)
+   
+public function detail($slug)
 {
     $productModel   = new ProductModel();
     $variantModel   = new ProductVariantModel();
@@ -65,13 +78,14 @@ class ProductController extends BaseController
     }
 
     $variants = $variantModel->where('product_id', $product['id'])->findAll();
-    $variantImages = $imageModel->where('product_id', $product['id'])->where('variant_id IS NOT NULL', null, false)->findAll();
+
+    $variantImages = $imageModel
+        ->where('product_id', $product['id'])
+        ->where('variant_id IS NOT NULL', null, false)
+        ->findAll();
 
     $variantImageMap = [];
     foreach ($variantImages as $img) {
-        if (!isset($variantImageMap[$img['variant_id']])) {
-            $variantImageMap[$img['variant_id']] = [];
-        }
         $variantImageMap[$img['variant_id']][] = $img['image_path'];
     }
 
@@ -80,35 +94,49 @@ class ProductController extends BaseController
         $variant['image_path'] = $variant['images'][0] ?? null;
     }
 
-    $galleryImages = $imageModel->where('product_id', $product['id'])->where('variant_id', null)->findAll();
+    $galleryImages = $imageModel
+        ->where('product_id', $product['id'])
+        ->where('variant_id', null)
+        ->findAll();
+
+    $useVariantSlug = '';
+    if (empty($galleryImages) && !empty($variants[0]['images'])) {
+        $galleryImages = array_map(fn($img) => ['image_path' => $img], $variants[0]['images']);
+        $useVariantSlug = strtolower(str_replace(' ', '-', $variants[0]['name']));
+    }
 
     $category = $categoryModel->find($product['category_id']);
 
     $sectionsRaw = $sectionModel->where('product_id', $product['id'])->findAll();
     $sections = [];
-
     foreach ($sectionsRaw as $section) {
         $details = $detailModel->where('section_id', $section['id'])->findAll();
         $sections[$section['type']][] = [
-            'header'  => $section['type'],
+            'header'  => $section['header'],
             'details' => array_column($details, 'detail')
         ];
     }
 
+    $categorySlug = strtolower(str_replace(' ', '-', $category['name']));
+    $productSlug  = strtolower(str_replace(' ', '-', $product['name']));
+    $galleryPath  = "assets/SGV/Category/{$categorySlug}/{$productSlug}";
+    if (!empty($useVariantSlug)) {
+        $galleryPath .= "/{$useVariantSlug}";
+    }
 
-
-
-    $data = [
+    return view('product/detail', [
         'product'       => $product,
         'variants'      => $variants,
         'galleryImages' => $galleryImages,
         'category'      => $category,
         'sections'      => $sections,
-    ];
-    
-
-    return view('product/detail', $data);
+        'galleryPath'   => $galleryPath, 
+        'categorySlug'  => $categorySlug,
+        'productSlug'   => $productSlug,
+        'pageTitle'=> 'Detail Product',
+    ]);
 }
+
 
 public function search()
 {
@@ -130,8 +158,9 @@ public function search()
 
 public function cart()
 {
-    // Logic to retrieve cart items
-    return view('product/cart');
+    return view('product/cart',[
+        'pageTitle'=> 'Cart',
+    ]);
 }
 
 }

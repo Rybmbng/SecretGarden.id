@@ -4,292 +4,31 @@
 //     {
 //         return view('admin/index');
 //     }
+;
 ?>
 
 <html class="scroll-smooth" lang="en" lang="en" x-data="{ mobileMenuOpen: false, searchOpen: false, isScrolled: false }"
   x-init="window.addEventListener('scroll', () => isScrolled = window.scrollY > 50)">
 <head>
     <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <title>SGV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- <meta content="width=device-width, initial-scale=1" name="viewport"/> -->
+    <title>SecretGarden | <?= $pageTitle ?? '' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
      <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="https://www.secretgarden.co.id/skins/secret//img/logo/favicon.png" type="image/x-icon">
-    <link rel="icon" href="https://www.secretgarden.co.id/skins/secret//img/logo/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url('assets/SGV/sg.png') ?>" type="image/x-icon">
+    <link rel="icon" href="<?= base_url('assets/SGV/sg.png') ?>" type="image/x-icon">
     <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-    <style>
-      html, body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-      color: #0a2540;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh; 
-    }
-    video {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background-color: #000;
-      margin: 5px auto;
-      transition: all 0.3s ease-in-out;
-    }
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
-
-    section {
-      margin: 0;
-      padding: 0;
-      background-attachment: fixed;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      will-change: transform;
-      perspective: 1000px;
-      overflow: visible
-    }
-    .parallax {
-      perspective: 1000px;
-      overflow-x: hidden;
-      overflow-y: auto;
-      height: 100vh;
-      scroll-snap-type: y mandatory;
-    }
-    .page {
-      scroll-snap-align: start;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .tilt-parallax {
-      transform-style: preserve-3d;
-      transition: transform 0.2s ease-out;
-      will-change: transform;
-    }
-    /* Hide scrollbar for all browsers */
-    .parallax::-webkit-scrollbar {
-      display: none;
-    }
-    .parallax {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .slider-button {
-      background-color: #8c9464;
-      border: none;
-      color: #a1c6ea;
-      font-size: 1.5rem;
-      padding: 0.5rem 0.75rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
-      box-shadow: 0 0 8px rgba(10,37,64,0.3);
-    }
-    .slider-button:hover {
-      background-color: #a1c6ea;
-      color: #0a2540;
-    }
-    video::-internal-media-controls {
-      display:none;
-    }
-      
-        nav a {
-            color: #0a2540;
-            font-weight: 600;
-        }
-        nav a:hover {
-            color: #4a90e2;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-      #parallax-image {
-      transform: translateY(0px);
-      transition: transform 0.1s linear;
-      will-change: transform;
-    }
-     .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  [x-cloak] 
-  { display: none; }
-  .brand {
-     transform-style: preserve-3d;
-      perspective: 1000px;
-      will-change: transform;
-      transition: transform 0.1s ease-out;
-    }
-
-    /* Scroll indicator track */
-    #scroll-track {
-      width: 4px;
-      height: 150px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 9999px;
-      position: fixed;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 50;
-    }
-
-    /* Scroll indicator bar */
-    #scroll-bar {
-      width: 4px;
-      background: white;
-      border-radius: 9999px;
-      height: 0;
-      transition: height 0.2s ease;
-    }
-
-    /* Intro overlay */
-    #intro {
-      position: fixed;
-      inset: 0;
-      background: black;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      transition: opacity 1s ease;
-    }
-    #intro.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .story-section {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective: 1500px;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: visible;
-  }
-
-  .content-wrapper {
-    background: rgba(0,0,0,0.6);
-    padding: 3rem;
-    border-radius: 1rem;
-    max-width: 800px;
-    color: white;
-    transform-style: preserve-3d;
-  }
-  #background-container {
-      padding-top: 10px;
-      object-fit: cover;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100vh;
-      overflow: hidden;
-      filter: brightness(0.4) saturate(1.1);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: opacity 1s ease-in-out;
-      opacity: 0;
-    }
-    #background-container video {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      top: 0; left: 0;
-      z-index: -1;
-    }
-    .brand-story {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-      text-align: center;
-      scroll-snap-type: y mandatory;
-      scroll-padding-top: 0;
-      color: white; 
-      transition: color 1s ease-in-out;     
-
-    }
-    .brand-story:hover {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .typing-text {
-      font-size: 5vw;
-      max-width: auto;
-      line-height: 1;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.85);
-      white-space: pre-wrap;
-      user-select: none;
-      /* background: rgba(0, 0, 0, 0.9);  */
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 3rem;
-      min-height: 50px; /* jaga space supaya gak lompat */
-      color: black; /* teks putih di typing */
-      transition: color 1s ease-in-out;
-
-    }
-    typing-text:hover {
-      color: white;
-    }
-
-    #welcome-text {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom: 3rem;
-      text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
-      color: white; 
-    }
-
-   
-    </style>
+    <link rel="stylesheet" href="<?= base_url('style.css')?>">
+    
 </head>
 <body x-data="{ mobileMenuOpen: false, searchOpen: false, isScrolled: false }"
       x-init="
@@ -301,18 +40,43 @@
         observer.observe(trigger);
       ">
 <!-- Header -->
-<header class="bg-white shadow" x-data="{ mobileOpen: false }">
+<header class="bg-white shadow" x-data="{ mobileOpen: false } ">
   <div class="container mx-auto px-4 py-4 flex justify-between items-center">
     
     <!-- Logo -->
-    <a href="/" class="text-xl font-bold text-[#8c9464]">SecretGarden</a>
+    <a href="/" class="text-xl font-bold text-[#8c9464] select-none flex justify-between items-center">
+      <img class="w-[90px] h-auto" src="<?= base_url('assets/SGV/sg.png') ?>" alt="SecretGarden Official">
+    </a>
 
     <!-- Desktop Menu -->
     <nav class="hidden lg:flex items-center space-x-6">
-      <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Brand</a>
-      <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Products</a>
-      <a href="<?= base_url('services') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Services</a>
-      <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition">Find Us</a>
+      <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition select-none">Brand</a>
+      <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition select-none">Products</a>
+      <div class="relative dropdown select-none" x-data="{ open: false }">
+        <button 
+          @click="open = !open" 
+          class="text-gray-700 hover:text-[#8c9464] transition flex items-center"
+          :aria-expanded="open"
+          aria-haspopup="true"
+          type="button"
+        >
+          Services
+          <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div 
+          class="dropdown-content absolute left-0 mt-2 w-48 bg-white shadow-md rounded z-50 py-2"
+          x-show="open"
+          x-cloak
+          x-transition
+          @click.away="open = false"
+        >
+          <a href="<?= base_url('services/cu') ?>" class="block px-4 py-2 text-gray-600 hover:text-[#8c9464] hover:bg-gray-100 select-none">Contact Us</a>
+          <a href="<?= base_url('services/cg') ?>" class="block px-4 py-2 text-gray-600 hover:text-[#8c9464] hover:bg-gray-100 select-none">Corporate Gift</a>
+        </div>
+      </div>
+      <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition select-none">Find Us</a>
     </nav>
 
     <!-- Icons -->
@@ -351,21 +115,20 @@
 
   <!-- Mobile Menu -->
   <div x-show="mobileOpen" x-cloak x-transition class="lg:hidden px-4 pb-4">
-    <a href="<?= base_url('brand') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464]">Brand</a>
+    <a href="<?= base_url('brand') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464] select-none">Brand</a>
 
     <!-- Dropdown mobile -->
+    <a href="<?= base_url('products') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464] select-none">Products</a>
+    
     <div x-data="{ dropdown: false }" class="py-2">
-      <button @click="dropdown = !dropdown" class="w-full text-left text-gray-700 hover:text-[#8c9464]">
-        Products
+      <button @click="dropdown = !dropdown" class="w-full text-left text-gray-700 hover:text-[#8c9464] select-none">
+        Services
       </button>
       <div x-show="dropdown" x-cloak x-transition class="pl-4 mt-1 space-y-1">
-        <a href="<?= base_url('products/skincare') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464]">Skincare</a>
-        <a href="<?= base_url('products/fragrance') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464]">Fragrance</a>
-        <a href="<?= base_url('products/haircare') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464]">Haircare</a>
+        <a href="<?= base_url('services/cu') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464] select-none">Contact Us</a>
+        <a href="<?= base_url('services/cg') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464] select-none">Coorporate Gift</a>
       </div>
     </div>
-
-    <a href="<?= base_url('services') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464]">Services</a>
-    <a href="<?= base_url('findus') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464]">Find Us</a>
+    <a href="<?= base_url('findus') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464] select-none">Find Us</a>
   </div>
 </header>

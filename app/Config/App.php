@@ -16,7 +16,8 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'http://dev.secretgarden.id/';
+    // public string $baseURL = 'http://localhost:8081';
+    public string $baseURL = 'https://dev.secretgarden.id/';
     // public string $baseURL = 'http://192.168.1.111:8081';
 
     /**

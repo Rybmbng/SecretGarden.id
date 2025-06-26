@@ -13,7 +13,9 @@
 
             <!-- info -->
             <div class="py-2 ml-10">
-                <h1 class="h6">Good Job, <?= isset($user['name']) && $user['name'] !== null ? htmlspecialchars($user['name']) : 'Guest' ?></h1>
+                <h1 class="h6">Good Job,
+                    <?= isset($_SESSION['user']['name']) && $_SESSION['user']['name'] !== null ? htmlspecialchars($_SESSION['user']['name']) : 'Guest' ?>
+                </h1>
                 <p class="text-white text-xs">You've finished all of your tasks for this week.</p>
 
                 <ul class="mt-4">
@@ -33,42 +35,14 @@
 
         <!-- alert -->
         <div class="alert alert-dark mb-6">
-            Hi! Wait A Minute . . . . . . Follow Me On Twitter 
-            <a class="ml-2" target="_blank" href="https://twitter.com/MohamedSaid__">@moesaid</a>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Delectus corrupti ea dolorum blanditiis cum voluptates accusamus quisquam asperiores illo recusandae!
         </div>
         <!-- end alert -->
 
         <!-- charts -->
         <div class="grid grid-cols-2 gap-6 h-full">
 
-            <div class="card">
-                <div class="py-3 px-4 flex flex-row justify-between">
-                    <h1 class="h6">
-                        <span class="num-4"></span>k
-                        <p>page view</p>
-                    </h1>
-
-                    <div class="bg-teal-200 text-teal-700 border-teal-300 border w-10 h-10 rounded-full flex justify-center items-center">
-                        <i class="fad fa-eye"></i>
-                    </div>
-                </div>                
-                <div class="analytics_1"></div>
-            </div>
-
-            <div class="card">
-                <div class="py-3 px-4 flex flex-row justify-between">                    
-                    <h1 class="h6">
-                        <span class="num-2"></span>k
-                        <p>Unique Users</p>
-                    </h1>
-
-                    <div class="bg-indigo-200 text-indigo-700 border-indigo-300 border w-10 h-10 rounded-full flex justify-center items-center">
-                        <i class="fad fa-users-crown"></i>
-                    </div>
-                </div>
-                <div class="analytics_1"></div>
-            </div>
-
+            
         </div>     
         <!-- charts    -->
 
@@ -78,4 +52,5 @@
 
 </div>
 
-<?php echo view('adminpartial/footer'); ?>
+<?php 
+echo view('adminpartial/footer'); ?>

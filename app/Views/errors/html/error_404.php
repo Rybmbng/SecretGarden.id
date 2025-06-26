@@ -71,13 +71,8 @@
 <body>
     <div class="wrap">
         <h1>404</h1>
-
         <p>
-            <?php if (ENVIRONMENT !== 'production') : ?>
-                <?= nl2br(esc($message)) ?>
-            <?php else : ?>
-                <?= lang('Errors.sorryCannotFind') ?>
-            <?php endif; ?>
+            Sorry, the page you are looking for could not be found.
         </p>
     </div>
 </body>

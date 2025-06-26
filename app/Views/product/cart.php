@@ -1,6 +1,7 @@
 <?php
 session()->start();
 $cart = session('cart') ?? [];
+// echo '<pre>' . print_r($product, true) . '</pre>';
 
 // echo $cart ? '<pre>' . print_r($cart, true) . '</pre>' : 'Keranjang kosong.';
 ?>
@@ -23,19 +24,19 @@ $cart = session('cart') ?? [];
           <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm light:border-gray-700 light:bg-gray-800 md:p-6">
             <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
               <a href="" class="shrink-0 md:order-1">
-                <img class="h-20 w-20 rounded-lg light:hidden" src="<?= base_url("assets/SGV/Category/" . str_replace(" ", "-", $item["category"]) . "/" . str_replace(" ", "-", $item["name"]) . "/" . $item['image']) ?>" alt="<?= $item['name'] ?>" />
+                <img class="h-20 w-20 rounded-lg light:hidden" src="<?= base_url("assets/SGV/Category/" . strtolower(str_replace(" ", "-", $item["category"])) . "/" . strtolower(str_replace(" ", "-", $item["name"])) . "/" .strtolower(str_replace(" ", "-", $item["variant"])) .'/'. $item['image']) ?>" alt="<?= $item['name'] ?>" />
               </a>
 
               <label for="counter-input" class="sr-only">Choose quantity:</label>
               <div class="flex items-center justify-between md:order-3 md:justify-end">
                 <div class="flex items-center">
-                  <a href="<?= base_url('cart/min/' . $item['id']) ?>"  id="decrement-button" data-input-counter-decrement="counter-input" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 light:border-gray-600 light:bg-gray-700 light:hover:bg-gray-600 light:focus:ring-gray-700">
+                  <a href="<?= base_url('cart/min/' . $item['idVariant']) ?>"  id="decrement-button" data-input-counter-decrement="counter-input" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 light:border-gray-600 light:bg-gray-700 light:hover:bg-gray-600 light:focus:ring-gray-700">
                     <svg class="h-2.5 w-2.5 text-gray-900 light:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
                     </svg>
                   </a>
                   <input type="text" id="counter-input" data-input-counter class="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 light:text-white" placeholder="" value="<?=$item['qty']?>" required />
-                  <a href="<?= base_url('cart/add/' . $item['id']) ?>"  id="increment-button" data-input-counter-increment="counter-input" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 light:border-gray-600 light:bg-gray-700 light:hover:bg-gray-600 light:focus:ring-gray-700">
+                  <a href="<?= base_url('cart/add/' .$item['id'] .'/'. $item['idVariant']) ?>"  id="increment-button" data-input-counter-increment="counter-input" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 light:border-gray-600 light:bg-gray-700 light:hover:bg-gray-600 light:focus:ring-gray-700">
                     <svg class="h-2.5 w-2.5 text-gray-900 light:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
                     </svg>
@@ -49,17 +50,17 @@ $cart = session('cart') ?? [];
               </div>
 
               <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                <a href="#" class="text-base font-medium text-gray-900 hover:underline light:text-white"><?php echo htmlspecialchars($item['name']); ?></a>
+                <a href="<?= site_url('products/' . strtolower(str_replace(' ', '-', $item['name']))) ?>" class="text-base font-medium text-gray-900 hover:underline light:text-white"><?php echo esc($item['name']) ?> (<?= esc($item['variant']); ?>)</a>
 
                 <div class="flex items-center gap-4">
-                  <a href="<?= base_url('cart/fav/' . $item['id']) ?>"  class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline light:text-gray-400 light:hover:text-white">
+                  <a href="<?= base_url('cart/fav/' . $item['idVariant']) ?>"  class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline light:text-gray-400 light:hover:text-white">
                     <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z" />
                     </svg>
                     Add to Favorites
                   </a>
 
-                  <a href="<?= base_url('cart/remove/' . $item['id']) ?>"  class="inline-flex items-center text-sm font-medium text-red-600 hover:underline light:text-red-500">
+                  <a href="<?= base_url('cart/remove/' . $item['idVariant']) ?>"  class="inline-flex items-center text-sm font-medium text-red-600 hover:underline light:text-red-500">
                     <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
                     </svg>
@@ -73,46 +74,47 @@ $cart = session('cart') ?? [];
         </div>
         <div class="hidden xl:mt-8 xl:block">
           <h3 class="text-2xl font-semibold text-gray-900 light:text-white">People also bought</h3>
-          <div class="mt-6 grid grid-cols-3 gap-4 sm:mt-8">
-          <?php foreach ($product as $products) : ?>
-            <div class="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm light:border-gray-700 light:bg-gray-800">
-              <a href="#" class="overflow-hidden rounded">
-                <img class="mx-auto h-44 w-44 light:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
-                <img class="mx-auto hidden h-44 w-44 light:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-light.svg" alt="imac image" />
-              </a>
-              <div>
-                <a href="#" class="text-lg font-semibold leading-tight text-gray-900 hover:underline light:text-white"><?= $products['name']?></a>
-                <p class="mt-2 text-base font-normal text-gray-500 light:text-gray-400">This generation has some improvements, including a longer continuous battery life.</p>
-              </div>
-              <div>
-                <p class="text-lg font-bold text-gray-900 light:text-white">
-                  <span class="line-through"> $399,99 </span>
-                </p>
-                <p class="text-lg font-bold leading-tight text-red-600 light:text-red-500">$299</p>
-              </div>
-              <div class="mt-6 flex items-center gap-2.5">
-                <button data-tooltip-target="favourites-tooltip-1" type="button" class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 light:border-gray-600 light:bg-gray-800 light:text-gray-400 light:hover:bg-gray-700 light:hover:text-white light:focus:ring-gray-700">
-                  <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6C6.5 1 1 8 5.8 13l6.2 7 6.2-7C23 8 17.5 1 12 6Z"></path>
-                  </svg>
-                </button>
-                <div id="favourites-tooltip-1" role="tooltip" class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 light:bg-gray-700">
-                  Add to favourites
-                  <div class="tooltip-arrow" data-popper-arrow></div>
+          <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <?php
+              $randomProducts = [];
+              foreach ($product as $category) {
+                foreach ($category['products'] as $p) {
+                  $p['category'] = $category; 
+                  $randomProducts[] = $p;
+                }
+              }
+              shuffle($randomProducts);
+              $randomProducts = array_slice($randomProducts, 0, 6);
+            ?>
+
+            <?php foreach ($randomProducts as $products): ?>
+              <div class="space-y-4 overflow-hidden rounded-lg border border-gray-200 bg-white p-4 shadow-sm light:border-gray-700 light:bg-gray-800">
+                <a href="<?= site_url('products/' . strtolower($products['slug'])) ?>" class="block overflow-hidden rounded">
+                  <img src="<?= base_url('assets/SGV/Category/' . strtolower($products['category']['path']) . '/'. strtolower(str_replace(" ","-",$products['name'])).'/' . strtolower(str_replace(" ","-",$products['pname'])).'/' . $products['img']) ?>" alt="<?= $products['name'] ?>" class="w-full h-52 object-cover rounded">
+                </a>
+                <div>
+                  <a href="<?= site_url('products/' . strtolower($products['slug'])) ?>" class="text-lg font-semibold text-gray-900 hover:underline light:text-white">
+                    <?= $products['name'] ?> 
+                  </a>
+                  <p class="text-sm text-gray-500 mt-1 light:text-gray-400"><?= $products['description'] ?: 'Tanpa deskripsi.' ?></p>
                 </div>
-                <button type="button" class="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 light:bg-primary-600 light:hover:bg-primary-700 light:focus:ring-primary-800">
-                  <svg class="-ms-2 me-2 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4" />
-                  </svg>
-                  Add to cart
-                </button>
+                <div>
+                  <!-- <p class="text-sm text-gray-400 line-through">Rp <?= number_format($products['variant_price'] * 1.2, 0, ',', '.') ?></p> -->
+                  <p class="text-lg font-bold text-red-600 light:text-red-500">Rp <?= number_format($products['variant_price'], 0, ',', '.') ?></p>
+                </div>
+                <div class="flex items-center gap-2.5 mt-4">
+                  <button data-tooltip-target="favourites-tooltip-<?= $products['id'] ?>" type="button" class="p-2 rounded-lg border text-gray-900 hover:bg-gray-100 light:border-gray-600 light:bg-gray-800 light:text-gray-400 light:hover:bg-gray-700">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6C6.5 1 1 8 5.8 13l6.2 7 6.2-7C23 8 17.5 1 12 6Z"/></svg>
+                  </button>
+                  <button type="button" class="flex-1 inline-flex items-center justify-center rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800">
+                    <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16h8m-8 0a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4zM8.5 13h9.25L19 7h-1M8 7H7.3M13 5v4m-2-2h4"/></svg>
+                    Tambah ke Keranjang
+                  </button>
+                </div>
               </div>
-            </div>
             <?php endforeach; ?>
-           
           </div>
         </div>
-      </div>
 
       <div class="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
         <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm light:border-gray-700 light:bg-gray-800 sm:p-6">

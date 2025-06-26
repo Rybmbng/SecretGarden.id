@@ -23,6 +23,7 @@ class ProductController extends BaseController
             'products' => $this->productModel->getAllProducts(),
             'categories' => $categories,
             'activeCategory' => 'all',
+            'pageTitle'=>'Product',
         ];
 
         return view('products', $data);
@@ -41,6 +42,7 @@ class ProductController extends BaseController
             'products' => $this->productModel->getProductsByCategory($category),
             'categories' => $categories,
             'activeCategory' => $category,
+            'pageTitle'=>'Home',
         ];
 
         return view('products', $data);
@@ -54,11 +56,13 @@ class ProductController extends BaseController
             throw PageNotFoundException::forPageNotFound("Product not found");
         }
 
+        $detailSlug = 'Product'.$slug;
         $data = [
             'title' => $product['name'],
             'product' => $product,
             'categories' => array_column($this->productModel->getCategories(), 'category'),
             'activeCategory' => $product['category'],
+            'pageTitle'=> $detailSlug,
         ];
 
         return view('product_detail', $data);

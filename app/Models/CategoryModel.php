@@ -8,6 +8,12 @@ class CategoryModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = ['name', 'description'];
+    protected $useTimestamps = false;
+
+
+    public function findCategory(){
+
+    }
 
     public function getCategoriesWithProducts()
 {
@@ -42,7 +48,7 @@ class CategoryModel extends Model
                 'id' => $row['product_id'],
                 'name' => $row['product_name'],
                 'price' => $row['price'],
-                'img' => $row['product_img'], // tetap pakai 'img' agar kompatibel dengan view
+                'img' => $row['product_img'],
             ];
         }
     }

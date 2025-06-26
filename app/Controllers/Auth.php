@@ -32,9 +32,7 @@ class Auth extends BaseController
         $userModel = new UserModel();
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
-
         $user = $userModel->where('email', $email)->first();
-
         if ($user && password_verify($password, $user['password'])) {
             session()->set('user', [
                 'id' => $user['id'],
@@ -42,6 +40,7 @@ class Auth extends BaseController
                 'email' => $user['email'],
                 'role' => $user['role']
             ]);
+            
             if ($user['role'] == 'admin') {
                 return redirect()->to('/admin');
             } else {

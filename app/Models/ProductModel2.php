@@ -10,6 +10,7 @@ class ProductModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = ['name', 'slug', 'description', 'price', 'image_url', 'category'];
+    protected $useTimestamps = true; 
 
     public function getAllProducts()
     {
