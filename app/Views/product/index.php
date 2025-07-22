@@ -95,35 +95,24 @@ function slugify($string)
   cursor: pointer;
 }
 
-.img-hover {
-  position: relative;
-  top: -10em;
-  left: 5em;
-  width: 250px;
-  height: 250px;
-  transition: .4s ease-in-out;
-}
-
-.card:hover {
+.product-preview:hover .card {
   width: 20em;
   height: 25em;
   transform: translateY(1.25em);
 }
-
-.card:hover + .img-hover {
+.product-preview:hover .card + .img-hover {
   transform: rotateX(360deg);
   height: 150px;
   width: 150px;  
+  left: 0;
   margin-left:0;
   top: -23em;
 }
-
-
-.card:hover .heading {
+.product-preview:hover .card .heading {
   transform: translateY(5em) translateX(0em);
 }
 
-.card:hover .details {
+.product-preview:hover .card .details {
   max-width:100%;
   flex-item: center;
   animation: fadein 3s;
@@ -134,6 +123,19 @@ function slugify($string)
   animation: fadeout 3s;
 
 }
+
+.img-hover {
+  position: relative;
+  top: -10em;
+  left: 5em;
+  width: 250px;
+  height: 250px;
+  transition: .4s ease-in-out;
+}
+
+
+
+
 .parallax-hover {
     transition: transform 0.5s ease;
     will-change: transform;
@@ -153,28 +155,42 @@ function slugify($string)
     <p class="max-w-2xl text-gray-700 text-lg md:text-xl mb-8">
       Handcrafted aromatic experiences inspired by nature and tradition.
     </p>
-    <a class="inline-block bg-black text-white uppercase tracking-widest px-8 py-3 text-sm md:text-base hover:bg-gray-800 transition" href="#">
-      Shop Now
-    </a>
   </div>
 </section>
 
-<section class="relative w-full h-[400px] px-4 md:px-12 flex items-center justify-center fade-in-up">
-  <div class="overflow-hidden w-full max-w-7xl mx-auto">
-    <div id="slider-track"
-         class="flex  space-x-10 transition-transform duration-700 ease-in-out will-change-transform md:justify-center mx-auto"
-         style="padding-left: calc((100vw - 240px) / 2);"
-    >
+<section class="relative w-full h-auto px-4 md:px-12 flex items-center justify-center fade-in-up">
+
+  <button id="scroll-left"
+    class="absolute left-2 z-10 bg-white/80 backdrop-blur-md rounded-full shadow-md p-2 hover:bg-white md:visible invisible"
+    aria-label="Scroll Left">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-800" fill="none" viewBox="0 0 24 24"
+      stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  <button id="scroll-right"
+      class="absolute right-2 z-10 bg-white/80 backdrop-blur-md rounded-full shadow-md p-2 md:visible invisible"
+      aria-label="Scroll Right">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-800" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+  </button>
+  
+  <div class="w-full max-w-7xl mx-auto">
+    <div id="slider-track" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-8 px-2">
       <?php foreach ($images as $catImg => $img): ?>
         <?php $imgSlug = slugify($img['name']); ?>
-        <div class="product-slider-track-<?= $catImg ?> flex-shrink-0 w-[240px] p-2 flex flex-col mr-[200px] snap-center items-center px-4">
-          <div class="main">
+        <div class="product-preview product-slider-top-<?= $catImg ?> snap-center flex-shrink-0 min-w-[320px]">
+          <div class="main relative w-full flex flex-col items-center">
             <div class="card">
               <div class="heading"><?= esc($img['name']) ?></div>
               <div class="details"><?= esc($img['desc']) ?></div>
-              <a href="<?= site_url('category/' . str_replace(' ', '-', $img['name'])) ?>" class="btndetail overflow-hidden text-center">Check</a>
+              <a href="<?= site_url('category/' . str_replace(' ', '-', $img['name'])) ?>" class="btndetail text-center">Check</a>
             </div>
-            <img src="<?= base_url('assets/SGV/Category/' . $imgSlug . '/' . $img['img']) ?>" alt="Product image of <?= esc($img['name']) ?> category showing a detailed view of the product packaging and design" class="img-hover object-cover rounded mx-auto parallax-hover">
+            <img src="<?= base_url('assets/SGV/Category/' . $imgSlug . '/' . $img['img']) ?>"
+                 alt="<?= esc($img['name']) ?>"
+                 class="img-hover object-cover parallax-hover" />
           </div>
         </div>
       <?php endforeach; ?>
@@ -182,11 +198,13 @@ function slugify($string)
   </div>
 </section>
 
+
 <section class="page relative w-full h-[480px] fade-in-up">
   <img alt="Full width image of SGV luxury spa treatment room with soft lighting and elegant decor"  class="w-full h-auto object-cover"  loading="lazy" src="<?= base_url('assets/SGV/fragrance.jpeg') ?>" />
 </section>
 
 <?php foreach ($categories as $catIndex => $category): ?>
+  <?php if (empty($category['products'])) continue; ?>
 <section class="bg-[#f4e4cc] text-white h-[50vh] relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 py-20 h-full flex flex-col md:flex-row items-center justify-between gap-10">
     
@@ -223,11 +241,13 @@ function slugify($string)
 
     <!-- Product Slider Track -->
     <div id="product-slider-track-<?= $catIndex ?>"
-         class="flex space-x-6 transition-transform duration-700 ease-in-out will-change-transform md:justify-center overflow-x-auto scrollbar-hide mx-auto py-4"
+         class="flex space-x-6 transition-transform duration-700 ease-in-out will-change-transform md:justify-center overflow-x-auto mx-auto py-4"
+         style="-ms-overflow-style: none; scrollbar-width: none;"
+         onscroll="this.style.scrollbarWidth='none';"
          style="padding-left: calc((100vw - 240px) / 2);"
     >
       <?php foreach ($category['products'] as $product): ?>
-        <div class="flex-shrink-0 w-[240px] bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-between group transition-all duration-300 hover:shadow-2xl hover:scale-105">
+        <a href="<?= site_url('products/' . strtolower(str_replace(' ', '-', $product['name']))) ?>" class="flex-shrink-0 w-[240px] bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-between group transition-all duration-300 hover:shadow-2xl hover:scale-105">
           <div class="w-full flex flex-col items-center">
             <div class="text-xs uppercase tracking-widest text-[#7b956a] font-semibold mb-1"><?= esc($category['name']) ?></div>
             <div class="font-bold text-base text-[#495c48] text-center mb-2"><?= esc($product['name']) ?></div>
@@ -240,11 +260,7 @@ function slugify($string)
               <?= isset($product['desc']) ? esc($product['desc']) : '' ?>
             </div>
           </div>
-          <a href="<?= site_url('products/' . strtolower(str_replace(' ', '-', $product['name']))) ?>"
-             class="mt-auto inline-block bg-[#495c48] text-white px-4 py-2 rounded-md text-xs font-semibold uppercase tracking-wide hover:bg-[#7b956a] transition">
-            Detail
-          </a>
-        </div>
+        </a>
       <?php endforeach; ?>
     </div>
 
@@ -332,14 +348,55 @@ function slugify($string)
     appearOnScroll.observe(fader);
   });
 </script>
+<script>
+  const slider = document.getElementById('slider-track');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('dragging');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('dragging');
+  });
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('dragging');
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 2; 
+    slider.scrollLeft = scrollLeft - walk;
+  });
+
+  slider.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].pageX;
+    scrollLeft = slider.scrollLeft;
+  });
+
+  slider.addEventListener('touchmove', (e) => {
+    const x = e.touches[0].pageX;
+    const walk = (x - startX) * 2;
+    slider.scrollLeft = scrollLeft - walk;
+  });
+</script>
+
 
 <script>
   const track = document.getElementById("slider-track");
   const items = track.querySelectorAll("div.flex-shrink-0");
   const itemWidth = 240 + 24;
   let index = 0;
-
-  
 
   function adjustPadding() {
     if (window.innerWidth < 768) {
@@ -460,6 +517,9 @@ function slugify($string)
   <?php foreach ($categories as $index => $_): ?>
     setupSlider(<?= $index ?>);
   <?php endforeach; ?>
+
+  
 </script>
+
 
 <?= $this->include('partials/footer') ?>

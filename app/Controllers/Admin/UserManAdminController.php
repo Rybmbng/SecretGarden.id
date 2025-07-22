@@ -9,6 +9,7 @@ class UserManAdminController extends BaseController
 {
     public function index()
     {
-        //
+        
+        return view('admin/user/index');
     }
 }

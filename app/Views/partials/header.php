@@ -1,11 +1,3 @@
-<?php
-//  $user = session()->get('user');
-//         if ($user['role'] == 'admin')
-//     {
-//         return view('admin/index');
-//     }
-;
-?>
 
 <html class="scroll-smooth" lang="en" lang="en" x-data="{ mobileMenuOpen: false, searchOpen: false, isScrolled: false }"
   x-init="window.addEventListener('scroll', () => isScrolled = window.scrollY > 50)">
@@ -29,6 +21,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link rel="stylesheet" href="<?= base_url('style.css')?>">
     
+
 </head>
 <body x-data="{ mobileMenuOpen: false, searchOpen: false, isScrolled: false }"
       x-init="
@@ -39,54 +32,84 @@
         );
         observer.observe(trigger);
       ">
+<?= view('partials/search_overlay') ?>
+
 <!-- Header -->
-<header class="bg-white shadow" x-data="{ mobileOpen: false } ">
-  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+ 
+    <div id="loader-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500">
+      <div class="flex flex-col items-center">
+        <svg class="animate-spin h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+        <span class="text-green-700 font-semibold text-lg">Loading...</span>
+      </div>
+    </div>
     
-    <!-- Logo -->
-    <a href="/" class="text-xl font-bold text-[#8c9464] select-none flex justify-between items-center">
-      <img class="w-[90px] h-auto" src="<?= base_url('assets/SGV/sg.png') ?>" alt="SecretGarden Official">
+<div class="h-[70px] md:h-[70px]"></div>
+
+<header class="fixed top-0 left-0 w-full z-50 bg-white shadow" x-data="{ mobileOpen: false } ">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <a href="/" class="text-xl flex flex-col font-bold text-[#8c9464] select-none flex justify-between items-center">
+      <img class="h-10 w-auto object-fit" src="<?= base_url('assets/SGV/footer/footer.jpg') ?>" alt="SecretGarden Official">
+      <!-- <p class=" text-xs font-medium">𝘐𝘯𝘴𝘱𝘪𝘳𝘦𝘥 𝘣𝘺 𝘌𝘢𝘳𝘵𝘩, 𝘔𝘢𝘥𝘦 𝘍𝘰𝘳 𝘠𝘰𝘶</p> -->
     </a>
 
     <!-- Desktop Menu -->
-    <nav class="hidden lg:flex items-center space-x-6">
-      <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition select-none">Brand</a>
-      <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition select-none">Products</a>
-      <div class="relative dropdown select-none" x-data="{ open: false }">
-        <button 
-          @click="open = !open" 
-          class="text-gray-700 hover:text-[#8c9464] transition flex items-center"
-          :aria-expanded="open"
-          aria-haspopup="true"
-          type="button"
-        >
+    <nav class="hidden lg:flex items-center space-x-8 font-poppins text-lg font-bold">
+      <a href="<?= base_url('brand') ?>" class="text-gray-700 hover:text-[#8c9464] transition-colors duration-200 select-none px-2 py-1 rounded hover:bg-gray-100">
+        Brand
+      </a>
+      <a href="<?= base_url('products') ?>" class="text-gray-700 hover:text-[#8c9464] transition-colors duration-200 select-none px-2 py-1 rounded hover:bg-gray-100">
+        Products
+      </a>
+      <div class="relative" x-data="{ showServices: false }">
+        <button @click="showServices = !showServices"
+          class="text-gray-700 hover:text-[#8c9464] transition-colors duration-200 select-none px-2 py-1 rounded hover:bg-gray-100 flex items-center gap-1 font-bold">
           Services
-          <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 ml-1 transition-transform duration-200" :class="{'rotate-180': showServices}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div 
-          class="dropdown-content absolute left-0 mt-2 w-48 bg-white shadow-md rounded z-50 py-2"
-          x-show="open"
-          x-cloak
-          x-transition
-          @click.away="open = false"
-        >
-          <a href="<?= base_url('services/cu') ?>" class="block px-4 py-2 text-gray-600 hover:text-[#8c9464] hover:bg-gray-100 select-none">Contact Us</a>
-          <a href="<?= base_url('services/cg') ?>" class="block px-4 py-2 text-gray-600 hover:text-[#8c9464] hover:bg-gray-100 select-none">Corporate Gift</a>
+        <div x-show="showServices" @click.outside="showServices = false" x-cloak x-transition
+             class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-50 py-2 border border-gray-100">
+          <a href="<?= base_url('services/cu') ?>" class="block px-5 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#8c9464] transition-colors duration-200 rounded font-bold text-base">
+            Contact Us
+          </a>
+          <a href="<?= base_url('services/cg') ?>" class="block px-5 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#8c9464] transition-colors duration-200 rounded font-bold text-base">
+            Corporate Gift
+          </a>
         </div>
       </div>
-      <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition select-none">Find Us</a>
+      <a href="<?= base_url('findus') ?>" class="text-gray-700 hover:text-[#8c9464] transition-colors duration-200 select-none px-2 py-1 rounded hover:bg-gray-100">
+        Find Us
+      </a>
+
     </nav>
 
-    <!-- Icons -->
     <div class="flex items-center space-x-4">
-      <!-- Cart -->
+      <button class="flex p-2 hover:bg-blue-300 rounded" id='openSearch'>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1.5em"
+            height="1.5em"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            fill="none"
+            stroke="currentColor"
+            class="icon"
+          >
+            <path
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+        </button>
       <a href="<?= base_url('cart') ?>" class="p-2 rounded hover:bg-gray-100">
         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
       </a>
-
-      <!-- Profile Dropdown -->
       <div class="relative" x-data="{ showProfile: false }">
         <button @click="showProfile = !showProfile" class="p-2 rounded hover:bg-gray-100">
           <i data-lucide="user" class="w-5 h-5"></i>
@@ -94,16 +117,15 @@
         <div x-show="showProfile" @click.outside="showProfile = false" x-cloak x-transition
              class="absolute right-0 mt-2 w-40 bg-white shadow-md rounded z-50 py-2">
           <?php if (session()->has('user')): ?>
-            <a href="<?= base_url('profile') ?>" class="block px-4 py-2 hover:bg-gray-100">My Account</a>
-            <a href="<?= base_url('order') ?>" class="block px-4 py-2 hover:bg-gray-100">My Orders</a>
-            <a href="<?= base_url('logout') ?>" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+            <a href="<?= base_url('profile') ?>" class="block px-4 py-2 hover:bg-gray-100 font-bold text-base">My Account</a>
+            <a href="<?= base_url('order') ?>" class="block px-4 py-2 hover:bg-gray-100 font-bold text-base">My Orders</a>
+            <a href="<?= base_url('logout') ?>" class="block px-4 py-2 hover:bg-gray-100 font-bold text-base">Logout</a>
           <?php else: ?>
-            <a href="<?= base_url('profile') ?>" class="block px-4 py-2 hover:bg-gray-100">My Account</a>
+            <a href="<?= base_url('profile') ?>" class="block px-4 py-2 hover:bg-gray-100 font-bold text-base">My Account</a>
           <?php endif; ?>
         </div>
       </div>
 
-      <!-- Hamburger (Mobile only) -->
       <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2 rounded hover:bg-gray-100">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -113,22 +135,45 @@
     </div>
   </div>
 
-  <!-- Mobile Menu -->
-  <div x-show="mobileOpen" x-cloak x-transition class="lg:hidden px-4 pb-4">
-    <a href="<?= base_url('brand') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464] select-none">Brand</a>
-
-    <!-- Dropdown mobile -->
-    <a href="<?= base_url('products') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464] select-none">Products</a>
-    
+  <!-- Mobile Side Menu -->
+  <div 
+    x-show="mobileOpen" 
+    x-cloak 
+    x-transition:enter="transition ease-in-out duration-300 transform"
+    x-transition:enter-start="translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transition ease-in-out duration-300 transform"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="translate-x-full"
+    class="fixed inset-y-0 right-0 w-64 bg-white shadow-lg z-50 flex flex-col px-6 py-8 lg:hidden"
+    @keydown.window.escape="mobileOpen = false"
+  >
+    <button @click="mobileOpen = false" class="self-end mb-6 p-2 rounded hover:bg-black-100">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <a href="<?= base_url('brand') ?>" class="block py-2 text-black-700 hover:text-[#8c9464] select-none font-bold text-lg">Brand</a>
+    <a href="<?= base_url('products') ?>" class="block py-2 text-black-600 hover:text-[#8c9464] select-none font-bold text-lg">Products</a>
     <div x-data="{ dropdown: false }" class="py-2">
-      <button @click="dropdown = !dropdown" class="w-full text-left text-gray-700 hover:text-[#8c9464] select-none">
+      <button @click="dropdown = !dropdown" class="w-full text-left text-black-700 hover:text-[#8c9464] select-none font-bold text-lg">
         Services
       </button>
       <div x-show="dropdown" x-cloak x-transition class="pl-4 mt-1 space-y-1">
-        <a href="<?= base_url('services/cu') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464] select-none">Contact Us</a>
-        <a href="<?= base_url('services/cg') ?>" class="block py-1 text-gray-600 hover:text-[#8c9464] select-none">Coorporate Gift</a>
+        <a href="<?= base_url('services/cu') ?>" class="block py-1 text-black-600 hover:text-[#8c9464] select-none font-bold text-base">Contact Us</a>
+        <a href="<?= base_url('services/cg') ?>" class="block py-1 text-black-600 hover:text-[#8c9464] select-none font-bold text-base">Corporate Gift</a>
       </div>
     </div>
-    <a href="<?= base_url('findus') ?>" class="block py-2 text-gray-700 hover:text-[#8c9464] select-none">Find Us</a>
+    <a href="<?= base_url('findus') ?>" class="block py-2 text-black-700 hover:text-[#8c9464] select-none font-bold text-lg">Find Us</a>
+    <hr class="block py-2 select-none font-bold text-lg" style="border-color: black;">
   </div>
+  <!-- Overlay -->
+  <div 
+    x-show="mobileOpen" 
+    x-cloak 
+    x-transition.opacity
+    class="fixed inset-0 bg-black bg-opacity-30 z-40 lg:hidden"
+    @click="mobileOpen = false"
+  >
+</div>
 </header>

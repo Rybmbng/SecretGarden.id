@@ -6,7 +6,8 @@ class BrandController extends BaseController
 {
     public function index()
     {
-        $data['title'] = 'Brand Page';
-        return view('brand', $data);
+        return view('brand/index', [
+            'pageTitle' => 'Brand Page',
+        ]);
     }
 }

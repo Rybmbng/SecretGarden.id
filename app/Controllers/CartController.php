@@ -48,6 +48,7 @@ class CartController extends Controller
             'product' => $categories,
             'images' => $images,
             'cart' => $sesi,
+            'pageTitle' => 'Cart',
         ];
         return view('product/cart', $data);
     }
@@ -95,6 +96,7 @@ class CartController extends Controller
                 'variant' => $variant['name'] ?? 'Default Variant',
                 'idVariant' => $variant['id'] ?? 'Default Variant',
                 'image' => $image['image_path'] ?? 'default-product.jpg',
+                
             ];
         }
 

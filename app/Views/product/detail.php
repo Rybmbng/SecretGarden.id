@@ -62,44 +62,43 @@ $ogImage = !empty($galleryImages)
 }
 </style>
 
-<div class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-
-  <!-- Thumbnails -->
-  <aside class="lg:col-span-1 flex lg:flex-col gap-4 overflow-x-auto lg:overflow-x-visible" id="thumbnail-container">
-    <?php foreach ($galleryImages as $img): ?>
-      <img
-        src="<?= base_url($galleryPath . '/' . strtolower($img['image_path'])) ?>"
-        alt="Thumbnail"
-        class="thumb-img w-20 h-20 object-cover rounded-md border border-gray-300 hover:border-black cursor-pointer transition duration-200"
-      />
-    <?php endforeach; ?>
-  </aside>
-
+<div class="max-w-auto max-h-auto mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-start fade-in-up">
   <!-- Main Image -->
-  <div class="lg:col-span-6 flex justify-center items-center max-h-[700px] max-w-[700px] mx-auto">
-    <div class="w-full border border-gray-300 rounded-md overflow-hidden relative max-h-[700px]">
+  <div class="md:col-span-6 flex justify-center items-center max-h-auto max-w-full mx-auto fade-in-up">
+    <div class="w-full flex flex-row md:flex-col border border-gray-300 rounded-md overflow-hidden relative max-h-auto">
       <div id="loading-spinner" class="absolute inset-0 flex items-center justify-center bg-white/70 hidden">
         <div class="w-6 h-6 border-2 border-gray-400 border-t-transparent animate-spin rounded-full"></div>
       </div>
       <img
         id="main-image"
         src="<?= base_url($galleryPath . '/' . strtolower($galleryImages[0]['image_path'] ?? 'default.jpg')) ?>"
-        class="w-full h-[auto] object-contain transition duration-500 ease-in-out"
+        class="w-full h-full object-contain transition duration-500 ease-in-out object-fit fade-in-up"
         alt="<?= esc($product['name']) ?>"
         data-action="zoom"
       />
+      <div id="thumbnail-container">
+        <?php foreach ($galleryImages as $img): ?>
+          <img
+            src="<?= base_url($galleryPath . '/' . strtolower($img['image_path'])) ?>"
+            alt="Thumbnail"
+            class="w-full h-full object-contain transition duration-500 ease-in-out object-fit fade-in-up"
+            data-action="zoom"
+
+          />
+        <?php endforeach; ?>
+      </div>
+
     </div>
   </div>
 
   <!-- Product Info -->
   <div class="lg:col-span-5 space-y-8">
     <div>
+    <p id="desc-display" class="mt-2 text-sm italic  text-gray-600">
+    <?= esc($variants[0]['desc'] ?? '') ?>
+    </p>
       <h1 class="font-serif text-4xl font-semibold tracking-tight"><?= esc($product['name']) ?></h1>
-      <div class="mt-4 text-gray-800 text-base leading-relaxed whitespace-pre-line">
-        <?= esc($product['description']) ?>
-      </div>
-    </div>
-
+      
     <!-- Variants -->
     <?php if (!empty($variants)): ?>
       <div>
@@ -122,23 +121,34 @@ $ogImage = !empty($galleryImages)
             </button>
           <?php endforeach; ?>
         </div>
+      
       </div>
     <?php endif; ?>
+      <div class="mt-4 text-gray-800 text-base leading-relaxed whitespace-pre-line">
+        <?= esc($product['description']) ?>
+      </div>
+    </div>
+
 
     <div class="border-t pt-6">
-      <p class="text-xs text-gray-500 uppercase mb-2 font-semibold">Price</p>
-      <p id="price-display" class="text-3xl font-serif font-bold">
+      <p class="text-xs text-gray-500 uppercase mb-2 invisible md:visible font-semibold">Price</p>
+      <p id="price-display" class="text-3xl invisible md:visible font-serif font-bold">
         Rp. <?= number_format((float)($variants[0]['price'] ?? 0), 0, ',', '.') ?>
       </p>
-      <p id="desc-display" class="mt-2 text-sm italic text-gray-600">
-        <?= esc($variants[0]['desc'] ?? '') ?>
-      </p>
-      <a id="idcart" href="/cart/add/<?= esc($product['id']) ?>" class="CartBtn">
+      
+      <a id="idcart" href="/cart/add/<?= esc($product['id']) ?>" class="CartBtn invisible md:visible">
         <span class="IconContainer">
         </span>
         <p class="text">Add to Cart</p>
       </a>
+        <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 z-50 lg:hidden flex justify-between items-center">
+        <span class="text-xl font-semibold" id="mobile-price"><?= esc($variants[0]['price'] ?? 0) ?></span>
+        <a id="idcarts" href="/cart/add/<?= esc($product['id']) ?>" class="CartBtn bg-black text-white px-5 py-2 rounded-md text-sm">Add to Cart</a>
+      </div>
     </div>
+        
+    <!-- Mobile Cart -->
+    
       
 
     <?php if (!empty($sections)): ?>
@@ -157,29 +167,48 @@ $ogImage = !empty($galleryImages)
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
-
-    <!-- Related Products -->
-    <div class="mt-24 border-t pt-12">
-      <h2 class="text-xl font-semibold mb-6">You Might Also Like</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-        <?php foreach ($products ?? [] as $item): ?>
-          <?php $itemSlug = slugify($item['name']); ?>
-          <a href="<?= site_url('products/' . $item['slug']) ?>" class="block group">
-            <img src="<?= base_url("assets/SGV/Category/{$categorySlug}/{$itemSlug}/{$itemSlug}.jpg") ?>"
-                 class="w-full h-48 object-cover rounded-md group-hover:opacity-80 transition" />
-            <p class="mt-2 text-sm"><?= esc($item['name']) ?></p>
-          </a>
-        <?php endforeach; ?>
-      </div>
-    </div>
   </div>
 </div>
 
-<!-- Mobile Cart -->
-<div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 z-50 lg:hidden flex justify-between items-center">
-  <span class="text-xl font-semibold" id="mobile-price"><?= esc($variants[0]['price'] ?? 0) ?></span>
-  <button class="bg-black text-white px-5 py-2 rounded-md text-sm">Add to Cart</button>
-</div>
+
+<section class="page relative w-full overflow-hidden fade-in-up">
+  <div class="mt-10 border-t pt-12 px-4">
+    <h2 class="text-xl font-semibold mb-6">You Might Also Like</h2>
+
+    <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [-webkit-overflow-scrolling:_touch] fade-in-up">
+      <?php foreach ($products ?? [] as $item): ?>
+        <?php 
+          $itemSlug = slugify($item['name']); 
+          $imagePath = base_url('assets/SGV/Category/' . strtolower(str_replace(' ','-',$item['category_name'])) . '/' . strtolower(str_replace(' ','-',$item['name']))  . '/' . $item['img']);
+        ?>
+        <a href="<?= site_url('products/' . $item['slug']) ?>" 
+           class="min-w-[200px] max-w-[220px] snap-start shrink-0 group bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 ease-in-out">
+          <div class="w-full h-[250px] overflow-hidden rounded-t-lg">
+            <img src="<?= $imagePath ?>" alt="<?= $item['name'] ?>" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="p-3 text-left">
+            <p class="text-sm font-medium group-hover:underline"><?= esc($item['name']) ?></p>
+            <?php if (!empty($item['variant_price'])): ?>
+              <p class="text-xs text-gray-500 mt-1"><?= 'Rp ' . number_format($item['variant_price'], 0, ',', '.') ?></p>
+            <?php endif; ?>
+          </div>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="page relative h-[80vh] md:h-[800px] w-full aspect-video overflow-hidden fade-in-up">
+  <div class="absolute inset-0 w-auto h-auto transition-opacity duration-1000 ease-in-out opacity-70">
+    <video loading="lazy" autoplay loop muted playsinline  class="md:aspect-video w-auto h-full md:h-[auto] md:w-full object-fit">
+      <source src="<?= base_url('assets/SGV/video/slide2.mp4') ?>" type="video/mp4" />
+    </video>
+  </div>
+</section>
+
 
 <!-- JS Thumbnail + Variant Switch -->
 <style>
@@ -206,6 +235,7 @@ const mainImage = document.getElementById('main-image');
 const priceDisplay = document.getElementById('price-display');
 const descDisplay = document.getElementById('desc-display');
 const idCart = document.getElementById('idcart');
+const idCarts = document.getElementById('idcarts');
 const mobilePrice = document.getElementById('mobile-price');
 const thumbnails = document.getElementById('thumbnail-container');
 const variantButtons = document.querySelectorAll('.variant-btn');
@@ -233,6 +263,7 @@ function updateVariant(button) {
   mobilePrice.textContent = button.dataset.price;
   descDisplay.textContent = button.dataset.desc;
   idCart.href = "/cart/add/" + button.dataset.idp + "/" + button.dataset.id;
+  idCarts.href = "/cart/add/" + button.dataset.idp + "/" + button.dataset.id;
 
   try {
     const images = JSON.parse(button.dataset.images);
@@ -240,7 +271,7 @@ function updateVariant(button) {
     (images.length ? images : defaultThumbs).forEach(img => {
       const el = document.createElement('img');
       el.src = img;
-      el.className = 'thumb-img fade-in w-20 h-20 object-cover rounded-md border border-gray-300 hover:border-black cursor-pointer transition';
+      el.className = 'w-full h-full object-contain transition duration-500 ease-in-out';
       thumbnails.appendChild(el);
     });
     setMainImage(images[0] || defaultThumbs[0]);

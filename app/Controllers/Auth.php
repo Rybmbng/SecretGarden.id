@@ -6,12 +6,17 @@ class Auth extends BaseController
 {
     public function login()
     {
-        return view('login');
+        
+        return view('login', [
+            'pageTitle' => 'Login Page',
+        ]);
     }
 
     public function register()
     {
-        return view('login');
+        return view('login', [
+            'pageTitle' => 'Register Page',
+        ]);
     }
 
     public function doRegister()
@@ -22,6 +27,7 @@ class Auth extends BaseController
             'email' => $this->request->getPost('email'),
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role' => 'user'
+            
         ];
         $userModel->save($data);
         return redirect()->to('/login');
@@ -35,14 +41,15 @@ class Auth extends BaseController
         $user = $userModel->where('email', $email)->first();
         if ($user && password_verify($password, $user['password'])) {
             session()->set('user', [
-                'id' => $user['id'],
-                'name' => $user['name'],
+                'isLoggedIn' => true,
+                'id_user' => $user['id_user'],
+                'username' => $user['username'],
                 'email' => $user['email'],
                 'role' => $user['role']
             ]);
             
             if ($user['role'] == 'admin') {
-                return redirect()->to('/admin');
+                    return redirect()->to(base_url('admin'));
             } else {
                 return redirect()->to('/');
             }

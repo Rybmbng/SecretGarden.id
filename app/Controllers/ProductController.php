@@ -115,9 +115,21 @@ public function detail($slug)
             'header'  => $section['header'],
             'details' => array_column($details, 'detail')
         ];
-    }
-
+    }    
     $categorySlug = strtolower(str_replace(' ', '-', $category['name']));
+
+
+    $products = $productModel
+        ->select('products.*, categories.name AS category_name, product_variants.price AS variant_price, product_images.image_path as img') 
+        ->join('categories', 'categories.id = products.category_id')
+        ->join('product_variants', 'product_variants.product_id = products.id')
+        ->join('product_images', 'product_images.variant_id = product_variants.id')
+        ->where('products.slug !=', $slug)
+        ->where('product_images.is_primary','1')
+        ->groupBy('products.name') 
+        ->findAll(6);
+
+
     $productSlug  = strtolower(str_replace(' ', '-', $product['name']));
     $galleryPath  = "assets/SGV/Category/{$categorySlug}/{$productSlug}";
     if (!empty($useVariantSlug)) {
@@ -133,7 +145,8 @@ public function detail($slug)
         'galleryPath'   => $galleryPath, 
         'categorySlug'  => $categorySlug,
         'productSlug'   => $productSlug,
-        'pageTitle'=> 'Detail Product',
+        'products'   => $products,
+        'pageTitle'=> $product['name'],
     ]);
 }
 

@@ -80,19 +80,11 @@
       scrollbar-width: none;
     }
     .slider-button {
-      background-color: #8c9464;
       border: none;
-      color: #a1c6ea;
       font-size: 1.5rem;
       padding: 0.5rem 0.75rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
       user-select: none;
-      box-shadow: 0 0 8px rgba(10,37,64,0.3);
-    }
-    .slider-button:hover {
-      background-color: #a1c6ea;
-      color: #0a2540;
     }
     video::-internal-media-controls {
       display:none;

@@ -127,6 +127,7 @@ class CategoryController extends BaseController
         }
 
         $data = [
+            'pageTitle' => $categoryName,
             'category' => $category,
             'products' => $category['products'],
             'primaryImage' => $primaryImage['image_path'] ?? 'default-product.jpg',

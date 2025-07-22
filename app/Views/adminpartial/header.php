@@ -1,3 +1,7 @@
+<?php
+        $user = session()->get('user');
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +23,6 @@
     }
   </script>
 </head>
-<body class="bg-gray-100 text-gray-800">
 
 <div class="flex min-h-screen">
   <!-- Sidebar -->
@@ -29,27 +32,27 @@
       <img class="w-[90px] h-auto" src="<?= base_url('assets/SGV/sg.png') ?>" alt="SecretGarden Official"></h1>
     </div>
     <nav class="flex-1 px-4 py-4 space-y-2 text-sm">
-      <a href="<?= site_url('admin/dashboard') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/20 text-gray-700 hover:text-secretGarden transition ">
+      <a href="<?= base_url('admin') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/20 text-gray-700 hover:text-secretGarden transition ">
         <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         Dashboard
       </a>
-      <a href="<?= site_url('admin/categories') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
+      <a href="<?= base_url('admin/categories') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
         <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/></svg>
         Categories
       </a>
-      <a href="<?= site_url('admin/products') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
+      <a href="<?= base_url('admin/products') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
         <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18m-6 5h6"/></svg>
         Products
       </a>
-      <a href="<?= site_url('admin/orders') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
+      <a href="<?= base_url('admin/orders') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
         <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         Orders
       </a>
-      <a href="<?= site_url('admin/users') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
+      <a href="<?= base_url('admin/users') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
         <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A11.963 11.963 0 0112 15c2.485 0 4.779.755 6.879 2.041M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         Users
       </a>
-      <a href="<?= site_url('admin/settings') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
+      <a href="<?= base_url('admin/settings') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
         <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17a4 4 0 01-4-4V5m4 0a4 4 0 014 4v8m0 0h4m-4 0H7"/></svg>
         Settings
       </a>
@@ -87,14 +90,20 @@
         <div class="p-4 text-sm text-gray-700">
           <p class="font-semibold">Notifications</p>
           <ul class="mt-2 space-y-2">
-            <li class="text-gray-600">🔔 No new notifications.</li>
-            <!-- Tambahkan item notifikasi di sini -->
+
+             <?php if (isset($notifications) && is_array($notifications)): ?>
+              <?php foreach ($notifications as $notification): ?>
+                <li class="text-gray-600"><?= htmlspecialchars($notification) ?></li>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <li class="text-gray-600">🔔 No new notifications.</li>
+            <?php endif; ?>
           </ul>
         </div>
       </div>
     </div>
 
-    <span class="text-sm font-medium text-gray-700">Hi, <?= isset($_SESSION['user']['name']) && $_SESSION['user']['name'] !== null ? htmlspecialchars($_SESSION['user']['name']) : 'Guest' ?></span>
+    <span class="text-sm font-medium text-gray-700">Hi, <?= isset($_SESSION['user']['username']) && $_SESSION['user']['username'] !== null ? htmlspecialchars($_SESSION['user']['username']) : 'Guest' ?></span>
     <a href="<?= site_url('logout') ?>" class="text-sm text-red-600 hover:underline">Logout</a>
   </div>
 </header>

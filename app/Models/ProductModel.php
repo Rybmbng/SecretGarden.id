@@ -68,6 +68,15 @@ class ProductModel extends Model
             ->first();
         }
 
+    public function search(){
+        return $this->select('products.name as pname, categories.name as cat_name, product_variants.name as variant_name, product_images.image_path as img')
+            ->join('categories', 'categories.id = products.category_id')
+            ->join('product_variants', 'products.id = product_variants.product_id')
+            ->join('product_images', 'products.id = product_images.product_id')
+            ->first();
+        }
+
+
    public function withCategory()
 {
     return $this->select('

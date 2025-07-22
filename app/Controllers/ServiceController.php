@@ -7,8 +7,16 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class ServiceController extends BaseController
 {
-    public function index()
+    public function cu()
     {
-        return view('service/index');
+        return view('service/cu', [
+            'pageTitle' => 'Contact Us',
+        ]);
+    }
+     public function cg()
+    {
+        return view('service/cg', [
+            'pageTitle' => 'Coorporate Gift',
+        ]);
     }
 }

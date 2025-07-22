@@ -120,7 +120,6 @@ class ProductAdminController extends BaseController
                     ];
                     
                     $db->table('product_images')->insert($imageInsert);
-
                      if ($i == 0 && $first) {
                         $globalPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
                         if (!is_dir($globalPath)) {
@@ -146,7 +145,7 @@ class ProductAdminController extends BaseController
                 'type'       => $type,
                 'header'     => $sectionHeaders[$i] ?? '',
             ])) {
-                log_message('error', '❌ Gagal insert section ke-' . $i);
+                log_message('error', 'Gagal insert section ke-' . $i);
                 continue;
             }
 
@@ -164,7 +163,7 @@ class ProductAdminController extends BaseController
                          ->with('success', 'Produk berhasil ditambahkan.');
     } catch (\Throwable $e) {
         $db->transRollback();
-        log_message('error', '🛑 Transaction rollback: ' . $e->getMessage());
+        log_message('error', 'Transaction rollback: ' . $e->getMessage());
         return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
 }
@@ -179,9 +178,9 @@ public function edit($id)
     $product['category_path'] = $category['path'] ?? 'default';
     $variants = $this->variantModel->where('product_id', $id)->findAll();
     foreach ($variants as &$variant) {
-        $variant['images'] = $this->imageModel->where('variant_id', $variant['id'])->findAll();
+        $variant['images'] = $this->imageModel->where('variant_id', $variant['id'])->where('is_primary', 0)->findAll();
     }
-
+    $mainImage = $this->imageModel->where('product_id', $product['id'])->where('is_primary', 1)->findAll();
     $sections = $this->sectionModel->where('product_id', $id)->findAll();
     foreach ($sections as &$section) {
         $section['detail'] = $this->sectionDetailModel->where('section_id', $section['id'])->first()['detail'] ?? '';
@@ -193,14 +192,18 @@ public function edit($id)
     // dd([
     //     'product'    => $product,
     //     'variants'   => $variants,
+    //     'imageMain'   => $mainImage,
+    //     'images'   => $variant['images'],
     //     'sections'   => $sections,
     //     'categories' => $categories,
     // ]);
     return view('admin/products/edit', [
         'product'    => $product,
         'variants'   => $variants,
+        'imageMain'   => $mainImage,
         'sections'   => $sections,
         'categories' => $categories,
+        'Nav'=>'Edit Products'
     ]);
 }
 

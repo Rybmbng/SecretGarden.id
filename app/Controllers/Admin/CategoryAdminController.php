@@ -99,6 +99,11 @@ class CategoryAdminController extends BaseController
             $imgName = $file->getRandomName();
             $file->move('assets/SGV/Category/'. url_title($this->request->getPost('name'), '-', true).'/', $imgName);
         }
+        if (!$file->isValid()) {
+        echo 'Upload error: ' . $file->getErrorString() . ' (' . $file->getError() . ')';
+        exit;
+    }
+
         $this->categoryModel->update($id, [
             'name'   => $this->request->getPost('name'),
             'path'   => url_title($this->request->getPost('name'), '-', true),

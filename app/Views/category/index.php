@@ -32,7 +32,7 @@
 <section class="relative">
  <div class="w-full h-[500px] bg-center bg-cover bg-no-repeat text-black text-center px-4 relative overflow-hidden parallax-section"
      style="background-image: url('<?= base_url('assets/SGV/fragrance.jpeg') ?>');">
-  <div class="absolute inset-0 bg-white/40 backdrop-blur-sm z-[1]"></div>
+  <div class="absolute inset-0 bg-white/40-to backdrop-blur-sm z-[1]"></div>
   <div class="relative z-[2] flex flex-col items-center justify-center h-full opacity-0 translate-y-10 transition-all duration-1000 ease-in-out fade-in-up">
     <div class="bg-white/70 p-6 rounded-xl">Secret Garden Official
       <h1 class="text-4xl md:text-6xl font-serif tracking-wide mb-2"><?= esc($category['name']) ?></h1>
@@ -59,8 +59,8 @@
   </form>
 </div>
 
-  <div class="max-w-7xl mx-auto py-16 px-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid item-center justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
       <?php foreach ($products as $product): ?>
         <?php if (isset($product['is_primary']) && $product['is_primary'] == 1): ?>
         <a href="<?php echo base_url('products/').str_replace(" ","-",$product['pname'])?>" class="group fade-in-up transition-all duration-1000 ease-out">
