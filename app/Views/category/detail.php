@@ -1,4 +1,7 @@
-<?= $this->include('partials/header'); ?>
+<?php echo print_r($products);
+        die(); 
+        ?>
+<?=  view('partials/header'); ?>
 <style>
   .fade-in-up {
     opacity: 0;
@@ -58,7 +61,7 @@
   <!-- Produk Grid -->
   <div class="max-w-7xl mx-auto py-16 px-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-      <?php foreach ($products as $product): ?>
+      <?php  foreach ($products as $product): ?>
         <a href="<?php echo base_url('products/').str_replace(" ","-",$product['pname'])?>" class="group fade-in-up transition-all duration-1000 ease-out">
           <div class="overflow-hidden rounded-lg shadow-md">
             <img src="<?= base_url('assets/SGV/Category/' . $category['path'] . '/'. str_replace(" ","-",$product['pname']) .'/'. $product['image_path']) ?>" alt="<?= $product['name'] ?>"

@@ -1,16 +1,27 @@
-<?php $pageTitle="Error 404"; echo view('partials/header'); ?>
-<div class="flex h-[100vh] min-h-screen bg-white">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecretGarden</title>
+
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="flex bg-white">
     <!-- Sidebar Image -->
-    <div class="hidden lg:block lg:w-1/2 relative">
+    <div class="hidden h-[100vh] lg:block lg:w-1/2 relative">
         <img
             src="https://images.unsplash.com/photo-1549415697-8e9a0872f910?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Lost man in desert"
-            class="h-full w-full object-cover"
+            class=" w-auto object-cover"
         />
         <div class="absolute inset-0 bg-black bg-opacity-30"></div>
     </div>
 
-    <!-- Main content -->
     <main class="flex flex-1 items-center justify-center px-6 py-24 sm:py-32 lg:px-8">
         <div class="text-center max-w-md">
                 <h1 class="text-2xl font-semibold text-red-600">404</h1>
@@ -27,11 +38,12 @@
                         >
                                 Go back home
                         </a>
-                        <a href="/services/cu" class="text-sm font-semibold text-gray-900">
+                        <a href="/services/contactus" class="text-sm font-semibold text-gray-900">
                                 Contact support <span aria-hidden="true">&rarr;</span>
                         </a>
                 </div>
         </div>
     </main>
 </div>
-<!-- <?php echo view('partials/footer'); ?> -->
+</body>
+</html>

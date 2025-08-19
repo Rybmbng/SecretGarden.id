@@ -1,4 +1,4 @@
-<?php $pageTitle="Error 404"; echo view('partials/header'); ?>
+<?php $pageTitle="Error 404"; ?>
 <div class="flex h-[100vh] min-h-screen bg-white">
     <!-- Sidebar Image -->
     <div class="hidden lg:block lg:w-1/2 relative">
@@ -34,4 +34,3 @@
         </div>
     </main>
 </div>
-<?php echo view('partials/footer'); ?>

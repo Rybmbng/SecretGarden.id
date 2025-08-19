@@ -5,14 +5,14 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!-- <meta content="width=device-width, initial-scale=1" name="viewport"/> -->
-    <title>SecretGarden | <?= $pageTitle ?? '' ?></title>
+    <title><?= esc($companySetting['name'] ?? 'SecretGarden') ?> | <?= $pageTitle ?? '' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
      <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="<?= base_url('assets/SGV/sg.png') ?>" type="image/x-icon">
-    <link rel="icon" href="<?= base_url('assets/SGV/sg.png') ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" type="image/x-icon">
+    <link rel="icon" href="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" type="image/x-icon">
     <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -51,8 +51,9 @@
 <header class="fixed top-0 left-0 w-full z-50 bg-white shadow" x-data="{ mobileOpen: false } ">
   <div class="container mx-auto px-4 py-4 flex justify-between items-center">
     <a href="/" class="text-xl flex flex-col font-bold text-[#8c9464] select-none flex justify-between items-center">
-      <img class="h-10 w-auto object-fit" src="<?= base_url('assets/SGV/footer/footer.jpg') ?>" alt="SecretGarden Official">
-      <!-- <p class=" text-xs font-medium">𝘐𝘯𝘴𝘱𝘪𝘳𝘦𝘥 𝘣𝘺 𝘌𝘢𝘳𝘵𝘩, 𝘔𝘢𝘥𝘦 𝘍𝘰𝘳 𝘠𝘰𝘶</p> -->
+      <img class="h-10 w-auto object-contain" 
+          src="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" 
+          alt="<?= esc($companySetting['name'] ?? 'SecretGarden Official') ?>">
     </a>
 
     <!-- Desktop Menu -->
@@ -73,7 +74,7 @@
         </button>
         <div x-show="showServices" @click.outside="showServices = false" x-cloak x-transition
              class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-50 py-2 border border-gray-100">
-          <a href="<?= base_url('services/cu') ?>" class="block px-5 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#8c9464] transition-colors duration-200 rounded font-bold text-base">
+          <a href="<?= base_url('services/contactus/') ?>" class="block px-5 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#8c9464] transition-colors duration-200 rounded font-bold text-base">
             Contact Us
           </a>
           <a href="<?= base_url('services/cg') ?>" class="block px-5 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#8c9464] transition-colors duration-200 rounded font-bold text-base">

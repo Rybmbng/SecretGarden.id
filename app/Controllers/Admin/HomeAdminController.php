@@ -10,20 +10,12 @@ use App\Models\UserModel;
 use App\Models\ProductModel;
 use App\Models\CategoryModel;
 
-
 class HomeAdminController extends BaseController
 {
+    
+
     public function index()
     {
-        $user = session()->get('user');
-        if (!isset($user['role']) || $user['role'] == 'user')
-        {
-            return view('errors/html/error_403', [
-                'pageTitle' => 'Unauthorized',
-            ]);
-        }
-        else
-        {
             // Load models
             $activityModel = new ActivityModel();
             $userModel = new UserModel();
@@ -44,7 +36,18 @@ class HomeAdminController extends BaseController
              'totalUsers' => $totalUsers,
              'recentActivities' => $recentActivities,
          ]);
-        }
+        
 
     }
+
+    public function config(){
+        return view('admin/home');
+    }
+
+    public function slider(){
+        return view('admin/home/slider');
+    }
+
 }
+
+    

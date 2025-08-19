@@ -18,9 +18,9 @@ class ProfileController extends BaseController
 
         $builder = $userModel->builder();
         $builder->select('users.*, profile.*, address.*');
-        $builder->join('profile', 'profile.id_user = users.id_user', 'left');
-        $builder->join('address', 'address.id_user = users.id_user', 'left');
-        $builder->where('users.id_user', $user['id_user']);
+        $builder->join('profile', 'profile.id_user = users.id', 'left');
+        $builder->join('address', 'address.id_user = users.id', 'left');
+        $builder->where('users.id', $user['id_user']);
         $query = $builder->get();
         return $query->getRowArray();
     

@@ -8,7 +8,7 @@
         class="relative h-28 bg-gradient-to-r from-[#cbd5e1] to-[#7b8ca6] rounded-t-xl"
       >
         <img
-          src="<?= base_url().'assets/SGV/profile/'.strtolower(str_replace(" ","-",$user['id_user'])).'/'.$user['cover_photo']?>"
+          src="<?= base_url().'assets/SGV/profile/'.strtolower(str_replace(" ","-",$user['id'])).'/'.$user['cover_photo']?>"
           alt="Profile Cover"
           class="w-[1000px] h-[110px] object-cover rounded-t-xl"
         />
@@ -16,7 +16,7 @@
       <div class="relative -mt-14 flex flex-col items-center px-6 pb-6">
         <div class="relative">
           <img
-            src="<?= base_url().'assets/SGV/profile/'.strtolower(str_replace(" ","-",$user['id_user'])).'/'.$user['avatar']?>"
+            src="<?= base_url().'assets/SGV/profile/'.strtolower(str_replace(" ","-",$user['id'])).'/'.$user['avatar']?>"
             alt="Profile Picture"
             class="w-24 h-24 rounded-full border-4 border-white object-cover"
             width="96"
@@ -29,7 +29,7 @@
             <i class="far fa-smile"></i>
           </button>
         </div>
-        <h2 class="mt-3 font-semibold text-gray-900 text-lg"><?= esc($user['name'])?></h2>
+        <h2 class="mt-3 font-semibold text-gray-900 text-lg"><?= esc(Ucwords($user['username']))?></h2>
         <p class="text-gray-500 text-sm"><?= esc($user['bio'])?></p>
       </div>
       <nav

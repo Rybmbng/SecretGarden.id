@@ -1,126 +1,86 @@
-<?php
-        $user = session()->get('user');
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Panel - SecretGarden</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="shortcut icon" href="<?= base_url('assets/SGV/sg.png') ?>" type="image/x-icon">
-  <link rel="icon" href="<?= base_url('assets/SGV/sg.png') ?>" type="image/x-icon">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            secretGarden: '#eab676',
-          }
-        }
-      }
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= esc($companySetting['name'] ?? 'SecretGarden') ?> | <?= $pageTitle ?? '' ?></title>
+<link rel="shortcut icon" href="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" type="image/x-icon">
+<link rel="icon" href="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" type="image/x-icon">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta name="csrf-token-name" content="<?= csrf_token() ?>">
+<meta name="csrf-token-hash" content="<?= csrf_hash() ?>">
 </head>
-
-<div class="flex min-h-screen">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:translate-x-0 md:flex">
-    <div class="p-6 border-b border-gray-200">
-      <h1 class="text-2xl font-bold text-secretGarden tracking-wide">
-      <img class="w-[90px] h-auto" src="<?= base_url('assets/SGV/sg.png') ?>" alt="SecretGarden Official"></h1>
-    </div>
-    <nav class="flex-1 px-4 py-4 space-y-2 text-sm">
-      <a href="<?= base_url('admin') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/20 text-gray-700 hover:text-secretGarden transition ">
-        <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Dashboard
-      </a>
-      <a href="<?= base_url('admin/categories') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
-        <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/></svg>
-        Categories
-      </a>
-      <a href="<?= base_url('admin/products') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
-        <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18m-6 5h6"/></svg>
-        Products
-      </a>
-      <a href="<?= base_url('admin/orders') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
-        <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        Orders
-      </a>
-      <a href="<?= base_url('admin/users') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
-        <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A11.963 11.963 0 0112 15c2.485 0 4.779.755 6.879 2.041M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        Users
-      </a>
-      <a href="<?= base_url('admin/settings') ?>" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secretGarden/10 text-gray-700 hover:text-secretGarden transition group">
-        <svg class="w-5 h-5 text-secretGarden group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17a4 4 0 01-4-4V5m4 0a4 4 0 014 4v8m0 0h4m-4 0H7"/></svg>
-        Settings
-      </a>
-    </nav>
-  </aside>
-
-  <button id="sidebarToggle" class="md:hidden fixed top-4 right-4 z-50 bg-secretGarden text-white p-2 rounded-full shadow-lg focus:outline-none">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-    </svg>
-  </button>
-
-  <!-- Main Content Area -->
-  <div class="flex-1 flex flex-col overflow-hidden">
-
-    <!-- Header -->
-   <header class="bg-white shadow flex items-center justify-between px-6 h-16">
-  <div class="text-lg font-semibold tracking-wide text-secretGarden">Admin Panel</div>
-
-  <div class="flex items-center space-x-6">
-    <!-- Notification Bell -->
-    <div class="relative group">
-      <button class="relative focus:outline-none">
-        <svg class="w-6 h-6 text-gray-600 hover:text-secretGarden transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C8.67 6.165 8 7.388 8 8.75v5.408c0 .538-.214 1.055-.595 1.437L6 17h5m4 0v1a2 2 0 11-4 0v-1m4 0H9" />
-        </svg>
-
-        <!-- Notification Badge -->
-        <span class="absolute top-0 right-0 inline-block w-2.5 h-2.5 bg-red-600 rounded-full animate-ping"></span>
-        <span class="absolute top-0 right-0 inline-block w-2.5 h-2.5 bg-red-600 rounded-full"></span>
-      </button>
-
-      <!-- Dropdown (Optional Future Feature) -->
-      <div class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg border z-50">
-        <div class="p-4 text-sm text-gray-700">
-          <p class="font-semibold">Notifications</p>
-          <ul class="mt-2 space-y-2">
-
-             <?php if (isset($notifications) && is_array($notifications)): ?>
-              <?php foreach ($notifications as $notification): ?>
-                <li class="text-gray-600"><?= htmlspecialchars($notification) ?></li>
-              <?php endforeach; ?>
-            <?php else: ?>
-              <li class="text-gray-600">🔔 No new notifications.</li>
-            <?php endif; ?>
-          </ul>
+<body class="bg-gray-100 font-sans antialiased" x-data="{ sidebarOpen: false }">
+<header class="bg-white shadow flex justify-between items-center px-4 md:px-6 py-3 sticky top-0 z-30">
+    <div class="flex items-center space-x-4">
+        <button @click="sidebarOpen = !sidebarOpen" class="md:hidden focus:outline-none">
+            <i class="fas fa-bars text-xl text-gray-700"></i>
+        </button>
+        <div class="flex items-center space-x-2">
+            <img src="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" alt="Logo" class="h-10 w-auto">
+            <span class="hidden md:block font-bold text-lg text-gray-800"><?= esc($companySetting['name'] ?? 'SecretGarden') ?></span>
         </div>
-      </div>
     </div>
 
-    <span class="text-sm font-medium text-gray-700">Hi, <?= isset($_SESSION['user']['username']) && $_SESSION['user']['username'] !== null ? htmlspecialchars($_SESSION['user']['username']) : 'Guest' ?></span>
-    <a href="<?= site_url('logout') ?>" class="text-sm text-red-600 hover:underline">Logout</a>
-  </div>
+    <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+            <span class="font-medium text-gray-700"><?= session()->get('user')['name'] ?? 'User' ?></span>
+            <img src="<?= base_url(session()->get('user')['avatar'] ?? 'assets/SGV/avatar/default.png') ?>" 
+                 alt="Avatar" class="h-8 w-8 rounded-full object-cover">
+            <i class="fas fa-chevron-down text-gray-500 text-sm"></i>
+        </button>
+
+        <div x-show="open" @click.away="open = false" x-transition
+             class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+            <a href="<?= base_url('/profile') ?>" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+            <a href="<?= base_url('/logout') ?>" class="block px-4 py-2 text-red-600 hover:bg-red-100">Logout</a>
+        </div>
+    </div>
 </header>
 
-    <main class="flex-1 overflow-y-auto p-6">
+<div class="flex h-screen overflow-hidden">
 
+    <aside class="bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-30 w-64
+                  transform md:translate-x-0 transition-transform duration-300 ease-in-out"
+           :class="{'-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen}">
+        <div class="p-4 flex items-center justify-center md:justify-start">
+            <img src="<?= base_url($companySetting['logo'] ?? 'assets/SGV/logo/logo.jpg') ?>" alt="Logo" class="h-10 w-auto md:ml-2">
+        </div>
+        <nav class="mt-6 px-2" x-data="{ openMenu: null }">
+            <?php
+            $roleId = session()->get('user')['role_id'] ?? null;
+            if (!$roleId) { return redirect()->to('/'); }
+            $menus = getSidebarMenu($roleId);
 
+            function renderMenu($menus, $level = 0) {
+                foreach ($menus as $m) {
+                    $hasChildren = isset($m['children']) && !empty($m['children']);
+                    $isActive = url_is($m['url'].'*') ? 'bg-gray-200 font-semibold' : '';
 
-      <script>
-    const sidebar = document.querySelector('aside');
-    const toggleBtn = document.getElementById('sidebarToggle');
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('-translate-x-full');
-    });
-    document.addEventListener('click', function(e) {
-      if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target) && window.innerWidth < 768) {
-        sidebar.classList.add('-translate-x-full');
-      }
-    });
-  </script>
+                    if ($hasChildren) {
+                        echo '<div class="mb-1" x-data="{ open: false }">';
+                        echo '<button @click="open = !open" class="flex items-center justify-between w-full py-2 px-3 hover:bg-gray-100 '.$isActive.'">';
+                        echo '<span><i class="'.esc($m['icon']).' mr-2"></i>'.esc($m['name']).'</span>';
+                        echo '<i :class="open ? \'fa fa-chevron-up\' : \'fa fa-chevron-down\'" class="text-xs text-gray-500"></i>';
+                        echo '</button>';
+                        echo '<div x-show="open" x-transition class="ml-4 border-l border-gray-200 pl-2">';
+                        renderMenu($m['children'], $level+1);
+                        echo '</div></div>';
+                    } else {
+                        echo '<a href="'.base_url($m['url']).'" class="flex items-center py-2 px-3 hover:bg-gray-100 '.$isActive.'">';
+                        echo '<i class="'.esc($m['icon']).' mr-2 text-gray-600"></i>'.esc($m['name']).'</a>';
+                    }
+                }
+            }
+            renderMenu($menus);
+            ?>
+        </nav>
+    </aside>
+
+    <div class="fixed inset-0 bg-black bg-opacity-25 z-20 md:hidden" x-show="sidebarOpen" @click="sidebarOpen = false" x-transition></div>
+    <main class="flex-1 ml-0 md:ml-64 p-6 overflow-auto">
+     
+    

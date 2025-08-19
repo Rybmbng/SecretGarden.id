@@ -86,7 +86,7 @@ class CategoryController extends BaseController
         if ($category) {
             $db = \Config\Database::connect();
             $builder = $db->table('categories c');
-            $builder->select('p.name as pname, pv.*, pim.*');
+            $builder->select('p.name as pname,p.main_images as img, pv.*, pim.*');
             $builder->join('products p', 'c.id = p.category_id');
             $builder->join('product_variants pv', 'pv.product_id = p.id');
             $builder->join('product_images pim', 'pv.id = pim.variant_id');
@@ -126,6 +126,7 @@ class CategoryController extends BaseController
             $primaryImage = [];
         }
 
+       
         $data = [
             'pageTitle' => $categoryName,
             'category' => $category,

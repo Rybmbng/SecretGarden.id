@@ -1,9 +1,18 @@
 
+<style>
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease;
+}
+</style>
 <?php
 $session = session();
 $cart = $session->get('cart') ?? [];
 ?>
-<?php if (isset($cart) && !empty($cart)): ?>
+<!-- <?php if (isset($cart) && !empty($cart)): ?>
 <button onclick="showCartModal()" class="fixed bottom-6 right-6 z-40 bg-[#0a2540] text-white rounded-full shadow-lg p-4 hover:bg-[#183b6b] transition flex items-center group md:flex">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.5 17h9a1 1 0 00.9-1.45L17 13M7 13V6h13" />
@@ -13,7 +22,7 @@ $cart = $session->get('cart') ?? [];
     <span class="ml-2 bg-red-500 text-white rounded-full px-2 py-0.5 text-xs"><?php echo count($cart); ?></span>
   <?php endif; ?>
 </button>
-<?php endif; ?>
+<?php endif; ?> -->
 
 <?php if (isset($cart) && !empty($cart)): ?>
 <div id="modalCart" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 transition-opacity duration-300 hidden">
@@ -59,55 +68,120 @@ $cart = $session->get('cart') ?? [];
   </div>
 </div>
 <?php endif; ?>
-
-
 <footer class="w-full font-playfair" id="ordernow" style="position: relative;">
-<div class="w-full py-10 px-6 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto bg-white border-t border-gray-200">
-  
-  <div class="max-w-xs flex flex-col text-center items-center md:text-left md:mb-0 mb-10">
-            <img src="assets/SGV/footer/footer.jpg" alt="Logo OF SecretGarden.id" class="md:h-auto h-auto w-auto border-40 object-fit" />
-            <p class="font-medium">𝘐𝘯𝘴𝘱𝘪𝘳𝘦𝘥 𝘣𝘺 𝘌𝘢𝘳𝘵𝘩, 𝘔𝘢𝘥𝘦 𝘍𝘰𝘳 𝘠𝘰𝘶</p>
-    </div>
+  <div class="w-full py-10 px-6 flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto bg-white border-t border-gray-200">
     
-    <div class="flex flex-col">
-      <div class="flex flex-col">
-        <h1 class="font-medium text-black mb-1 text-lg">SECRETGARDEN</h1>
-        <a href="<?= base_url('')?>" class="text-base">About</a>
-        <a href="<?= base_url('')?>" class="text-base">Store Locator</a>
-        <a href="<?= base_url('')?>" class="text-base">Find </a>
-        <a href="<?= base_url('')?>" class="text-base">About</a>
-        <a href="<?= base_url('')?>" class="text-base">About</a>
-      </div> 
-
-      <div class="flex flex-col mt-10">
-        <h1 class="font-medium text-black mb-1 text-lg">MEMBERSHIP</h1>
-        <a href="<?= base_url('')?>" class="text-base">Membership Benefits</a>
-        <a href="<?= base_url('')?>" class="text-base">Membership Privacy Policy</a>
-      </div>
+    <div class="max-w-xs flex flex-col text-center items-center md:text-left md:mb-0 mb-10">
+      <img src="<?= base_url($companySetting['logo'] ?? 'assets/SGV/footer/footer.jpg') ?>" 
+           alt="Logo of <?= esc($companySetting['name'] ?? 'Company') ?>" 
+           class="md:h-auto h-auto w-auto border-40 object-fit" />
+      <p class="font-medium"><?= esc($companySetting['tagline'] ?? '𝘐𝘯𝘴𝘱𝘪𝘳𝘦𝘥 𝘣𝘺 𝘌𝘢𝘳𝘵𝘩, 𝘔𝘢𝘥𝘦 𝘍𝘰𝘳 𝘠𝘰𝘶') ?></p>
     </div>
-    
-    <div class="flex flex-col">
-      <div class="flex flex-col">
-        <h1 class="font-medium text-black mb-1 text-lg">SECRETGARDEN</h1>
-        <a href="<?= base_url('')?>" class="text-base">About</a>
-        <a href="<?= base_url('')?>" class="text-base">Store Locator</a>
-        <a href="<?= base_url('')?>" class="text-base">Find </a>
-        <a href="<?= base_url('')?>" class="text-base">About</a>
-        <a href="<?= base_url('')?>" class="text-base">About</a>
-      </div> 
 
-      <div class="flex flex-col mt-10">
-        <h1 class="font-medium text-black mb-1 text-lg">MEMBERSHIP</h1>
-        <a href="<?= base_url('')?>" class="text-base">Membership Benefits</a>
-        <a href="<?= base_url('')?>" class="text-base">Membership Privacy Policy</a>
+    <?php if (!empty($companySetting['footer_links'])): ?>
+      <?php $footerGroups = json_decode($companySetting['footer_links'], true); ?>
+      <div class="flex flex-col md:flex-row gap-10">
+        <?php foreach ($footerGroups as $group): ?>
+          <div class="flex flex-col">
+            <h1 class="font-medium text-black mb-1 text-lg"><?= esc($group['title']) ?></h1>
+            <?php if (!empty($group['links'])): ?>
+              <?php foreach ($group['links'] as $link): ?>
+                <a href="<?= base_url($link['url']) ?>" class="text-base hover:text-[#8c9464]">
+                  <?= esc($link['label']) ?>
+                </a>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+        <?php endforeach; ?>
       </div>
-    </div>
+    <?php endif; ?>
   </div>
-   
-<div class="flex flex-row mb-5  justify-center text-xl text-[#0a2540] text-center md:text-right">
-      <p> © <?php echo date('Y'); ?> SGV. All rights reserved.</p>
-</div>
+
+  <!-- Copyright -->
+  <div class="flex flex-row mb-5 justify-center text-xl text-[#0a2540] text-center md:text-right">
+    <p>© <?= date('Y'); ?> <?= esc($companySetting['name'] ?? 'SGV') ?>. All rights reserved.</p>
+  </div>
 </footer>
+<!-- Floating Chat Button -->
+<button id="chat-btn"
+    class="fixed bottom-5 right-5 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition transform hover:scale-110">
+    Chat
+</button>
+
+<!-- Chat Box -->
+<div id="chat-box"
+     class="fixed bottom-20 right-5 w-80 bg-white shadow-2xl rounded-2xl overflow-hidden hidden flex flex-col">
+
+    <!-- Header -->
+    <div class="bg-green-600 text-white p-3 text-sm font-semibold flex justify-between items-center">
+        <span>SecretGarden.id</span>
+        <button id="chat-close" class="text-white font-bold">✖</button>
+    </div>
+
+    <!-- Body -->
+    <div id="chat-body" class="h-64 p-3 overflow-y-auto text-sm flex flex-col space-y-2 scroll-smooth">
+        <div class="self-start bg-gray-100 px-3 py-2 rounded text-gray-700 animate-fade-in">
+            Halo! Ada yang bisa kami bantu?
+        </div>
+    </div>
+
+    <!-- Input -->
+    <form id="chat-form" class="flex border-t">
+        <input type="text" id="chat-input" class="flex-1 p-2 outline-none text-sm" placeholder="Ketik pesan...">
+        <button type="submit" class="bg-green-600 text-white px-3 hover:bg-green-700 transition">Kirim</button>
+    </form>
+</div>
+
+<!-- Chat AI JS -->
+<script>
+const chatBtn = document.getElementById('chat-btn');
+const chatBox = document.getElementById('chat-box');
+const chatClose = document.getElementById('chat-close');
+const chatBody = document.getElementById('chat-body');
+const chatForm = document.getElementById('chat-form');
+const chatInput = document.getElementById('chat-input');
+
+chatBtn.addEventListener('click', () => chatBox.classList.toggle('hidden'));
+chatClose.addEventListener('click', () => chatBox.classList.add('hidden'));
+
+chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    let message = chatInput.value.trim();
+    if(!message) return;
+
+    // User message
+    let userMsg = document.createElement('div');
+    userMsg.className = 'self-end bg-green-100 px-3 py-2 rounded animate-fade-in';
+    userMsg.textContent = message;
+    chatBody.appendChild(userMsg);
+    chatInput.value = '';
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    try {
+        let res = await fetch("<?= base_url('/chat/ai') ?>", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: "message=" + encodeURIComponent(message)
+        });
+        let data = await res.json();
+
+        // Bot reply
+        let botMsg = document.createElement('div');
+        botMsg.className = 'self-start bg-gray-100 px-3 py-2 rounded animate-fade-in';
+        botMsg.textContent = data.reply;
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    } catch(err) {
+        console.error(err);
+        let botMsg = document.createElement('div');
+        botMsg.className = 'self-start bg-gray-100 px-3 py-2 rounded animate-fade-in';
+        botMsg.textContent = 'Terjadi kesalahan saat mengirim pesan.';
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+});
+</script>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

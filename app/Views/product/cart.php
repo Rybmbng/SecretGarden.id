@@ -1,8 +1,4 @@
-<?php
-// echo '<pre>' . print_r($product, true) . '</pre>';
 
-// echo $cart ? '<pre>' . print_r($cart, true) . '</pre>' : 'Keranjang kosong.';
-?>
 <?php echo view('partials/header'); ?>
 <section class="bg-white py-8 antialiased light:bg-gray-900 md:py-16">
   <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -148,26 +144,15 @@
           </div>
         </div>
         
-        </div>
+        <div>
           <div class="mt-10 md:mt-4 md:block">
             <h3 class="text-2xl font-semibold text-gray-900 light:text-white">People also bought</h3>
             <div class="mt-20 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              <?php
-                $randomProducts = [];
-                foreach ($product as $category) {
-                  foreach ($category['products'] as $p) {
-                    $p['category'] = $category; 
-                    $randomProducts[] = $p;
-                  }
-                }
-                shuffle($randomProducts);
-                $randomProducts = array_slice($randomProducts, 0, 6);
-              ?>
-
-              <?php foreach ($randomProducts as $products): ?>
+              
+              <?php  foreach ($randomProducts as $products): ?>
                 <div class="space-y-3 overflow-hidden rounded-lg border border-gray-200 bg-white p-3 shadow-sm light:border-gray-700 light:bg-gray-800">
                   <a href="<?= site_url('products/' . strtolower($products['slug'])) ?>" class="block overflow-hidden rounded">
-                    <img src="<?= base_url('assets/SGV/Category/' . strtolower($products['category']['path']) . '/'. strtolower(str_replace(" ","-",$products['name'])).'/' . $products['img']) ?>" alt="<?= $products['name'] ?>" class="w-auto h-auto object-cover rounded">
+                    <img src="<?= base_url('assets/SGV/Category/' . strtolower(str_replace(" ","-",$products['caty'])) . '/'. strtolower(str_replace(" ","-",$products['name'])).'/' . strtolower(str_replace(" ","-",$products['variant_name'])).'/'. $products['img']) ?>" alt="<?= $products['name'] ?>" class="w-auto h-auto object-cover rounded">
                   </a>
                   <div>
                     <a href="<?= site_url('products/' . strtolower($products['slug'])) ?>" class="text-lg font-semibold text-gray-900 hover:underline light:text-white">
@@ -192,9 +177,10 @@
               <?php endforeach; ?>
             </div>
           </div>
-
-      
+        <div>   
     </div>
-  </div>
+  <div>
+<div>
+
 </section>
 <?php echo view('partials/footer'); ?>

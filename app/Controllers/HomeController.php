@@ -18,6 +18,8 @@ class HomeController extends BaseController
         $slider = $sliderModel->getSliders();
         $product = $productModel->sliderHome(4);
         
+        // echo print_r($product);
+        // die();
         $mainProducts = $productModel->mainProduct();
         $data=[
             'products' => $product,

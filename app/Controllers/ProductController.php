@@ -72,13 +72,16 @@ public function detail($slug)
     $sectionModel   = new \App\Models\ProductSectionModel();
     $detailModel    = new \App\Models\ProductSectionDetailModel();
 
+    // Produk utama
     $product = $productModel->where('slug', $slug)->first();
     if (!$product) {
         throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Product not found');
     }
 
+    // Varian
     $variants = $variantModel->where('product_id', $product['id'])->findAll();
 
+    // Gambar per varian
     $variantImages = $imageModel
         ->where('product_id', $product['id'])
         ->where('variant_id IS NOT NULL', null, false)
@@ -94,6 +97,7 @@ public function detail($slug)
         $variant['image_path'] = $variant['images'][0] ?? null;
     }
 
+    // Gambar galeri produk utama
     $galleryImages = $imageModel
         ->where('product_id', $product['id'])
         ->where('variant_id', null)
@@ -105,8 +109,11 @@ public function detail($slug)
         $useVariantSlug = strtolower(str_replace(' ', '-', $variants[0]['name']));
     }
 
+    // Kategori
     $category = $categoryModel->find($product['category_id']);
+    $categorySlug = strtolower(str_replace(' ', '-', $category['name']));
 
+    // Section detail produk
     $sectionsRaw = $sectionModel->where('product_id', $product['id'])->findAll();
     $sections = [];
     foreach ($sectionsRaw as $section) {
@@ -116,25 +123,27 @@ public function detail($slug)
             'details' => array_column($details, 'detail')
         ];
     }    
-    $categorySlug = strtolower(str_replace(' ', '-', $category['name']));
 
-
-    $products = $productModel
+    // Produk rekomendasi
+    $relatedProducts = $productModel
         ->select('products.*, categories.name AS category_name, product_variants.price AS variant_price, product_images.image_path as img') 
         ->join('categories', 'categories.id = products.category_id')
         ->join('product_variants', 'product_variants.product_id = products.id')
         ->join('product_images', 'product_images.variant_id = product_variants.id')
         ->where('products.slug !=', $slug)
-        ->where('product_images.is_primary','1')
+        ->where('products.status =', 1)
         ->groupBy('products.name') 
         ->findAll(6);
 
-
+    // Path galeri
     $productSlug  = strtolower(str_replace(' ', '-', $product['name']));
     $galleryPath  = "assets/SGV/Category/{$categorySlug}/{$productSlug}";
     if (!empty($useVariantSlug)) {
         $galleryPath .= "/{$useVariantSlug}";
     }
+
+    // echo print_r($variants);
+    // die();
 
     return view('product/detail', [
         'product'       => $product,
@@ -145,10 +154,12 @@ public function detail($slug)
         'galleryPath'   => $galleryPath, 
         'categorySlug'  => $categorySlug,
         'productSlug'   => $productSlug,
-        'products'   => $products,
-        'pageTitle'=> $product['name'],
+        'recommendedProducts'=> $relatedProducts,
+        'pageTitle'     => $product['name'],
+        'useVariantSlug' =>$useVariantSlug,
     ]);
 }
+
 
 
 public function search()

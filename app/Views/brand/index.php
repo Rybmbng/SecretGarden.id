@@ -3,10 +3,9 @@
   <div class="w-auto sticky top-0 z-50 bg-white px-4 py-4 ">
     <div class="relative flex items-center justify-center space-x-8">
       <div id="topNav" class="flex items-center space-x-8 text-gray-400 text-sm md:text-xl font-semibold">
-        <div data-target="year2016" class="cursor-pointer hover:text-black transition">2016</div>
-        <div data-target="year2020" class="cursor-pointer hover:text-black transition">2020</div>
-        <div data-target="year2023" class="cursor-pointer hover:text-black transition">2023</div>
-        <div data-target="year2025" class="cursor-pointer hover:text-black transition">2025</div>
+        <?php foreach($brands as $b) :?>
+        <div data-target="year<?=$b['year']?>" class="cursor-pointer hover:text-black transition"><?=$b['year']?></div>
+        <?php endforeach?>
       </div>
       <div class="absolute bottom-0 left-0 w-auto h-1 mt-2 overflow-hidden">
         <div id="topProgress" class="bg-black h-auto w-0 transition-all"></div>
@@ -20,10 +19,30 @@
   </section>
 
   <div class="w-full text-center">
-  <?= view('brand/section_2016') ?>
-  <?= view('brand/section_2020') ?>
-  <?= view('brand/section_2023') ?>
-  <?= view('brand/section_2025') ?>
+    <?php foreach($brands as $b) :?>
+    
+    <?php if($b['position']=='left'){ ?>
+    <section id="year<?=$b['year']?>" class="min-h-screen flex items-center justify-center bg-white px-4">
+      <div class="max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center opacity-0 transform translate-y-12">
+        <img src="<?=$b['img_path']?>" alt="<?=$b['year']?>" class="rounded-lg shadow-lg">
+        <div data-aos="fade-up" data-aos-delay="200" class="text-<?=$b['position']?>">
+          <h2 class="text-3xl font-bold"><?=$b['title']?></h2>
+          <p class="mt-4 text-lg text-gray-500"><?=$b['content']?></p>
+        </div>
+      </div>
+    </section>
+    <?php }else{?>
+    <section id="year<?=$b['year']?>" class="min-h-screen flex items-center justify-center bg-white px-4">
+      <div class="max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center opacity-0 transform translate-y-12">
+        <div data-aos="fade-up" data-aos-delay="200" class="text-right">
+          <h2 class="text-3xl font-bold text-center"><?=$b['title']?></h2>
+          <p class="mt-4 text-lg text-gray-500"><?=$b['content']?></p></p></div>
+        
+        <img src="<?=$b['img_path']?>" alt="<?=$b['year']?>" class="rounded-lg shadow-lg">
+      </div>
+    </section>
+    <?php } endforeach ?>
+
   </div>
   <section class="w-auto min-h-screen flex items-center justify-center bg-white text-black px-4 ">
     <div class="text-center">

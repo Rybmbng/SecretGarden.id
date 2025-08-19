@@ -62,20 +62,17 @@
   <div class="max-w-7xl mx-auto">
     <div class="grid item-center justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
       <?php foreach ($products as $product): ?>
-        <?php if (isset($product['is_primary']) && $product['is_primary'] == 1): ?>
         <a href="<?php echo base_url('products/').str_replace(" ","-",$product['pname'])?>" class="group fade-in-up transition-all duration-1000 ease-out">
           <div class="overflow-hidden rounded-lg shadow-md">
-                <img src="<?php echo base_url('assets/SGV/Category/'.strtolower(str_replace(" ","-",$category['name'])).'/'.strtolower(str_replace(" ","-",$product['pname']).'/'.strtolower(str_replace(" ","-",$product['image_path']))))?>" class="w-full h-[350px] object-cover transform transition-transform duration-500 group-hover:scale-105" />
+                <img src="<?php echo base_url('assets/SGV/Category/'.strtolower(str_replace(" ","-",$category['name'])).'/'.strtolower(str_replace(" ","-",$product['pname']).'/'.strtolower(str_replace(" ","-",$product['img']))))?>" class="w-full h-[350px] object-cover transform transition-transform duration-500 group-hover:scale-105" />
           </div>
           <div class="mt-4 text-center">
             <h3 class="text-lg font-semibold text-gray-900"><?= $product['pname'] ?></h3>
-            <p class="text-sm text-gray-600 mt-1"><?= $product['desc'] ?></p>
+            <p class="text-sm text-gray-600 mt-1 line-clamp"><?= $product['desc'] ?></p>
             <p class="mt-2 text-base font-medium text-gray-800">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
           </div>
         </a>
-      <?php 
-    endif;
-    endforeach; ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>

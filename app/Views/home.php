@@ -80,7 +80,7 @@
         <?php foreach ($products as $product) : ?>
         <a href="<?=base_url('products/').str_replace(" ","-",$product['pname'])?>" class="w-full flex-shrink-0 flex items-center justify-center">
           <img alt="<?= $product['pname'] ?>" class="aspect-square w-auto h-[300px]  md:w-auto md:h-[100%] object-cover mx-auto" loading="lazy"
-            src="<?= base_url("assets/SGV/Category/" . strtolower(str_replace(' ', '-', $product['cat_name'])) . "/" . strtolower(str_replace(' ', '-', $product['pname'])) . "/" . strtolower(str_replace(' ', '-', $product['variant_name'])) . "/" . ($product['img'] ?? 'default.jpg')) ?>" />
+            src="<?= base_url("assets/SGV/Category/" . strtolower(str_replace(' ', '-', $product['cat_name'])) ."/" . strtolower(str_replace(' ', '-', $product['pname'])) . "/" . ($product['img'] ?? 'default.jpg')) ?>" />
         </a>
         <?php endforeach; ?>
       </div>

@@ -7,7 +7,7 @@ use App\Models\ProductImageModel;
 use App\Models\ProductVariantModel;
 use CodeIgniter\Controller;
 
-class CartController extends Controller
+class CartController extends BaseController
 {
     public function index()
     {
@@ -42,6 +42,16 @@ class CartController extends Controller
             ];
         }
 
+         $randomProducts = $productModel
+                ->select('categories.name as caty,products.*, product_variants.price as variant_price, product_variants.name as variant_name, product_variants.id as variant_id,product_images.image_path as img')
+                ->join('product_variants', 'product_variants.product_id = products.id', 'inner')
+                ->join('product_images', 'product_variants.id = product_images.variant_id', 'inner')
+                ->join('categories', 'categories.id = products.category_id', 'inner')
+                ->groupBy('product_variants.id')
+                ->limit(5)
+                ->findAll();
+
+        // echo print_r($randomProducts);die();
         $session = session();
         $sesi = $session->get('cart') ?? [];
         $data = [
@@ -49,6 +59,7 @@ class CartController extends Controller
             'images' => $images,
             'cart' => $sesi,
             'pageTitle' => 'Cart',
+            'randomProducts' => $randomProducts,
         ];
         return view('product/cart', $data);
     }

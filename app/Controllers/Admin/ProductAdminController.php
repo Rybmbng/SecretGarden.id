@@ -17,6 +17,7 @@ class ProductAdminController extends BaseController
     protected $sectionDetailModel;
     protected $imageModel;
     protected $categoryModel;
+    protected $db;
 
     public function __construct()
     {
@@ -26,6 +27,8 @@ class ProductAdminController extends BaseController
         $this->sectionDetailModel  = new ProductSectionDetailModel();
         $this->imageModel          = new ProductImageModel();
         $this->categoryModel       = new CategoryModel();
+        $this->db = \Config\Database::connect();
+
     }
     public function index()
     {
@@ -42,29 +45,43 @@ class ProductAdminController extends BaseController
         ]);
     }
 
-   public function store()
+public function store()
 {
     $db = \Config\Database::connect();
     $db->transBegin();
-
     $request = service('request');
 
     try {
+   
+        $productName = $request->getPost('name');
+        $productSlug = url_title($productName, '-', true);
+        $category = $this->categoryModel->find($request->getPost('category_id'));
+        $categoryPath = $category['path'] ?? 'default';
+        $mainUploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
+
+        $mainImageFile = $request->getFile('main_images'); 
+        $mainImageName = '';
+
+        $mainUploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
+        if (!is_dir($mainUploadPath)) mkdir($mainUploadPath, 0777, true);
+
+        if ($mainImageFile && $mainImageFile->isValid() && !$mainImageFile->hasMoved()) {
+            $mainImageName = $mainImageFile->getRandomName();
+            $mainImageFile->move($mainUploadPath, $mainImageName);
+        }
+
         $productData = [
-            'name'        => $request->getPost('name'),
+            'name'        => $productName,
             'category_id' => $request->getPost('category_id'),
             'description' => $request->getPost('description'),
-            'slug'        => url_title($request->getPost('name'), '-', true),
+            'slug'        => $productSlug,
+            'main_images' => $mainImageName,
         ];
 
         if (!$this->productModel->insert($productData)) {
             throw new \Exception('Gagal menyimpan produk utama.');
         }
-
         $productId = $this->productModel->getInsertID();
-        $productSlug = url_title($productData['name'], '-', true);
-        $category = $this->categoryModel->find($productData['category_id']);
-        $categoryPath = $category['path'] ?? 'default';
 
         $variantNames  = $request->getPost('variant_name');
         $variantPrices = $request->getPost('variant_price');
@@ -74,11 +91,8 @@ class ProductAdminController extends BaseController
 
         foreach ($variantNames as $i => $name) {
             $variantSlug = url_title($name, '-', true);
-            $uploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}/{$variantSlug}";
-
-            if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
+            $variantUploadPath = $mainUploadPath . '/' . $variantSlug;
+            if (!is_dir($variantUploadPath)) mkdir($variantUploadPath, 0777, true);
 
             $variantData = [
                 'product_id' => $productId,
@@ -87,52 +101,31 @@ class ProductAdminController extends BaseController
                 'sku'        => $variantSkus[$i] ?? '',
                 'stock'      => $variantStocks[$i] ?? 0,
                 'desc'       => $variantDescs[$i] ?? '',
-                'main'       => $i == 0 ? 1 : 0,
+                'main'       => 0,
             ];
-
             if (!$this->variantModel->insert($variantData)) {
-                log_message('error', '❌ Gagal insert varian ke-' . $i . ': ' . json_encode($this->variantModel->errors()));
+                log_message('error', 'Gagal insert varian ke-' . $i);
                 continue;
             }
+            $variantId = $this->variantModel->getInsertID();
 
-           
             $imageFiles = $request->getFiles()["variant_images_{$i}"] ?? [];
-            $first = true;
-            sleep(1);
             foreach ($imageFiles as $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
+                if ($file && $file->isValid() && !$file->hasMoved()) {
                     $imageName = $file->getRandomName();
-                    $fullPath = $uploadPath . '/' . $imageName;
+                    $file->move($variantUploadPath, $imageName);
 
-                    \Config\Services::image()
-                        ->withFile($file)
-                        ->resize(800, 800, true, 'center')
-                        ->save($fullPath, 75);
-                    $variantId = $this->variantModel->getInsertID();
-                    
-                    $isPrimary = ($i === 0 && $first) ? 1 : 0;
-                   
-                    $imageInsert = [
-                        'product_id' => (int)$productId,
-                        'variant_id' => (int)$variantId,
+                    $db->table('product_images')->insert([
+                        'product_id' => $productId,
+                        'variant_id' => $variantId,
                         'image_path' => $imageName,
-                        'is_primary' => $isPrimary,
-                    ];
-                    
-                    $db->table('product_images')->insert($imageInsert);
-                     if ($i == 0 && $first) {
-                        $globalPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
-                        if (!is_dir($globalPath)) {
-                            mkdir($globalPath, 0777, true);
-                        }
-                        copy($fullPath, $globalPath . '/' . $imageName);
-                    }
-
-                    $first = false;
+                        'is_primary' => 0,
+                    ]);
                 }
             }
         }
 
+        // ====== INSERT SECTIONS ======
         $sectionTypes   = $request->getPost('section_type');
         $sectionHeaders = $request->getPost('section_header');
         $sectionDetails = $request->getPost('section_detail');
@@ -150,14 +143,12 @@ class ProductAdminController extends BaseController
             }
 
             $sectionId = $this->sectionModel->getInsertID();
-
             $this->sectionDetailModel->insert([
                 'section_id' => $sectionId,
                 'detail'     => $sectionDetails[$i] ?? '',
             ]);
         }
 
-        // ====== COMMIT ======
         $db->transCommit();
         return redirect()->to('/admin/products/edit/' . $productId)
                          ->with('success', 'Produk berhasil ditambahkan.');
@@ -167,6 +158,7 @@ class ProductAdminController extends BaseController
         return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
 }
+
 public function edit($id)
 {
     $product = $this->productModel->find($id);
@@ -206,17 +198,252 @@ public function edit($id)
         'Nav'=>'Edit Products'
     ]);
 }
+public function update($id)
+    {
+        $product = $this->productModel->find($id);
+        if(!$product) return redirect()->back()->with('error', 'Product not found');
+
+        $data = $this->request->getPost();
+
+        $updateProduct = [
+            'name' => $data['name'],
+            'category_id' => $data['category_id'],
+            'description' => $data['description'],
+        ];
+
+        $mainFile = $this->request->getFile('main_images');
+        if($mainFile && $mainFile->isValid() && !$mainFile->hasMoved()){
+            $newName = $mainFile->getRandomName();
+            $category = (new \App\Models\CategoryModel())->find($product['category_id']);
+            $categoryPath = $category['path'] ?? 'default';
+            $mainFile->move(FCPATH . 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']), $newName);
+            $updateProduct['main_images'] = $newName;
+        }
+
+        $this->productModel->update($id, $updateProduct);
+
+        $variantNames  = $data['variant_name'] ?? [];
+        $variantPrices = $data['variant_price'] ?? [];
+        $variantStocks = $data['variant_stock'] ?? [];
+        $variantSkus   = $data['variant_sku'] ?? [];
+        $variantDescs  = $data['variant_desc'] ?? [];
+
+        foreach($variantNames as $vId => $name){
+            $variantData = [
+                'name' => $name,
+                'price' => $variantPrices[$vId] ?? 0,
+                'stock' => $variantStocks[$vId] ?? 0,
+                'sku'   => $variantSkus[$vId] ?? '',
+                'desc'  => $variantDescs[$vId] ?? ''
+            ];
+
+            if(str_starts_with($vId, 'new_')){
+                $variantData['product_id'] = $id;
+                $variantId = $this->variantModel->insert($variantData, true);
+            } else {
+                $this->variantModel->update($vId, $variantData);
+                $variantId = $vId;
+            }
+
+            $files = $this->request->getFiles();
+            $key = 'variant_images_' . $vId;
+            if(isset($files[$key])){
+                $category = (new \App\Models\CategoryModel())->find($product['category_id']);
+                $categoryPath = $category['path'] ?? 'default';
+                $folderBase = FCPATH . 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']) . '/' . strtolower(str_replace(' ', '', $name));
+                if(!is_dir($folderBase)) mkdir($folderBase, 0755, true);
+
+                foreach($files[$key] as $file){
+                    if($file && $file->isValid() && !$file->hasMoved()){
+                        $fileName = $file->getRandomName();
+                        $file->move($folderBase, $fileName);
+
+                        $this->db->table('product_images')->insert([
+                            'variant_id' => $variantId,
+                            'image_path' => $fileName
+                        ]);
+                    }
+                }
+            }
+        }
+
+        // ===== Sections =====
+        $this->sectionModel->where('product_id', $id)->delete();
+        $sectionHeaders = $data['section_header'] ?? [];
+        $sectionDetails = $data['section_detail'] ?? [];
+
+        foreach($sectionHeaders as $i => $header){
+            if(trim($header) !== ''){
+                $this->sectionModel->insert([
+                    'product_id' => $id,
+                    'header' => $header,
+                    'detail' => $sectionDetails[$i] ?? ''
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Product updated successfully');
+    }
+
+    public function delete_variant($id)
+    {
+    $variantModel = new \App\Models\ProductVariantModel();
+    $variant = $variantModel->find($id);
+    if (!$variant) {
+        return $this->response->setJSON(['success' => false, 'message' => 'Variant not found']);
+    }
+
+    $productModel = new \App\Models\ProductModel();
+    $product = $productModel->find($variant['product_id']);
+    
+    $db = \Config\Database::connect();
+    $images = $db->table('product_images')->getWhere(['variant_id' => $id])->getResultArray();
+    foreach ($images as $img) {
+        $category = (new \App\Models\CategoryModel())->find($product['category_id']);
+        $categoryPath = $category['path'] ?? 'default';
+        $folder = 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']) . '/' . strtolower($variant['name']);
+        $filePath = $folder . '/' . $img['image_path'];
+        if (file_exists($filePath)) unlink($filePath); 
+        $db->table('product_images')->delete(['id' => $img['id']]); 
+    }
+    $category = (new \App\Models\CategoryModel())->find($product['category_id']);
+    $categoryPath = $category['path'] ?? 'default';
+    $folder = 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']) . '/' . strtolower($variant['name']);
+    if (is_dir($folder) && count(scandir($folder)) === 2) { 
+        rmdir($folder);
+    }
+
+    $variantModel->delete($id);
+
+    return $this->response->setJSON(['success' => true]);
+}
+
+public function delete_variant_image($id)
+{
+    $db = \Config\Database::connect();
+    $builder = $db->table('product_images');
+
+    $image = $builder->getWhere(['id' => $id])->getRowArray();
+    if (!$image) {
+        return $this->response->setJSON(['success' => false, 'message' => 'Image not found']);
+    }
+
+    $variantModel = new \App\Models\ProductVariantModel();
+    $variant = $variantModel->find($image['variant_id']);
+    $productModel = new \App\Models\ProductModel();
+    $product = $productModel->find($variant['product_id']);
+    $category = (new \App\Models\CategoryModel())->find($product['id']);
+    $categoryPath = $category['path'] ?? 'default';
+    $folder = 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']) . '/' . strtolower($variant['name']);
+    $filePath = $folder . '/' . $image['image_path'];
+    if (file_exists($filePath)) unlink($filePath);
+
+    $builder->delete(['id' => $id]);
+
+    return $this->response->setJSON(['success' => true]);
+}
+
+private function deleteFolderRecursive($folder)
+{
+    if (!is_dir($folder)) return;
+
+    $files = array_diff(scandir($folder), ['.', '..']);
+    foreach ($files as $file) {
+        $path = $folder . '/' . $file;
+        if (is_dir($path)) {
+            $this->deleteFolderRecursive($path);
+        } else {
+            unlink($path);
+        }
+    }
+    rmdir($folder);
+}
+
+
+  public function toggleDisplay($id)
+    { 
+    $productModel = new \App\Models\ProductModel();
+    $db = \Config\Database::connect();
+    $builder = $db->table('products');
+
+    $data = [
+        'is_display' => '0',
+    ];
+    $builder->update($data);
+    $productModel->update($id, ['is_display' => 1]);
+
+    return redirect()->to(site_url('admin/products'));
+    }
+
+    public function toggleSlide($id)
+    { 
+    $productModel = new \App\Models\ProductModel();
+    
+    $data = $productModel->find($id, ['is_show']);
+    $isActive = $data['is_show'];
+    if($isActive == 0){
+    $productModel->update($id, ['is_show' => 1]);
+    return redirect()->to(site_url('admin/products'));
+    }else{
+    $productModel->update($id, ['is_show' => 0]);
+    return redirect()->to(site_url('admin/products'));
+    }
+    }
+
 
 public function delete($id)
 {
-    $product = $this->productModel->find($id);
+    $productModel = new \App\Models\ProductModel();
+    $variantModel = new \App\Models\ProductVariantModel();
+    $sectionModel = new \App\Models\ProductSectionModel();
+    $db = \Config\Database::connect();
+
+    $product = $productModel->find($id);
     if (!$product) {
         return redirect()->to('/admin/products')->with('error', 'Produk tidak ditemukan.');
     }
 
-    $this->productModel->delete($id); 
+    $category = (new \App\Models\CategoryModel())->find($product['category_id']);
+    $categoryPath = $category['path'] ?? 'default';
+    $productFolder = 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']);
 
-    return redirect()->to('/admin/products')->with('success', 'Produk berhasil dihapus.');
+    $variants = $variantModel->where('product_id', $id)->findAll();
+    foreach ($variants as $variant) {
+        $images = $db->table('product_images')->getWhere(['variant_id' => $variant['id']])->getResultArray();
+
+        $variantFolder = $productFolder . '/' . strtolower($variant['name']);
+        foreach ($images as $img) {
+            $filePath = $variantFolder . '/' . $img['image_path'];
+            if (file_exists($filePath) && is_file($filePath)) {
+                unlink($filePath);
+            }
+            $db->table('product_images')->delete(['id' => $img['id']]);
+        }
+        if (is_dir($variantFolder) && count(array_diff(scandir($variantFolder), ['.', '..'])) === 0) {
+            rmdir($variantFolder);
+        }
+
+        $variantModel->delete($variant['id']);
+    }
+
+    $sections = $sectionModel->where('product_id', $id)->findAll();
+    foreach ($sections as $section) {
+        $sectionModel->delete($section['id']);
+    }
+
+    $mainImagePath = $productFolder . '/' . $product['main_images'];
+    if (!empty($product['main_images']) && file_exists($mainImagePath) && is_file($mainImagePath)) {
+        unlink($mainImagePath);
+    }
+
+    if (is_dir($productFolder) && count(array_diff(scandir($productFolder), ['.', '..'])) === 0) {
+        rmdir($productFolder);
+    }
+
+    $productModel->delete($id);
+
+    return redirect()->to('/admin/products')->with('success', 'Produk beserta semua data terkait berhasil dihapus.');
 }
+
 
 }

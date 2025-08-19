@@ -18,7 +18,7 @@ class App extends BaseConfig
      * E.g., http://example.com/
      */
     // public string $baseURL = 'http://localhost:8081';
-    public string $baseURL = 'https://dev.secretgarden.id/';
+    public string $baseURL = 'https://dev.secretgarden.id/index.php/';
     // public string $baseURL = 'http://192.168.1.111:8081';
 
     /**
@@ -137,6 +137,8 @@ class App extends BaseConfig
      *      supported by PHP.
      */
     public string $appTimezone = 'UTC';
+
+
 
     /**
      * --------------------------------------------------------------------------

@@ -8,6 +8,9 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\CompanySettingModel;
+use App\Models\FooterLinkModel;
+use Config\Services;
 
 /**
  * Class BaseController
@@ -35,7 +38,11 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = [];
+    protected $helpers = ['menu'];
+    protected $companySetting;
+    protected $footerLinks;
+    protected $defaultPath;
+
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -54,6 +61,43 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
+        
+        $companyModel = new CompanySettingModel();
+        $footerModel  = new FooterLinkModel();
+
+        $this->companySetting = $companyModel->first() ?? [
+            'name' => 'SecretGarden',
+            'logo' => 'assets/SGV/footer/footer.jpg',
+            'favicon' => 'assets/SGV/sg.png',
+            'tagline' => 'Inspired by Earth, Made For You',
+        ];
+
+        $this->footerLinks = $footerModel->orderBy('position', 'ASC')->findAll();
+
+        // Share ke semua view
+        $renderer = Services::renderer();
+        $renderer->setVar('companySetting', $this->companySetting);
+        $renderer->setVar('footerLinks', $this->footerLinks);
+
+        $this->defaultPath = [
+            'images' => 'uploads/images/',
+            'docs'   => 'uploads/documents/',
+            'items'   => 'uploads/SG/',
+            'assets' => 'assets/'
+        ];
     }
+
+    protected $user = [];
+    public function ceksesi(){
+        $user = session()->get('user');
+        if (!isset($user['role_id']) || $user['role_id'] == 2)
+        {
+            return view('errors/html/error_403', [
+                'pageTitle' => 'Unauthorized',
+            ]);
+        }
+    }
+   
+
     
 }
