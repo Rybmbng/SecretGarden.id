@@ -6,7 +6,7 @@
     <?php if(session()->getFlashdata('success')): ?>
       <div class="bg-green-100 text-green-800 p-3 rounded mb-3"><?= session()->getFlashdata('success') ?></div>
     <?php endif; ?>
-    <form method="post" action="<?= base_url('admin/setting/email/save') ?>" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form id="emailConfigForm" method="post" action="<?= base_url('admin/setting/email/save') ?>">
       <?= csrf_field() ?>
       <div>
         <label class="block text-sm">SMTP Host</label>

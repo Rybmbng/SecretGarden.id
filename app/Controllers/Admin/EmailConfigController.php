@@ -1,40 +1,69 @@
 <?php
-
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Models\EmailSettingModel;
-use CodeIgniter\Controller;
+use App\Models\EmailConfigModel;
 
 class EmailConfigController extends BaseController
 {
-    protected $emailModel;
-
+    protected $configModel;
     public function __construct()
     {
-        $this->emailModel = new EmailSettingModel();
+        $this->configModel = new EmailConfigModel();
     }
 
     public function index()
     {
-        $data['config'] = $this->emailModel->orderBy('id','DESC')->first();
-        return view('admin/setting/email/index', $data);
+        $config = $this->configModel->getConfig();
+        return view('admin/emails/config', ['config' => $config]);
     }
 
-    public function update()
+    public function save()
     {
-        $post = $this->request->getPost();
-        $this->emailModel->save([
-            'id' => 1, 
-            'smtp_host' => $post['smtp_host'],
-            'smtp_user' => $post['smtp_user'],
-            'smtp_pass' => $post['smtp_pass'],
-            'smtp_port' => $post['smtp_port'],
-            'smtp_crypto' => $post['smtp_crypto'],
-            'from_email' => $post['from_email'],
-            'to_email' => $post['to_email'],
+        $data = $this->request->getPost([
+            'smtp_host','smtp_user','smtp_pass','smtp_port',
+            'imap_host','imap_user','imap_pass','imap_port','mail_type'
         ]);
-
-        return redirect()->back()->with('success','Email configuration updated.');
+        $existing = $this->configModel->getConfig();
+        if ($existing) {
+            $this->configModel->update($existing['id'], $data);
+        } else {
+            $this->configModel->insert($data);
+        }
+        return redirect()->to('/admin/setting/email')->with('success','Config saved.');
     }
+public function testConnection()
+{
+    $request = service('request');
+
+    $host     = $request->getPost('imap_host');
+    $port     = $request->getPost('imap_port');
+    $username = $request->getPost('imap_user');
+    $password = $request->getPost('imap_pass');
+
+    try {
+        $imap = @imap_open("{" . $host . ":" . $port . "/imap/ssl}INBOX", $username, $password);
+
+        if ($imap) {
+            imap_close($imap);
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Koneksi IMAP berhasil.'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Koneksi IMAP gagal: ' . imap_last_error()
+            ]);
+        }
+    } catch (\Exception $e) {
+        return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+
+
+
 }

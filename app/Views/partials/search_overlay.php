@@ -10,5 +10,5 @@
                 <li><a href="<?= base_url('/category/Perfume') ?>" class="text-lg hover:underline">Perfume</a></li>
             </ul>
         </div>
-    </div>
+    </div>
 </div>

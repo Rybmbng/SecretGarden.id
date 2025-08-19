@@ -1,3 +1,9 @@
+<?php
+$roleId = session()->get('user')['role_id'] ?? null;
+    if ($roleId == NULL || $roleId == 99) { 
+    echo "<script>    window.location.href = '/'</script> ";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,8 +57,6 @@
         </div>
         <nav class="mt-6 px-2" x-data="{ openMenu: null }">
             <?php
-            $roleId = session()->get('user')['role_id'] ?? null;
-            if (!$roleId) { return redirect()->to('/'); }
             $menus = getSidebarMenu($roleId);
 
             function renderMenu($menus, $level = 0) {

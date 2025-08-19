@@ -111,8 +111,23 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
 
     // Mail Management
     $routes->get('setting/email', 'EmailConfigController::index');
-    $routes->post('setting/email/update', 'EmailConfigController::update');
+    $routes->post('setting/email/save', 'EmailConfigController::save');
+    $routes->post('setting/email/test', 'EmailConfigController::testConnection');
 
+
+  
+    // Group admin email
+    $routes->group('email', static function($routes) {
+        $routes->get('/', 'EmailController::index');
+        $routes->get('folder/(:segment)', 'EmailController::folder/$1'); 
+        $routes->get('view/(:num)', 'EmailController::view/$1');
+        $routes->match(['get','post'], 'reply/(:num)', 'EmailController::reply/$1');
+        $routes->match(['get','post'], 'compose', 'EmailController::compose');
+        $routes->get('delete/(:num)', 'EmailController::delete/$1');
+        $routes->get('restore/(:num)', 'EmailController::restore/$1');
+        $routes->get('fetch', 'EmailController::fetch');
+    $routes->get('checkNew', 'EmailController::checkNew');
+    });
 
     // Page Management
     
