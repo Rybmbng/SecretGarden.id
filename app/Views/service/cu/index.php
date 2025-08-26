@@ -2,22 +2,15 @@
 
 <section class="relative w-full bg-[white] text-black font-sans">
   <!-- Banner -->
-  <div class="relative h-[80vh] overflow-hidden">
+  <!-- <div class="relative h-[80vh] overflow-hidden">
     <img src="<?= base_url('assets/SGV/services/cu/background.jpeg') ?>" alt="Service Banner" class="w-full h-full object-cover" />
     <div class="absolute inset-0 flex items-center justify-center">
       <h1 class="text-4xl text-white md:text-6xl font-light tracking-wide">Our Service</h1>
     </div>
-  </div>
+  </div> -->
 
   <!-- Description -->
-  <div class="max-w-4xl mx-auto px-6 py-16 text-center space-y-6">
-    <h3 class="text-2xl py-0 md:text-xl tracking-wider uppercase text-black">SecretGarden.ID</h3>
-    <h1 class="text-2xl py-0 md:text-3xl tracking-wider uppercase text-black">Coorporate Gift</h1>
-    <h2 class="text-2xl py-0 md:text-1xl tracking-wider uppercase text-black">A Thoughtful Experience</h2>
-    <p class="text-lg leading-relaxed text-black-300">
-      At Secret Garden, we believe in not just providing products, but crafting meaningful experiences.
-      From curated packaging to personalized care, every detail is designed to delight your senses and soul.
-    </p>
+  <div class="max-w-4xl flex item-center mx-auto px-6 py-16 text-center space-y-6">
   </div>
 
   <!-- Service List -->

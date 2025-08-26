@@ -33,6 +33,8 @@ class ProductAdminController extends BaseController
     public function index()
     {
         $data['products'] = $this->productModel->withCategory()->findAll();
+
+        $data['pageTitle'] = 'Product Management';
         return view('admin/products/index', $data);
     }
 
@@ -55,19 +57,26 @@ public function store()
    
         $productName = $request->getPost('name');
         $productSlug = url_title($productName, '-', true);
-        $category = $this->categoryModel->find($request->getPost('category_id'));
-        $categoryPath = $category['path'] ?? 'default';
-        $mainUploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
-
-        $mainImageFile = $request->getFile('main_images'); 
-        $mainImageName = '';
+        $category    = $this->categoryModel->find($request->getPost('category_id'));
+        $categoryPath = strtolower($category['path'] ?? 'default');
 
         $mainUploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
-        if (!is_dir($mainUploadPath)) mkdir($mainUploadPath, 0777, true);
 
+        if (!is_dir($mainUploadPath)) {
+            mkdir($mainUploadPath, 0777, true);
+        }
+
+        $mainImageName = null;
+        $mainVideoName = null;
+        $mainImageFile = $request->getFile('main_images');
         if ($mainImageFile && $mainImageFile->isValid() && !$mainImageFile->hasMoved()) {
             $mainImageName = $mainImageFile->getRandomName();
             $mainImageFile->move($mainUploadPath, $mainImageName);
+        }
+        $mainVideoFile = $request->getFile('main_videos');
+        if ($mainVideoFile && $mainVideoFile->isValid() && !$mainVideoFile->hasMoved()) {
+            $mainVideoName = $mainVideoFile->getRandomName();
+            $mainVideoFile->move($mainUploadPath, $mainVideoName);
         }
 
         $productData = [
@@ -76,6 +85,7 @@ public function store()
             'description' => $request->getPost('description'),
             'slug'        => $productSlug,
             'main_images' => $mainImageName,
+            'main_videos' => $mainVideoName,
         ];
 
         if (!$this->productModel->insert($productData)) {
@@ -178,7 +188,6 @@ public function edit($id)
         $section['detail'] = $this->sectionDetailModel->where('section_id', $section['id'])->first()['detail'] ?? '';
     }
 
-    
     $categories = $this->categoryModel->findAll();
 
     // dd([
@@ -195,7 +204,8 @@ public function edit($id)
         'imageMain'   => $mainImage,
         'sections'   => $sections,
         'categories' => $categories,
-        'Nav'=>'Edit Products'
+        'Nav' =>'Edit Products',
+        'pageTitle' => $product['name'],
     ]);
 }
 public function update($id)
@@ -211,16 +221,38 @@ public function update($id)
             'description' => $data['description'],
         ];
 
-        $mainFile = $this->request->getFile('main_images');
-        if($mainFile && $mainFile->isValid() && !$mainFile->hasMoved()){
-            $newName = $mainFile->getRandomName();
-            $category = (new \App\Models\CategoryModel())->find($product['category_id']);
-            $categoryPath = $category['path'] ?? 'default';
-            $mainFile->move(FCPATH . 'assets/SGV/Category/' . strtolower($categoryPath) . '/' . strtolower($product['slug']), $newName);
+        $category = (new \App\Models\CategoryModel())->find($product['category_id']);
+        $categoryPath = strtolower($category['path'] ?? 'default');
+        $uploadPath   = FCPATH . 'assets/SGV/Category/' . $categoryPath . '/' . strtolower($product['slug']);
+
+        // pastikan direktori ada
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $updateProduct = [];
+
+        // Upload main image
+        $mainImage = $this->request->getFile('main_images');
+        if ($mainImage && $mainImage->isValid() && !$mainImage->hasMoved()) {
+            $newName = $mainImage->getRandomName();
+            $mainImage->move($uploadPath, $newName);
             $updateProduct['main_images'] = $newName;
         }
 
-        $this->productModel->update($id, $updateProduct);
+        // Upload main video
+        $mainVideo = $this->request->getFile('main_videos');
+        if ($mainVideo && $mainVideo->isValid() && !$mainVideo->hasMoved()) {
+            $newName = $mainVideo->getRandomName();
+            $mainVideo->move($uploadPath, $newName);
+            $updateProduct['main_videos'] = $newName;
+        }
+
+        // Update ke database
+        if (!empty($updateProduct)) {
+            $this->productModel->update($id, $updateProduct);
+        }
+
 
         $variantNames  = $data['variant_name'] ?? [];
         $variantPrices = $data['variant_price'] ?? [];

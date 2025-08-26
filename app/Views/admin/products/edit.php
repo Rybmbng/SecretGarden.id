@@ -19,7 +19,7 @@
           <label class="text-sm font-semibold text-gray-700 mb-2">Thumbnail</label>
           <img 
             id="thumbnailPreview"
-            src="<?= base_url('assets/SGV/Category/' . strtolower(str_replace(" ", "-",$product['category_path'])) . '/' . strtolower($product['slug']) . '/' . esc($product['main_images'])) ?>" 
+            src="<?= base_url('assets/SGV/Category/' . strtolower(str_replace(" ", "-",$product['category_path'])) . '/' . strtolower(str_replace(" ","-",$product['slug'])) . '/' . esc($product['main_images'])) ?>" 
             alt="Main Product Image"
             class="w-40 h-40 rounded-full object-cover shadow-md ring-1 ring-gray-300 mb-4"
           >
@@ -52,6 +52,10 @@
             <textarea name="description" rows="4"
               class="w-full border border-gray-300 px-4 py-3 rounded-xl resize-y focus:outline-none focus:ring-2 focus:ring-amber-500"><?= esc($product['description']) ?></textarea>
           </div>
+        </div>
+         <div>
+          <label class="block font-medium mb-1">Videos</label>
+          <input type="file" name="main_videos" id="main-video-input" multiple accept="video/*" class="w-full border px-4 py-2 rounded-lg">
         </div>
       </div>
     </section>
@@ -93,7 +97,7 @@
               <div class="flex gap-2 flex-wrap">
                 <?php foreach ($v['images'] as $img): ?>
                   <div class="relative variant-image-item" data-id="<?= $img['id'] ?>">
-                    <img src="<?= base_url('assets/SGV/Category/' . strtolower($product['category_path']) . '/' . strtolower($product['slug']) . '/' . strtolower($v['name']) . '/' . $img['image_path']) ?>" class="w-24 h-24 object-cover rounded shadow">
+                    <img src="<?= base_url('assets/SGV/Category/' . strtolower($product['category_path']) . '/' . strtolower($product['slug']) . '/' . strtolower(str_replace(" ","-",$v['name'])) . '/' . $img['image_path']) ?>" class="w-24 h-24 object-cover rounded shadow">
                     <button type="button" class="delete-variant-image absolute -top-1 -right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center" data-image-id="<?= $img['id'] ?>">&times;</button>
                   </div>
                 <?php endforeach ?>
@@ -132,7 +136,7 @@
 
     <!-- Submit -->
     <div class="text-right">
-      <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white px-10 py-3 rounded-2xl font-semibold shadow-md transition transform hover:scale-105">
+      <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-black px-10 py-3 rounded-2xl font-semibold shadow-md transition transform hover:scale-105">
         Save Changes
       </button>
     </div>

@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 namespace App\Controllers;
 
 use App\Models\UserModel;
@@ -27,7 +26,6 @@ class Auth extends Controller
                 'email' => $user['email'],
                 'role_id' => $user['role_id']
             ]);
-            
             if ($user['role_id'] != 2 || $user['role_id'] != '') {
                     return redirect()->to(base_url('admin'));
             } else {
@@ -91,7 +89,7 @@ class Auth extends Controller
     public function checkIdentity()
 {
     $model = new UserModel();
-    $type  = $this->request->getGet('type'); 
+    $type  = $this->request->getGet('type');
     $value = $this->request->getGet('value');
 
     if ($type === 'email') {

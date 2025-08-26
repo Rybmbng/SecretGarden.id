@@ -25,13 +25,12 @@ function slugify($string)
     </p>
   </div>
 </section>
-
-<section class="relative w-full px-4 md:px-12 py-12 bg-gradient-to-b from-white to-gray-50">
+<section class="relative w-full px-4 md:px-12 py-12 ">
   <div class="max-w-7xl mx-auto relative">
 
     <!-- Tombol Scroll -->
     <button id="scroll-left"
-      class="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 backdrop-blur-md rounded-full shadow-md p-3 hover:bg-white hidden md:flex items-center justify-center transition">
+      class="absolute -left-4 top-1/2 -translate-y-1/2 z-10  backdrop-blur-md rounded-full shadow-md p-3 hidden md:flex items-center justify-center transition">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
       </svg>
@@ -39,30 +38,26 @@ function slugify($string)
 
     <!-- Slider -->
     <div id="slider-track"
-         class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-8 px-2 no-scrollbar cursor-grab">
-      <?php foreach ($images as $catImg => $img): ?>
+         class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-6 px-2 no-scrollbar cursor-grab transition-all">
+      <?php foreach ($images as $img): ?>
         <?php $imgSlug = slugify($img['name']); ?>
-        <div class="snap-center flex-shrink-0 w-[280px] sm:w-[320px]">
-          <div class="group relative bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-[1.03] hover:shadow-xl">
+        <div class="snap-center flex-shrink-0 w-[220px] sm:w-[260px] md:w-[280px] lg:w-[300px] 
+                    rounded-xl shadow-md p-4 flex flex-col items-center text-center 
+                    transition-transform duration-300 ">
+          <a href="<?= site_url('category/' . str_replace(' ', '-', $img['name'])) ?>" 
+             class="  overflow-hidden transform transition duration-300 ">
 
-            <!-- Gambar -->
+            <!-- Gambar Produk -->
             <img src="<?= base_url('assets/SGV/Category/' . $imgSlug . '/' . $img['img']) ?>"
                  alt="<?= esc($img['name']) ?>"
-                 class="h-48 w-full object-cover group-hover:scale-105 transition duration-500"/>
+                 class="w-full h-64 object-cover"/>
 
-            <!-- Overlay Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-
-            <!-- Konten -->
-            <div class="absolute bottom-0 left-0 w-full p-4 text-white">
-              <h3 class="text-lg font-bold"><?= esc($img['name']) ?></h3>
-              <p class="text-sm opacity-80 line-clamp-2"><?= esc($img['desc']) ?></p>
-              <a href="<?= site_url('category/' . str_replace(' ', '-', $img['name'])) ?>"
-                 class="inline-block mt-3 px-4 py-2 bg-white text-gray-800 font-semibold rounded-xl shadow hover:bg-gray-100 hover:shadow-lg transition">
-                Check
-              </a>
+            <!-- Nama & Harga Produk -->
+            <div class="p-4 text-center">
+              <h4 class="text-lg font-bold mb-1"><?= esc($img['name']) ?></h4>
+              <!-- <p class="text-gray-800 font-semibold"><?= esc($img['desc'] ?? '-') ?></p> -->
             </div>
-          </div>
+          </a>
         </div>
       <?php endforeach; ?>
     </div>
@@ -95,9 +90,9 @@ function slugify($string)
 
       <!-- Gambar -->
       <div class="flex justify-center">
-        <img src="<?= base_url("assets/SGV/cr1.png") ?>" 
+        <img src="<?= base_url('assets/SGV/Category/' . $imgSlug . '/' . $img['img']) ?>" 
              alt="<?= esc($category['name']) ?>" 
-             class="max-h-[40vh] object-contain parallax-hover transition-transform duration-500 hover:scale-105"/>
+             class="max-h-[60vh] object-contain parallax-hover transition-transform duration-500 hover:scale-105"/>
       </div>
     </div>
   </section>
@@ -105,36 +100,49 @@ function slugify($string)
   <!-- Slider Produk per Kategori -->
   <section class="relative w-full px-4 md:px-12 py-12 fade-in-up">
     <div class="max-w-7xl mx-auto relative">
-      <button onclick="slideLeft(<?= $catIndex ?>)"
-              class="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-md hover:bg-white hidden md:block">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-      </button>
 
+      <?php $isFew = count($category['products']) < 4; ?>
+
+      <?php if (!$isFew): ?>
+        <!-- Tombol Panah Kiri -->
+        <button onclick="slideLeft(<?= $catIndex ?>)"
+                class="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-md hover:bg-white hidden md:block">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+      <?php endif; ?>
+
+      <!-- Track Produk -->
       <div id="product-slider-track-<?= $catIndex ?>" 
-           class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-6 no-scrollbar cursor-grab">
+          class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-6 no-scrollbar cursor-grab 
+                  <?= $isFew ? 'justify-center' : '' ?>">
         <?php foreach ($category['products'] as $product): ?>
           <a href="<?= site_url('products/' . strtolower(str_replace(' ', '-', $product['name']))) ?>"
-             class="flex-shrink-0 w-[240px] bg-white rounded-xl shadow-lg p-4 flex flex-col items-center text-center snap-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+            class="flex-shrink-0 w-[240px] bg-white rounded-xl shadow-lg p-4 flex flex-col items-center text-center snap-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
             <div class="text-xs uppercase text-[#7b956a] font-semibold mb-1"><?= esc($category['name']) ?></div>
             <div class="font-bold text-base text-[#495c48] mb-2"><?= esc($product['name']) ?></div>
             <img src="<?= base_url('assets/SGV/Category/'.strtolower(str_replace(' ', '-', $category['name'])) . '/'. strtolower(str_replace(' ', '-', $product['name'])).'/'. $product['main_images']) ?>"
-                 alt="<?= esc($product['name']) ?>" 
-                 class="w-[180px] h-[180px] object-cover rounded-md mb-3 transition-transform duration-500 hover:scale-110"/>
+                alt="<?= esc($product['name']) ?>" 
+                class="w-[180px] h-[180px] object-cover rounded-md mb-3 transition-transform duration-500 hover:scale-110"/>
             <p class="text-xs text-gray-500 line-clamp-3"><?= esc($product['desc'] ?? '') ?></p>
           </a>
         <?php endforeach; ?>
       </div>
 
-      <button onclick="slideRight(<?= $catIndex ?>)"
-              class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-md hover:bg-white hidden md:block">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </button>
+      <?php if (!$isFew): ?>
+        <!-- Tombol Panah Kanan -->
+        <button onclick="slideRight(<?= $catIndex ?>)"
+                class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow-md hover:bg-white hidden md:block">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      <?php endif; ?>
+
     </div>
   </section>
+
 <?php endforeach; ?>
 
 <!-- No Scrollbar CSS -->
@@ -145,6 +153,11 @@ function slugify($string)
 
 <!-- Script Slider -->
 <script>
+const slider = document.getElementById('slider-track');
+const btnLeft = document.getElementById('scroll-left');
+const btnRight = document.getElementById('scroll-right');
+
+// draggable
 const makeDraggable = (slider) => {
   let isDown = false, startX, scrollLeft;
 
@@ -172,27 +185,20 @@ const makeDraggable = (slider) => {
     slider.scrollLeft = scrollLeft - (x - startX) * 2;
   });
 };
+makeDraggable(slider);
 
-makeDraggable(document.getElementById('slider-track'));
-<?php foreach ($categories as $index => $_): ?>
-makeDraggable(document.getElementById('product-slider-track-<?= $index ?>'));
-<?php endforeach; ?>
+// tombol scroll
+btnLeft.onclick = () => slider.scrollBy({ left: -320, behavior: 'smooth' });
+btnRight.onclick = () => slider.scrollBy({ left: 320, behavior: 'smooth' });
 
-// Scroll tombol utama
-document.getElementById('scroll-left').onclick = () => {
-  document.getElementById('slider-track').scrollBy({ left: -320, behavior: 'smooth' });
-};
-document.getElementById('scroll-right').onclick = () => {
-  document.getElementById('slider-track').scrollBy({ left: 320, behavior: 'smooth' });
-};
-
-function slideLeft(catIndex) {
-  document.getElementById(`product-slider-track-${catIndex}`)
-    .scrollBy({ left: -260, behavior: 'smooth' });
-}
-function slideRight(catIndex) {
-  document.getElementById(`product-slider-track-${catIndex}`)
-    .scrollBy({ left: 260, behavior: 'smooth' });
+// Atur center jika item < 4
+const items = slider.querySelectorAll('div.snap-center').length;
+if (items <= 4) {
+  slider.classList.add("justify-center");
+  btnLeft.style.display = "none";
+  btnRight.style.display = "none";
+} else {
+  slider.classList.add("justify-start");
 }
 </script>
 

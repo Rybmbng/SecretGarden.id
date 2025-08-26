@@ -7,7 +7,7 @@ class ProductModel extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['category_id', 'name', 'slug', 'price', 'main_images', 'description','is_display','is_show', 'created_at', 'updated_at'];
+    protected $allowedFields = ['category_id', 'name', 'slug', 'price', 'main_images','main_videos','description','is_display','is_show', 'created_at', 'updated_at'];
     protected $useTimestamps = true; // kalau pakai created_at dan updated_at
     public function withRelations()
     {

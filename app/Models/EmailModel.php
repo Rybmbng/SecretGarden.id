@@ -8,8 +8,6 @@ class EmailModel extends Model
     protected $table = 'emails';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'sender_email','sender_name','subject','body','received_at',
-        'replied','is_new','folder','parent_id','account'
+        'uid','subject','from_email','to_email','body','date','folder','is_seen'
     ];
-    protected $returnType = 'array';
 }

@@ -45,6 +45,11 @@
           <div id="main-image-preview" class="flex gap-3 mt-3 flex-wrap"></div>
         </div>
 
+         <div>
+          <label class="block font-medium mb-1">Videos</label>
+          <input type="file" name="main_videos" id="main-video-input" multiple accept="video/*" class="w-full border px-4 py-2 rounded-lg">
+        </div>
+
         <div>
           <label class="block font-medium mb-1">Description</label>
           <textarea name="description" rows="4" class="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Write something about the product..."></textarea>
@@ -57,7 +62,7 @@
 
         <div id="variants-container" class="space-y-auto">
           <div class="variant-group grid grid-row-4 md:grid-cols-2 gap-6 relative border border-gray-200 p-5 rounded-xl bg-gray-50" data-variant-index="0">
-            <button type="button" class="remove-variant absolute -top-3 -right-3 bg-red-500 text-white w-7 h-7 rounded-full shadow hover:bg-red-600" title="Remove Variant">×</button>
+            <button type="button" class="remove-variant absolute -top-3 -right-3 bg-red-500 text-black w-7 h-7 rounded-full shadow hover:bg-red-600" title="Remove Variant">×</button>
             <input type="text" name="variant_name[]" placeholder="Variant Name" required class="border px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-400">
             <input type="number" name="variant_price[]" placeholder="Price" class="border px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-400">
             <input type="text" name="variant_sku[]" placeholder="SKU" class="border px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-400">
@@ -68,13 +73,13 @@
               <div class="variant-image-group space-y-2">
                 <input type="file" name="variant_images_0[]" multiple accept="image/*" class="variant-file border px-4 py-2 rounded-lg w-full" />
                 <div class="variant-image-preview flex gap-2 flex-wrap mt-2"></div>
-                <button type="button" class="add-variant-image bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 mt-2">+ Add Image</button>
+                <button type="button" class="add-variant-image bg-blue-500 text-black text-xs px-3 py-1 rounded hover:bg-blue-600 mt-2">+ Add Image</button>
               </div>
             </div>
           </div>
         </div>
 
-        <button type="button" id="add-variant" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">+ Add Variant</button>
+        <button type="button" id="add-variant" class="bg-green-600 text-black px-5 py-2 rounded-lg hover:bg-green-700">+ Add Variant</button>
       </section>
 
       <!-- Step 3: Sections -->
@@ -83,7 +88,7 @@
 
         <div id="sections-container" class="space-y-6">
           <div class="section-group grid md:grid-cols-2 gap-6 relative border border-gray-200 p-5 rounded-xl bg-gray-50" data-section-index="0">
-            <button type="button" class="remove-section absolute -top-3 -right-3 bg-red-500 text-white w-7 h-7 rounded-full shadow hover:bg-red-600" title="Remove Section">×</button>
+            <button type="button" class="remove-section absolute -top-3 -right-3 bg-red-500 text-black w-7 h-7 rounded-full shadow hover:bg-red-600" title="Remove Section">×</button>
             
             <select name="section_type[]" class="border px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-400">
               <option value="story">Story</option>
@@ -96,14 +101,14 @@
           </div>
         </div>
 
-        <button type="button" id="add-section" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">+ Add Section</button>
+        <button type="button" id="add-section" class="bg-green-600 text-black px-5 py-2 rounded-lg hover:bg-green-700">+ Add Section</button>
       </section>
     </div>
 
     <div class="flex justify-between items-center mt-10">
-      <button type="button" id="prev-section" class="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500 hidden">← Previous</button>
-      <button type="button" id="next-section" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Next →</button>
-      <button type="submit" id="submit-btn" class="bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-800 hidden">💾 Save Product</button>
+      <button type="button" id="prev-section" class="bg-gray-400 text-black px-6 py-2 rounded-lg hover:bg-gray-500 hidden">← Previous</button>
+      <button type="button" id="next-section" class="bg-blue-600 text-black px-6 py-2 rounded-lg hover:bg-blue-700">Next →</button>
+      <button type="submit" id="submit-btn" class="bg-blue-700 text-black px-6 py-2 rounded-lg hover:bg-blue-800 hidden">💾 Save Product</button>
     </div>
   </form>
 </div>
@@ -167,7 +172,7 @@ document.getElementById('main-image-input').addEventListener('change', function(
       const btn=document.createElement('button');
       btn.type="button";
       btn.innerText="×";
-      btn.className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs";
+      btn.className="absolute -top-1 -right-1 bg-red-500 text-black rounded-full w-5 h-5 text-xs";
       btn.addEventListener('click', ()=>{
         const dt = new DataTransfer();
         Array.from(e.target.files).forEach((f,i)=>{ if(i!==idx) dt.items.add(f); });
@@ -246,7 +251,7 @@ document.addEventListener('change', e=>{
         const btn=document.createElement('button');
         btn.type="button";
         btn.innerText="×";
-        btn.className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs";
+        btn.className="absolute -top-1 -right-1 bg-red-500 text-black rounded-full w-4 h-4 text-xs";
         btn.addEventListener('click', ()=>{ wrapper.remove(); });
         wrapper.appendChild(img);
         wrapper.appendChild(btn);

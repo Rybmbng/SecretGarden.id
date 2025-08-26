@@ -1,48 +1,94 @@
 <?= view('partials/header'); ?>
 
 <style>
-  .fade-in-up {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease-out, transform 1s ease-out;
-  }
-
-  .fade-in-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
+  /* Parallax */
   .parallax-bg {
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
   }
-    .parallax-container {
+  .parallax-container {
     perspective: 1000px;
     transform-style: preserve-3d;
     overflow: hidden;
   }
-
   .parallax-item {
     transform: translateZ(0);
     transition: transform 0.3s ease;
   }
+/* Fade-in sections */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+  }
+  .fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Slider */
+  #slide-main {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    cursor: grab;
+  }
+  .slides-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  .slide.active {
+    opacity: 1;
+    z-index: 2;
+  }
+  .slide video, .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .indicator-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .indicator-dot.active {
+    background-color: white;
+  }
 </style>
+<section class="page relative h-screen w-full overflow-hidden fade-in-up" id="slide-main">
+  <div class="slides-container">
+    <?php foreach ($sliders as $slide): ?>
+      <div class="slide" data-duration="<?= $slide['duration'] ?? 8000 ?>">
+        <?php if ($slide['type'] === 'video'): ?>
+          <video loading="lazy" autoplay loop muted playsinline class="w-full h-full object-cover">
+            <source src="<?= base_url($slide['src']) ?>" type="video/mp4" />
+          </video>
+        <?php else: ?>
+          <img src="<?= base_url($slide['src']) ?>" alt="<?= esc($slide['alt']) ?>" class="w-full h-full object-cover" loading="lazy" />
+        <?php endif; ?>
+      </div>
+    <?php endforeach; ?>
+  </div>
 
-
-<section class="page relative h-[100vh] w-[100%] aspect-video overflow-hidden fade-in-up" id="slide-main">
-  <?php foreach ($sliders as $index => $slide): ?>
-    <div class="absolute inset-0 w-auto h-auto transition-opacity duration-1000 ease-in-out <?= $index === 0 ? 'opacity-100' : 'opacity-0' ?>" data-index="<?= $index ?>">
-      <?php if ($slide['type'] === 'video'): ?>
-        <video loading="lazy" autoplay loop muted playsinline class="md:aspect-video w-auto h-[100vh] md:h-[auto] md:w-full object-fit" loading="lazy">
-          <source src="<?= base_url($slide['src']) ?>" type="video/mp4" />
-        </video>
-      <?php elseif ($slide['type'] === 'image'): ?>
-        <img src="<?= base_url($slide['src']) ?>" alt="<?= esc($slide['alt']) ?>" class="md:aspect-video w-auto h-auto md:w-full md:h-auto object-fit" loading="lazy" />
-      <?php endif; ?>
-    </div>
-  <?php endforeach; ?>
+  <!-- Indicator Dots -->
+  <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+    <?php foreach ($sliders as $index => $slide): ?>
+      <span class="indicator-dot <?= $index === 0 ? 'active' : '' ?>" data-dot="<?= $index ?>"></span>
+    <?php endforeach; ?>
+  </div>
 </section>
 
 <section class="page w-full relative h-auto text-center fade-in-up flex justify-center items-center select-none">
@@ -146,87 +192,87 @@
 
 
 <script>
+  /* Parallax */
   const box = document.getElementById('parallaxBox');
   const item = document.getElementById('parallaxItem');
-
-  box.addEventListener('mousemove', (e) => {
-    const rect = box.getBoundingClientRect();
-    const x = e.clientX - rect.left; 
-    const y = e.clientY - rect.top;  
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const deltaX = (x - centerX) / centerX;
-    const deltaY = (y - centerY) / centerY;
-
-    const rotateX = deltaY * 10; 
-    const rotateY = deltaX * -10;
-
-    item.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-  });
-
-  box.addEventListener('mouseleave', () => {
-    item.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-  });
-</script>
-
-<script>
-    const slides = document.querySelectorAll("#slide-main > div");
-  const durations = [28000, 12000, 10000, 8000]; 
-  let current = 0;
-
-  function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("opacity-100", i === index);
-      slide.classList.toggle("opacity-0", i !== index);
+  if(box && item){
+    box.addEventListener('mousemove', (e) => {
+      const rect = box.getBoundingClientRect();
+      const x = e.clientX - rect.left; 
+      const y = e.clientY - rect.top;  
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const deltaX = (x - centerX) / centerX;
+      const deltaY = (y - centerY) / centerY;
+      const rotateX = deltaY * 10; 
+      const rotateY = deltaX * -10;
+      item.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
     });
-
-    setTimeout(() => {
-      current = (index + 1) % slides.length;
-      showSlide(current);
-    }, durations[index] || 8000);
+    box.addEventListener('mouseleave', () => {
+      item.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+    });
   }
+
+const slides = document.querySelectorAll('#slide-main .slide');
+  const dots = document.querySelectorAll('#slide-main [data-dot]');
+  const slider = document.getElementById('slide-main');
+  let current = 0;
+  let slideTimeout;
+  let isDragging = false;
+  let startX = 0;
+
+  function showSlide(index){
+    index = (index + slides.length) % slides.length;
+    slides.forEach((s,i)=>s.classList.toggle('active', i===index));
+    dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+    current = index;
+
+    clearTimeout(slideTimeout);
+    const duration = parseInt(slides[current].dataset.duration) || 8000;
+    slideTimeout = setTimeout(()=>showSlide(current+1), duration);
+  }
+
+  // Dot click
+  dots.forEach(dot => dot.addEventListener('click', ()=>showSlide(parseInt(dot.dataset.dot))));
+
+  // Pause on hover
+  slider.addEventListener('mouseenter', ()=>clearTimeout(slideTimeout));
+  slider.addEventListener('mouseleave', ()=>showSlide(current));
+
+  // Drag / Swipe
+  slider.addEventListener('mousedown', e => { isDragging=true; startX=e.clientX; slider.style.cursor="grabbing"; });
+  slider.addEventListener('touchstart', e => { isDragging=true; startX=e.touches[0].clientX; });
+
+  slider.addEventListener('mouseup', e => {
+    if(!isDragging) return;
+    const diff = e.clientX - startX;
+    if(diff > 50) showSlide(current-1);
+    else if(diff < -50) showSlide(current+1);
+    isDragging = false;
+    slider.style.cursor="grab";
+  });
+  slider.addEventListener('touchend', e => {
+    if(!isDragging) return;
+    const diff = e.changedTouches[0].clientX - startX;
+    if(diff > 50) showSlide(current-1);
+    else if(diff < -50) showSlide(current+1);
+    isDragging = false;
+  });
+
+  // Initialize
   showSlide(current);
 
   // Fade-in on scroll
-  const faders = document.querySelectorAll('.fade-in-up');
-  const appearOptions = {
-    threshold: 0.1,
-    rootMargin: "0px 0px -100px 0px"
-  };
-
-  const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
+  const faders=document.querySelectorAll('.fade-in-up');
+  const observer = new IntersectionObserver((entries, obs)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
     });
-  }, appearOptions);
-
-  faders.forEach(fader => {
-    appearOnScroll.observe(fader);
-  });
+  },{threshold:0.1, rootMargin:"0px 0px -100px 0px"});
+  faders.forEach(fader=>observer.observe(fader));
 </script>
 
-
-<script>
-  const slides = document.querySelectorAll("#slide-main > div");
-  const durations = [28000, 12000, 10000, 8000]; 
-  let current = 0;
-
-  function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("opacity-100", i === index);
-      slide.classList.toggle("opacity-0", i !== index);
-    });
-
-    setTimeout(() => {
-      current = (index + 1) % slides.length;
-      showSlide(current);
-    }, durations[index] || 8000);
-  }
-  showSlide(current);
-</script>
-
-<?= $this->include('partials/footer') ?>
+<?= $this->include('partials/footer'); ?>

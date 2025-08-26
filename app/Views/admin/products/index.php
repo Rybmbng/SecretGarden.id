@@ -16,7 +16,7 @@
 
   <!-- Search -->
   <div class="mb-6 flex justify-end">
-    <input id="searchInput" type="text" placeholder="🔍 Search products..." 
+    <input id="searchInput" type="text" placeholder="🔍 Search products..."
       class="w-full max-w-sm px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-400 text-gray-700 placeholder-gray-400 shadow-sm" />
   </div>
 

@@ -10,7 +10,7 @@ class EmailConfigModel extends Model
     protected $allowedFields = [
         'smtp_host','smtp_user','smtp_pass','smtp_port',
         'imap_host','imap_user','imap_pass','imap_port',
-        'mail_type'
+        'mail_type','name'
     ];
 
     public function getConfig()

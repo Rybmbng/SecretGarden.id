@@ -42,6 +42,36 @@ class ProfileController extends BaseController
         return $query->getResultArray();
     }
 
+    function update(){
+
+        $profileModel = new profileModel();
+        $user = session()->get('user');
+        $getUsername = $this->request->getPost('username');
+        $getName = $this->request->getPost('name');
+        $getEmail = $this->request->getPost('email');
+        $getBio = $this->request->getPost('bio');
+        if($user['username'] != $getUsername){
+             $data = [
+                    'pageTitle' => 'User Profile',
+                    'user' => $this->getUserProfileData(), 
+                    'address' => $this->getUserAddress(),
+
+                ];
+                return view('profile/index', $data);
+        }
+
+        $profileModel->update([
+            'name'       => $this->request->getPost('name'),
+            'phone'      => $this->request->getPost('phone'),
+            'address'    => $this->request->getPost('address'),
+            'location'   => $this->request->getPost('location'),
+            'birthday'   => $this->request->getPost('birthday'),
+            'bio'        => $this->request->getPost('bio'),
+            'avatar'     => null,
+            'cover_photo'=> null,
+        ]);
+    }
+
     public function index($slug = null)
     {     
         $user = session()->get('user');

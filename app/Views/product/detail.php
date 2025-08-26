@@ -11,13 +11,10 @@ $ogImage = !empty($galleryImages)
 $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower($product['video'])) : null;
 ?>
 
-<!-- Meta SEO -->
 <meta property="og:title" content="<?= esc($product['name']) ?>" />
 <meta property="og:description" content="<?= esc(strip_tags($product['description'] ?? ($variants[0]['desc'] ?? ''))) ?>" />
 <meta property="og:image" content="<?= $ogImage ?>" />
 <meta name="description" content="<?= esc(strip_tags($product['description'] ?? ($variants[0]['desc'] ?? ''))) ?>">
-
-<!-- Page styles (Apple-ish micro details) -->
 <style>
   .glass { backdrop-filter: saturate(180%) blur(16px); background: rgba(255,255,255,.6); }
   .btn-smooth { transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease; }
@@ -27,11 +24,14 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
   .shimmer { background: linear-gradient(90deg,#eee,#f5f5f5,#eee); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
   @keyframes shimmer { 0%{background-position:-200% 0}100%{background-position:200% 0} }
   .thumb-active { outline: 2px solid #111; outline-offset: 2px; }
+  .CartBtn { width: 140px; height: 40px; border-radius: 9999px; border: none; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:.2s ease; }
+  .CartBtn:active { transform: scale(.98); }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
 <div class="max-w-[1200px] mx-auto px-5 md:px-8 py-10 md:py-16 font-sans">
 
-  <!-- Header breadcrumb minimal -->
   <nav aria-label="Breadcrumb" class="text-xs md:text-sm text-gray-400 mb-6 md:mb-10">
     <a href="/" class="hover:text-gray-900">Home</a>
     <span class="mx-2">/</span>
@@ -148,14 +148,14 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
           <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
             <div id="stock-bar" class="h-1.5 bg-gray-900" style="width:30%"></div>
           </div>
-          <p class="text-xs text-gray-500 mt-1" id="stock-text">Sisa stok: -</p>
+          <p class="text-xs text-gray-500 mt-1" id="stock-text">Stock Left: -</p>
         </div>
       </section>
       <?php endif; ?>
 
       <!-- Add to cart + wishlist -->
       <section class="flex items-center gap-3 pt-2">
-        <a id="idcart" href="/cart/add/<?= esc($product['id']) ?>?variant=<?= esc($variants[0]['id'] ?? 0) ?>"
+        <a id="idcart" href="/cart/add/<?= esc($product['id']) ?>/<?= esc($variants[0]['id'] ?? 0) ?>"
            class="btn-smooth bg-black text-white px-6 py-3 rounded-full text-sm uppercase tracking-wide">Add to Cart</a>
         <button id="btn-buy" class="btn-smooth px-6 py-3 rounded-full text-sm uppercase tracking-wide ring-fine">Buy Now</button>
       </section>
@@ -167,31 +167,92 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
       </section>
       <?php endif; ?>
     </aside>
-
   </div>
+</div>
+<div class="max-width-full">
+  <?php if(!empty($product['main_videos'])){?>
+<section class="page relative h-[80vh] md:h-[800px] w-full aspect-video overflow-hidden fade-in-up">
+  <div class="absolute inset-0 w-auto h-auto transition-opacity duration-1000 ease-in-out opacity-70">
+    <video loading="lazy" autoplay loop muted playsinline  class="md:aspect-video w-auto h-full md:h-[auto] md:w-full object-fit">
+      <source src="<?= base_url().'assets/SGV/Category/'.$categorySlug.'/'.$productSlug.'/'.$product["main_videos"]?>" type="video/mp4" />
+    </video>
+  </div>
+</section>
+<?php } ?>
 
-  <!-- Related (kept minimal) -->
-  <section class="mt-16 md:mt-24 border-t pt-10">
-    <h2 class="text-lg md:text-xl font-semibold mb-6">You Might Also Like</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-      <?php foreach (($products ?? []) as $item): $itemSlug = slugify($item['name']); ?>
-        <a href="<?= site_url('products/'.$item['slug']) ?>" class="group block">
-          <div class="w-full aspect-[4/5] bg-white rounded-2xl ring-fine overflow-hidden">
-            <img src="<?= base_url('assets/SGV/Category/'.slugify($item['category_name']).'/'.slugify($item['name']).'/'.$item['img']) ?>" alt="<?= esc($item['name']) ?>"
-                 class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
-          </div>
-          <p class="mt-2 text-sm text-gray-700 group-hover:underline truncate"><?= esc($item['name']) ?></p>
-        </a>
-      <?php endforeach; ?>
+<section class="mt-16 md:mt-24 border-t pt-10 relative">
+  <h2 class="text-lg text-center md:text-xl font-semibold mb-6">You Might Also Like</h2>
+
+  <div class="relative">
+    <!-- Tombol Kiri -->
+    <button id="scrollLeft"
+      class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow hidden">
+      &#8592;
+    </button>
+
+    <!-- Wrapper agar bisa center jika sedikit item -->
+    <div class="w-full">
+      <div id="related-scroll"
+           class="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth mx-auto max-w-full">
+        <?php foreach (($recommendedProducts ?? []) as $item): $itemSlug = slugify($item['name']); ?>
+          <a href="<?= site_url('products/'.$item['slug']) ?>"
+             class="group flex-shrink-0 w-[200px] aspect-[4/5] snap-start">
+            <div class="w-full aspect-[4/5] bg-white rounded-2xl ring-fine overflow-hidden">
+              <img src="<?= base_url('assets/SGV/Category/'.slugify($item['category_name']).'/'.slugify($item['name']).'/'.$item['main_images']) ?>"
+                   alt="<?= esc($item['name']) ?>"
+                   class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                   loading="lazy" />
+            </div>
+            <p class="mt-2 text-center text-sm text-black-700 group-hover:underline truncate">
+              <?= esc($item['name']) ?>
+            </p>
+          </a>
+        <?php endforeach; ?>
+      </div>
     </div>
-  </section>
+
+    <!-- Tombol Kanan -->
+    <button id="scrollRight"
+      class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow hidden">
+      &#8594;
+    </button>
+  </div>
+</section>
+
 </div>
 
-<!-- Styles for the default Add to Cart button look (subtle Apple-ish yellow removed; using black/white) -->
-<style>
-  .CartBtn { width: 140px; height: 40px; border-radius: 9999px; border: none; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:.2s ease; }
-  .CartBtn:active { transform: scale(.98); }
-</style>
+<script>
+  const scrollContainer = document.getElementById("related-scroll");
+  const btnLeft = document.getElementById("scrollLeft");
+  const btnRight = document.getElementById("scrollRight");
+
+  const scrollStep = 220; // 200px card + gap
+
+  btnLeft.addEventListener("click", () => {
+    scrollContainer.scrollBy({ left: -scrollStep, behavior: "smooth" });
+  });
+
+  btnRight.addEventListener("click", () => {
+    scrollContainer.scrollBy({ left: scrollStep, behavior: "smooth" });
+  });
+
+  function updateButtons() {
+    const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    btnLeft.classList.toggle("hidden", scrollContainer.scrollLeft <= 0);
+    btnRight.classList.toggle("hidden", scrollContainer.scrollLeft >= maxScroll - 5);
+
+    // 👉 Auto center kalau sedikit item
+    if (scrollContainer.scrollWidth <= scrollContainer.clientWidth) {
+      scrollContainer.classList.add("justify-center");
+    } else {
+      scrollContainer.classList.remove("justify-center");
+    }
+  }
+
+  scrollContainer.addEventListener("scroll", updateButtons);
+  window.addEventListener("load", updateButtons);
+  window.addEventListener("resize", updateButtons);
+</script>
 
 <!-- JS: Zoom, Variants, Media, Wishlist, Share, Price formatting -->
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
@@ -263,7 +324,7 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
 
     // Cart links
     const idp = btn.dataset.idp, idv = btn.dataset.id;
-    cartBtn.href = `/cart/add/${idp}?variant=${idv}`;
+    cartBtn.href = `/cart/add/${idp}/${idv}`;
     buyBtn.onclick = ()=>{ window.location.href = `/checkout?add=${idp}&variant=${idv}`; };
 
     // Stock
@@ -272,7 +333,7 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
       stockWrap.style.display='block';
       const pct = Math.max(8, Math.min(100, (stock/50)*100));
       stockBar.style.width = pct+"%";
-      stockText.textContent = `Sisa stok: ${stock}`;
+      stockText.textContent = `Stock Left: ${stock}`;
     } else { stockWrap.style.display='none'; }
 
     // Media: variant video > variant images > default
@@ -325,23 +386,4 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
     }catch{ navigator.clipboard.writeText(window.location.href).then(()=>alert('Link disalin')); }
   });
 </script>
-
-<!-- JSON-LD Product (basic) -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"Product",
-  "name":"<?= esc($product['name']) ?>",
-  "image":["<?= $ogImage ?>"],
-  "description":"<?= esc(strip_tags($product['description'] ?? '')) ?>",
-  "brand":{"@type":"Brand","name":"<?= esc($product['brand'] ?? 'Brand') ?>"},
-  "offers":{
-    "@type":"Offer",
-    "priceCurrency":"IDR",
-    "price":"<?= (float)($variants[0]['price'] ?? 0) ?>",
-    "availability":"<?= (!empty($variants[0]['stock']) && $variants[0]['stock']>0) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' ?>"
-  }
-}
-</script>
-
 <?= view('partials/footer') ?>

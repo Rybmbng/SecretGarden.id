@@ -91,6 +91,7 @@ class CategoryController extends BaseController
             $builder->join('product_variants pv', 'pv.product_id = p.id');
             $builder->join('product_images pim', 'pv.id = pim.variant_id');
             $builder->where('c.name', $categoryName);
+            $builder->groupBy('p.id');
 
             // Tambahkan FILTER dan SORT
             $search = $this->request->getGet('search');

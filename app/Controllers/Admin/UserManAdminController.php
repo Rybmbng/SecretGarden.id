@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\RoleModel;
+use App\Models\ProfileModel;
 
 class UserManAdminController extends BaseController
 {
@@ -15,6 +16,7 @@ class UserManAdminController extends BaseController
 
         $data['users'] = $userModel->findAll();
         $data['roles'] = $roleModel->findAll();
+        $data['pageTitle'] = 'Users Management';
 
         return view('admin/users/index', $data);
     }
@@ -30,7 +32,6 @@ class UserManAdminController extends BaseController
             'role_id'  => $this->request->getPost('role_id'),
             'is_active'=> $this->request->getPost('is_active') ? 1 : 0,
         ]);
-
         return redirect()->to(base_url('admin/users'));
     }
 
