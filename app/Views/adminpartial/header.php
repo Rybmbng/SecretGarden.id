@@ -15,8 +15,12 @@ $menus = getSidebarMenu($roleId);
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/72b236a30b.js" crossorigin="anonymous"></script>
+
 <style>
+.icon-picker { display: flex; flex-wrap: wrap; gap: 8px; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 8px; border-radius: 6px; background: #f9f9f9; }
+.icon-picker i { font-size: 20px; cursor: pointer; padding: 4px; border-radius: 4px; transition: 0.2s; }
+.icon-picker i:hover, .icon-picker i.selected { background-color: #3b82f6; color: white; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
@@ -105,7 +109,7 @@ $menus = getSidebarMenu($roleId);
   </div>
 </header>
 
-<div class="flex h-screen overflow-hidden">
+<div class="flex h-full overflow-hidden">
 
   <!-- MOBILE OVERLAY -->
   <div class="fixed inset-0 bg-black bg-opacity-25 z-30 md:hidden" 

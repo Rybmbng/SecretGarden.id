@@ -103,6 +103,9 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
     $routes->post('menu/create', 'MenuController::create');
     $routes->get('menu/delete/(:num)', 'MenuController::delete/$1');
     $routes->post('menu/setRoleAccess', 'MenuController::setRoleAccess');
+    $routes->post('menu/updateOrder', 'MenuController::updateOrder');
+    $routes->post('menu/update/(:any)', 'MenuController::update/$1');
+    
 
     // Company Management
     $routes->get('setting/company', 'CompanyController::index');

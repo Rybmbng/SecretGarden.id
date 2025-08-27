@@ -9,15 +9,15 @@ class MenuController extends BaseController
 {
     public function index()
     {
-        $menuModel = new MenuModel();
-        $roleModel = new RoleModel();
+        $menuModel = new \App\Models\MenuModel();
+        $roleModel = new \App\Models\RoleModel();
 
-        $data['menus'] = $menuModel->findAll();
+        $data['menus'] = $menuModel->orderBy('parent_id','ASC')->orderBy('order','ASC')->findAll();
         $data['roles'] = $roleModel->findAll();
+        $data['menuModel'] = $menuModel; // <-- kirim ke view
 
         return view('admin/menu/index', $data);
     }
-
     public function create()
     {
         $menuModel = new MenuModel();
@@ -30,12 +30,41 @@ class MenuController extends BaseController
         ]);
         return redirect()->to('/admin/menu');
     }
+    public function update($id) {
+        $menuModel = new \App\Models\MenuModel();
+        $data = $this->request->getPost();
 
+        $menuModel->update($id, [
+            'name'      => $data['name'],
+            'url'       => $data['url'],
+            'icon'      => $data['icon'],
+            'parent_id' => $data['parent_id'] ?: null,
+            'is_active' => isset($data['is_active']) ? 1 : 0,
+        ]);
+
+        // kembalikan data terbaru untuk JS
+        $updatedMenu = $menuModel->find($id);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'menu'    => $updatedMenu
+        ]);
+    }
     public function delete($id)
     {
         $menuModel = new MenuModel();
         $menuModel->delete($id);
         return redirect()->to('/admin/menu');
+    }
+
+    public function updateOrder()
+    {
+        $data = $this->request->getJSON();
+        $menuModel = new MenuModel();
+        foreach($data->order as $index => $id){
+            $menuModel->update($id, ['order'=>$index]);
+        }
+        return $this->response->setJSON(['status'=>'success']);
     }
 
     public function setRoleAccess()
