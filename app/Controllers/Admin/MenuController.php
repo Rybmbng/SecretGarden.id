@@ -14,9 +14,10 @@ class MenuController extends BaseController
 
         $data['menus'] = $menuModel->orderBy('parent_id','ASC')->orderBy('order','ASC')->findAll();
         $data['roles'] = $roleModel->findAll();
-        $data['menuModel'] = $menuModel; // <-- kirim ke view
+        $data['menuModel'] = $menuModel; 
+        $data['pageTitle'] = "Menu Management"; 
 
-        return view('admin/menu/index', $data);
+        return view('admin/setting/menu/index', $data);
     }
     public function create()
     {
@@ -28,7 +29,7 @@ class MenuController extends BaseController
             'parent_id' => $this->request->getPost('parent_id') ?: null,
             'is_active' => $this->request->getPost('is_active') ? 1 : 0,
         ]);
-        return redirect()->to('/admin/menu');
+        return redirect()->to('/admin/setting/menu');
     }
     public function update($id) {
         $menuModel = new \App\Models\MenuModel();
@@ -54,7 +55,7 @@ class MenuController extends BaseController
     {
         $menuModel = new MenuModel();
         $menuModel->delete($id);
-        return redirect()->to('/admin/menu');
+        return redirect()->to('/admin/setting/menu');
     }
 
     public function updateOrder()
@@ -82,6 +83,6 @@ class MenuController extends BaseController
             ]);
         }
 
-        return redirect()->to('/admin/menu');
+        return redirect()->to('/admin/setting/menu');
     }
 }

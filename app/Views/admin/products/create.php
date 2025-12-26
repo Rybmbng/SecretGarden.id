@@ -40,13 +40,17 @@
         </div>
 
         <div>
-          <label class="block font-medium mb-1">Main Images</label>
+          <label class="block font-medium mb-1">Main Images
+            <span title="Maksimal 2MB, format JPG/PNG, resolusi 1080x1080px" class="text-blue-500 cursor-pointer">ℹ️</span>
+          </label>
           <input type="file" name="main_images" id="main-image-input" multiple accept="image/*" class="w-full border px-4 py-2 rounded-lg">
           <div id="main-image-preview" class="flex gap-3 mt-3 flex-wrap"></div>
         </div>
 
          <div>
-          <label class="block font-medium mb-1">Videos</label>
+          <label class="block font-medium mb-1">Videos
+            <span title="Maksimal 10MB, format MP4, resolusi 16:9" class="text-blue-500 cursor-pointer">ℹ️</span>
+          </label>
           <input type="file" name="main_videos" id="main-video-input" multiple accept="video/*" class="w-full border px-4 py-2 rounded-lg">
         </div>
 
@@ -69,7 +73,9 @@
             <input type="number" name="variant_stock[]" placeholder="Stock" class="border px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-400">
             <textarea name="variant_desc[]" rows="2" placeholder="Variant Description" class="border px-4 py-2 rounded-lg col-span-2 focus:ring-2 focus:ring-blue-400"></textarea>
             <div class="col-span-1">
-              <label class="block mb-1 font-medium">Variant Images</label>
+              <label class="block mb-1 font-medium">Variant Images
+                <span title="Maksimal 2MB, format JPG/PNG, resolusi 1080x1080px" class="text-blue-500 cursor-pointer">ℹ️</span>
+              </label>
               <div class="variant-image-group space-y-2">
                 <input type="file" name="variant_images_0[]" multiple accept="image/*" class="variant-file border px-4 py-2 rounded-lg w-full" />
                 <div class="variant-image-preview flex gap-2 flex-wrap mt-2"></div>
@@ -112,6 +118,28 @@
     </div>
   </form>
 </div>
+
+<div id="progress-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 transition-opacity duration-300 opacity-0">
+  <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center transform scale-95 transition-transform duration-300">
+    <h2 class="text-xl font-bold text-gray-700 mb-4">Processing...</h2>
+    <p id="progress-message" class="text-gray-600 mb-6">Please wait while we save your product.</p>
+
+    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden mb-4">
+      <div id="progress-bar" class="bg-blue-500 h-3 w-0 transition-all duration-500 ease-out"></div>
+    </div>
+
+    <div class="flex justify-center">
+      <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+        </path>
+      </svg>
+    </div>
+  </div>
+</div>
+
 
 <script>
 let currentStep = 0;
@@ -261,6 +289,55 @@ document.addEventListener('change', e=>{
     });
   }
 });
+  // === AJAX UPLOAD WITH PROGRESS ===
+const form=document.getElementById('product-form');
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  showModal("📤 Uploading files...",0);
+
+  let formData=new FormData(form);
+  const xhr=new XMLHttpRequest();
+  xhr.open("POST", form.action, true);
+
+  xhr.upload.addEventListener("progress", function(e){
+    if(e.lengthComputable){
+      const percent=Math.round((e.loaded/e.total)*100);
+      progressMessage.textContent=`📤 Uploading... ${percent}%`;
+      progressBar.style.width=percent+"%";
+    }
+  });
+
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState===4){
+      try{
+        const data=JSON.parse(xhr.responseText);
+        if(!data.success){
+          showError(data.message||"Upload failed");
+          return;
+        }
+        progressMessage.textContent="✅ Upload complete!";
+        progressBar.style.width="100%";
+        setTimeout(()=>window.location.href=data.redirect,1000);
+      }catch(err){
+        showError("Invalid server response");
+      }
+    }
+  };
+
+  xhr.send(formData);
+});
+
+function showModal(msg,p){
+  document.getElementById('progress-modal').classList.remove('hidden');
+  document.getElementById('progress-message').textContent=msg;
+  document.getElementById('progress-bar').style.width=p+"%";
+}
+
+function showError(msg){
+  document.getElementById('progress-message').textContent="❌ "+msg;
+  document.getElementById('progress-bar').classList.remove('bg-blue-500');
+  document.getElementById('progress-bar').classList.add('bg-red-500');
+}
 </script>
 
 <?= view('adminpartial/footer'); ?>

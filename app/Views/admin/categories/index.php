@@ -3,6 +3,7 @@
 
 <div class="w-full mx-auto px-6 py-10 min-h-screen">
 
+  <!-- Header -->
   <div class="flex items-center justify-between mb-8">
     <h1 class="text-4xl font-semibold text-black tracking-wide drop-shadow-sm">Category</h1>
     <button id="openCreateBtn" 
@@ -11,15 +12,19 @@
     </button>
   </div>
 
+  <!-- Categories Grid -->
   <?php if (!empty($categories)): ?>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <?php foreach ($categories as $category): ?>
         <div class="bg-white border border-gray-200 rounded-3xl shadow hover:shadow-lg transition group overflow-hidden p-4 flex flex-col justify-between">
+          
+          <!-- Category Image -->
           <div class="relative h-40 bg-gray-100 rounded-xl overflow-hidden mb-4">
             <?php if (!empty($category['img'])): ?>
-              <img src="<?= base_url('assets/SGV/Category/' . $category['path'] . '/' . str_replace(" ", "-", $category['img'])) ?>"
-                   alt="<?= esc($category['name']) ?>"
-                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-xl">
+              <img 
+                src="<?= base_url('assets/SGV/Category/' . $category['path'] . '/' . str_replace(" ", "-", $category['img'])) ?>"
+                alt="<?= esc($category['name']) ?>"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-xl">
             <?php else: ?>
               <div class="w-full h-full flex items-center justify-center text-gray-400 italic text-sm rounded-xl">
                 No Image
@@ -27,7 +32,12 @@
             <?php endif; ?>
           </div>
 
-          <h3 class="text-lg font-serif font-semibold text-amber-800 truncate mb-1"><?= esc($category['name']) ?></h3>
+          <!-- Category Name -->
+          <h3 class="text-lg font-serif font-semibold text-amber-800 truncate mb-1">
+            <?= esc($category['name']) ?>
+          </h3>
+
+          <!-- Status -->
           <div>
             <?php if ($category['status'] == 1): ?>
               <span class="inline-block bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Active</span>
@@ -36,6 +46,7 @@
             <?php endif; ?>
           </div>
 
+          <!-- Action Buttons -->
           <div class="mt-6 flex justify-between items-center">
             <button 
               class="text-amber-700 hover:text-amber-900 font-semibold text-sm editBtn"
@@ -44,8 +55,7 @@
               data-path="<?= esc($category['path']) ?>"
               data-description="<?= esc($category['description']) ?>"
               data-status="<?= $category['status'] ?>"
-              data-img="<?= !empty($category['img']) ? base_url('assets/SGV/Category/' . $category['path'] . '/' . str_replace(" ", "-", $category['img'])) : '' ?>"
-              >
+              data-img="<?= !empty($category['img']) ? base_url('assets/SGV/Category/' . $category['path'] . '/' . str_replace(" ", "-", $category['img'])) : '' ?>">
               Edit
             </button>
             <button
@@ -54,6 +64,7 @@
               Delete
             </button>
           </div>
+
         </div>
       <?php endforeach; ?>
     </div>
@@ -64,43 +75,56 @@
   <?php endif; ?>
 </div>
 
-<!-- Modal Background Overlay (hidden default) -->
+<!-- Overlay -->
 <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50"></div>
 
 <!-- Create Modal -->
-<div id="createModal" class="fixed inset-0 bg-white rounded-3xl p-8 max-w-md w-full shadow-lg animate-fadeIn hidden z-50 overflow-auto max-h-[90vh] mx-auto my-10">
-  <button id="createModalClose" class="absolute top-4 right-6 text-amber-600 hover:text-amber-900 text-3xl font-bold cursor-pointer">&times;</button>
+<div id="createModal" 
+  class="fixed inset-0 bg-white rounded-3xl p-8 max-w-md w-full shadow-lg animate-fadeIn hidden z-50 overflow-auto max-h-[90vh] mx-auto my-10">
+
+  <button id="createModalClose" 
+    class="absolute top-4 right-6 text-amber-600 hover:text-amber-900 text-3xl font-bold cursor-pointer">
+    &times;
+  </button>
+
   <h3 class="text-2xl font-serif font-semibold text-amber-800 mb-6 text-center">Add New Category</h3>
 
   <form action="<?= site_url('admin/categories/store') ?>" method="post" enctype="multipart/form-data" class="space-y-6" id="createForm">
     <?= csrf_field() ?>
 
+    <!-- Name -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Category Name</label>
       <input type="text" name="name" placeholder="e.g. Fragrance" required
         class="w-full rounded-lg border border-amber-300 shadow-sm px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition" />
     </div>
 
+    <!-- Slug -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Slug (URL Path)</label>
       <input type="text" name="path" readonly placeholder="auto-generated-slug"
         class="w-full rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-600 cursor-not-allowed" />
     </div>
 
+    <!-- Description -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Description</label>
       <textarea name="description" placeholder="Deskripsi" rows="4"
         class="w-full rounded-lg border border-amber-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition resize-none"></textarea>
     </div>
 
+    <!-- Image -->
     <div>
-      <label class="block text-sm font-medium text-amber-700 mb-2">Image</label>
+      <label class="block text-sm font-medium text-amber-700 mb-2">Image
+        <span title="Maksimal 2MB, format JPG/PNG, resolusi 1080x1080px" class="text-blue-500 cursor-pointer">ℹ️</span>
+      </label>
       <input type="file" name="img" accept="image/*" class="w-full rounded-lg border border-amber-300 shadow-sm px-4 py-3" />
       <div id="createPreviewContainer" class="mt-3 hidden">
         <img id="createImgPreview" class="w-24 h-24 object-cover rounded-xl border border-amber-200 shadow" alt="Preview Image" />
       </div>
     </div>
 
+    <!-- Status -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Status</label>
       <select name="status"
@@ -110,6 +134,7 @@
       </select>
     </div>
 
+    <!-- Actions -->
     <div class="flex justify-end gap-4">
       <button type="button" id="createCancelBtn" class="px-6 py-3 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition">
         Cancel
@@ -122,40 +147,55 @@
 </div>
 
 <!-- Edit Modal -->
-<div id="editModal" class="fixed inset-0 bg-white rounded-3xl p-8 max-w-md w-full shadow-lg animate-fadeIn hidden z-50 overflow-auto max-h-[90vh] mx-auto my-10">
-  <button id="editModalClose" class="absolute top-4 right-6 text-amber-600 hover:text-amber-900 text-3xl font-bold cursor-pointer">&times;</button>
+<div id="editModal" 
+  class="fixed inset-0 bg-white rounded-3xl p-8 max-w-md w-full shadow-lg animate-fadeIn hidden z-50 overflow-auto max-h-[90vh] mx-auto my-10">
+
+  <button id="editModalClose" 
+    class="absolute top-4 right-6 text-amber-600 hover:text-amber-900 text-3xl font-bold cursor-pointer">
+    &times;
+  </button>
+
   <h3 class="text-2xl font-serif font-semibold text-amber-800 mb-6 text-center">Edit Category</h3>
 
   <form action="" method="post" enctype="multipart/form-data" class="space-y-6" id="editForm">
     <?= csrf_field() ?>
     <input type="hidden" name="old_img" id="oldImgInput" value="">
 
+    <!-- Name -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Category Name</label>
       <input type="text" name="name" id="editName" required
         class="w-full rounded-lg border border-amber-300 shadow-sm px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition" />
     </div>
 
+    <!-- Slug -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Slug (URL Path)</label>
       <input type="text" name="path" id="editPath" 
         class="w-full rounded-lg border border-amber-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition" />
     </div>
 
+    <!-- Description -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Description</label>
       <textarea name="description" id="editDescription" rows="4"
         class="w-full rounded-lg border border-amber-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition resize-none"></textarea>
     </div>
 
+    <!-- Image -->
     <div>
-      <label class="block text-sm font-medium text-amber-700 mb-2">Image</label>
-      <input type="file" name="img" id="editImgInput" accept="image/*" class="w-full rounded-lg border border-amber-300 shadow-sm px-4 py-3" />
+      <label class="block text-sm font-medium text-amber-700 mb-2">
+        Image
+        <span title="Maksimal 2MB, format JPG/PNG, resolusi 1080x1080px" class="text-blue-500 cursor-pointer">ℹ️</span>
+      </label>
+      <input type="file" name="img" id="editImgInput" accept="image/*" 
+        class="w-full rounded-lg border border-amber-300 shadow-sm px-4 py-3" />
       <div id="editPreviewContainer" class="mt-3 hidden">
         <img id="editImgPreview" class="w-24 h-24 object-cover rounded-xl border border-amber-200 shadow" alt="Preview Image" />
       </div>
     </div>
 
+    <!-- Status -->
     <div>
       <label class="block text-sm font-medium text-amber-700 mb-2">Status</label>
       <select name="status" id="editStatus" 
@@ -165,6 +205,7 @@
       </select>
     </div>
 
+    <!-- Actions -->
     <div class="flex justify-end gap-4">
       <button type="button" id="editCancelBtn" class="px-6 py-3 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition">
         Cancel
@@ -176,6 +217,7 @@
   </form>
 </div>
 
+<!-- Scripts -->
 <script>
   // SweetAlert2 Delete Confirmation
   function confirmDelete(id) {
@@ -302,7 +344,7 @@
     createPathInput.value = slug;
   });
 
-  // Auto slug for edit modal (only when user types slug)
+  // Auto slug for edit modal
   editNameInput.addEventListener('input', () => {
     let slug = editNameInput.value
       .toLowerCase()
@@ -351,6 +393,7 @@
   });
 </script>
 
+<!-- Styles -->
 <style>
   @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9);}
@@ -364,8 +407,6 @@
   }
   #createModal, #editModal {
     top: 5vh;
-    left: 50%;
-    transform: translateX(-50%);
     position: fixed;
     z-index: 50;
     display: none; /* Controlled by JS */

@@ -26,7 +26,9 @@ class CompanyController extends BaseController
         $id = $this->request->getPost('id');
         $data = [
             'name'    => $this->request->getPost('name'),
-            'tagline' => $this->request->getPost('tagline')
+            'tagline' => $this->request->getPost('tagline'),
+            'font' => $this->request->getPost('font'),
+            'base_color' => $this->request->getPost('base_color')
         ];
 
         if ($logo = $this->request->getFile('logo')) {

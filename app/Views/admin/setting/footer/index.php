@@ -78,3 +78,5 @@
     </div>
   </div>
 </div>
+
+<?=view("adminpartial/footer")?>

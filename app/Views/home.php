@@ -1,7 +1,7 @@
 <?= view('partials/header'); ?>
 
 <style>
-  /* Parallax */
+  /* Parallax Effect */
   .parallax-bg {
     background-attachment: fixed;
     background-position: center;
@@ -17,7 +17,8 @@
     transform: translateZ(0);
     transition: transform 0.3s ease;
   }
-/* Fade-in sections */
+
+  /* Fade-in Animation */
   .fade-in-up {
     opacity: 0;
     transform: translateY(20px);
@@ -28,7 +29,7 @@
     transform: translateY(0);
   }
 
-  /* Slider */
+  /* Slider Styling */
   #slide-main {
     position: relative;
     width: 100%;
@@ -68,72 +69,83 @@
     background-color: white;
   }
 </style>
-<section class="page relative h-screen w-full overflow-hidden fade-in-up" id="slide-main">
+
+<!-- Hero Slider -->
+<section id="slide-main" class="page relative h-screen w-full overflow-hidden fade-in-up">
   <div class="slides-container">
-    <?php foreach ($sliders as $slide): ?>
-      <div class="slide" data-duration="<?= $slide['duration'] ?? 8000 ?>">
-        <?php if ($slide['type'] === 'video'): ?>
-          <video loading="lazy" autoplay loop muted playsinline class="w-full h-full object-cover">
-            <source src="<?= base_url($slide['src']) ?>" type="video/mp4" />
-          </video>
-        <?php else: ?>
-          <img src="<?= base_url($slide['src']) ?>" alt="<?= esc($slide['alt']) ?>" class="w-full h-full object-cover" loading="lazy" />
-        <?php endif; ?>
+    <?php foreach ($sliders as $i => $slide): ?>
+      <div class="slide <?= $i === 0 ? 'active' : '' ?>"
+           data-duration="<?= esc($slide['duration'] ?? 8000) ?>"
+           data-src-d="<?= base_url('assets/SGV/Page/Home/'.$slide['srcD']) ?>"
+           data-src-m="<?= base_url('assets/SGV/Page/Home/'.$slide['srcM']) ?>">
       </div>
     <?php endforeach; ?>
   </div>
-
-  <!-- Indicator Dots -->
-  <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-    <?php foreach ($sliders as $index => $slide): ?>
-      <span class="indicator-dot <?= $index === 0 ? 'active' : '' ?>" data-dot="<?= $index ?>"></span>
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    <?php foreach ($sliders as $i => $slide): ?>
+      <span class="indicator-dot <?= $i === 0 ? 'active' : '' ?>" data-dot="<?= $i ?>"></span>
     <?php endforeach; ?>
   </div>
 </section>
 
+<!-- Slogan Section -->
 <section class="page w-full relative h-auto text-center fade-in-up flex justify-center items-center select-none">
   <div class="w-full aspect-video h-[450px] md:h-[600px] flex flex-col justify-center items-center bg-gradient-to-b from-transparent to-white">
-    <p class="text-black-700 text-2xl md:text-6xl flex justify-center items-center text-center select-none">
-      𝘐𝘯𝘴𝘱𝘪𝘳𝘦𝘥 𝘣𝘺 <b class="ml-[0.5rem]"> 𝘌𝘢𝘳𝘵𝘩</b>, 𝘔𝘢𝘥𝘦 𝘍𝘰𝘳 <b class="ml-[0.5rem]"> 𝘠𝘰𝘶</b>
+    <p class="text-gray-800 text-2xl md:text-6xl text-center">
+      𝘐𝘯𝘴𝘱𝘪𝘳𝘦𝘥 𝘣𝘺 <b class="ml-2">𝘌𝘢𝘳𝘵𝘩</b>, 𝘔𝘢𝘥𝘦 𝘍𝘰𝘳 <b class="ml-2">𝘠𝘰𝘶</b>
     </p>
   </div>
 </section>
 
+<!-- Banner 1 -->
 <section class="page relative w-full h-auto fade-in-up">
   <a href="<?= base_url('products') ?>" class="block w-full h-full">
-    <img alt="Secretgarden.id Products" class="aspect-video w-full h-[300px] md:h-[700px] object-fit" loading="lazy" src="<?= base_url('assets/SGV/home/home3.jpg') ?>" />
+    <img alt="Secretgarden.id Products"
+         class="aspect-video w-full h-[300px] md:h-[700px] object-cover"
+         loading="lazy"
+         src="<?= base_url('assets/SGV/home/home3.jpg') ?>" />
   </a>
 </section>
 
-<section class="page flex w-full h-[800px] md:h-auto flex-col md:flex-row items-center justify-center bg-white fade-in-up">
-  <div class="parallax-container h-[100%] w-100 aspect-square md:w-1/2 flex justify-center items-center p-4" id="parallaxBox">
-    <a href="<?=base_url('products/').str_replace(" ","-",$mainProduct['pname'])?>" class="parallax-item max-w-md rounded-lg overflow-hidden" id="parallaxItem">
-      <div class="flex flex-row items-center w-[100%] object-cover">
-        <div class="flex-1 flex flex-col justify-center items-start p-2">
-          <h2 class="text-xl font-bold text-gray-900"><?= esc($mainProduct['pname']) ?></h2>
-          <p class="text-gray-700"><?= esc($mainProduct['cat_name']) ?></p>
-        </div>
-        <div class="flex-1 flex justify-center items-center">
-          <img alt="<?= $mainProduct['pname'] ?>" class="aspect-square w-auto h-[300px] md:w-[50vh] md:h-[500px] object-cover" loading="lazy"
-            src="<?= base_url("assets/SGV/Category/" . strtolower(str_replace(' ', '-', $mainProduct['cat_name'])) . "/" . strtolower(str_replace(' ', '-', $mainProduct['pname'])) . "/" . ($mainProduct['img'] ?? 'default.jpg')) ?>" />
-        </div>
+<!-- Featured Product + Category Slider -->
+<section class="page flex flex-col md:flex-row w-full bg-white fade-in-up">
+  <!-- Main Product -->
+  <div class="parallax-container w-full md:w-1/2 flex justify-center items-center">
+    <a href="<?= base_url('products/'.str_replace(' ','-',$mainProduct['pname'])) ?>"
+       class="parallax-item max-w-md rounded-lg overflow-hidden">
+      <div class="relative flex flex-col items-center">
+        <h2 class="text-xl font-bold text-black"><?= esc($mainProduct['pname']) ?></h2>
+        <p class="text-black"><?= esc($mainProduct['cat_name']) ?></p>
+        <img alt="<?= esc($mainProduct['pname']) ?>"
+             class="aspect-square w-auto h-[300px] md:w-[50vh] md:h-[500px] object-contain"
+             loading="lazy"
+             src="<?= base_url("assets/SGV/Category/".strtolower(str_replace(' ','-',$mainProduct['cat_name']))."/".strtolower(str_replace(' ','-',$mainProduct['pname']))."/".($mainProduct['img'] ?? 'default.jpg')) ?>" />
       </div>
     </a>
   </div>
-  <div class="w-full md:w-1/2 h-100% aspect-square flex justify-center items-center">
-    <div class="relative h-[100%] overflow-hidden rounded-lg">
-      <div class="flex transition-transform duration-500 ease-in-out" id="categorySlider">
-        <?php foreach ($products as $product) : ?>
-        <a href="<?=base_url('products/').str_replace(" ","-",$product['pname'])?>" class="w-full flex-shrink-0 flex items-center justify-center">
-          <img alt="<?= $product['pname'] ?>" class="aspect-square w-auto h-[300px]  md:w-auto md:h-[100%] object-cover mx-auto" loading="lazy"
-            src="<?= base_url("assets/SGV/Category/" . strtolower(str_replace(' ', '-', $product['cat_name'])) ."/" . strtolower(str_replace(' ', '-', $product['pname'])) . "/" . ($product['img'] ?? 'default.jpg')) ?>" />
-        </a>
+
+  <!-- Category Slider -->
+  <div class="w-full md:w-1/2 flex justify-center items-center relative">
+    <div class="relative overflow-hidden rounded-lg w-full">
+      <div id="categorySlider" class="flex transition-transform duration-500 ease-in-out">
+        <?php foreach ($products as $product): ?>
+          <a href="<?= base_url('products/'.str_replace(' ','-',$product['pname'])) ?>"
+             class="w-full p-10 flex-shrink-0 flex items-center justify-center">
+            <img alt="<?= esc($product['pname']) ?>"
+                 class="h-[300px] md:h-[500px] object-contain mx-auto"
+                 loading="lazy"
+                 src="<?= base_url("assets/SGV/Category/".strtolower(str_replace(' ','-',$product['cat_name']))."/".strtolower(str_replace(' ','-',$product['pname']))."/".($product['img'] ?? 'default.jpg')) ?>" />
+          </a>
         <?php endforeach; ?>
       </div>
-      <button aria-label="Previous" class="text-2xl absolute top-1/2 left-1 -translate-y-1/2 rounded-full" id="prevCategory">
+      <button aria-label="Previous"
+              class="absolute top-1/2 left-2 -translate-y-1/2 text-2xl rounded-full bg-white/70 hover:bg-white p-2"
+              id="prevCategory">
         <i class="fas fa-chevron-left"></i>
       </button>
-      <button aria-label="Next" class="text-2xl absolute top-1/2 right-1 -translate-y-1/2 rounded-full" id="nextCategory">
+      <button aria-label="Next"
+              class="absolute top-1/2 right-2 -translate-y-1/2 text-2xl rounded-full bg-white/70 hover:bg-white p-2"
+              id="nextCategory">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
@@ -142,137 +154,45 @@
 
 <section class="page relative w-full h-auto fade-in-up">
   <a href="<?= base_url('products') ?>" class="block w-full h-full">
-    <img alt="Secretgarden.id Products" class="aspect-video w-full h-[300px] md:h-[700px] object-fit" loading="lazy" src="<?= base_url('assets/SGV/home/banner2.jpg') ?>" />
+    <img alt="Secretgarden.id Products"
+         class="aspect-video w-full h-[300px] md:h-[700px] object-cover"
+         loading="lazy"
+         src="<?= base_url('assets/SGV/home/banner2.jpg') ?>" />
   </a>
 </section>
-<!-- 
-<section class="page flex w-full h-auto md:h-[550px] md:h-auto flex-col md:flex-row items-center justify-center bg-white fade-in-up">
-  <div class="w-full md:w-1/2 h-auto md:h-[550px] aspect-square flex justify-center items-center">
-    <a href="<?= base_url('products') ?>" class="block w-full h-full">
-    <img alt="Secretgarden.id Products" class="aspect-video w-auto h-full md:h-auto object-cover" loading="lazy" src="<?= base_url('assets/SGV/home/banner2.jpg') ?>" />
-  </a>
-  </div>
-  <div class="parallax-container w-full h-auto md:h-[550px] md:w-1/2 h-auto aspect-square flex justify-center items-center" id="parallaxBox">
-    <a href="<?=base_url('products/').str_replace(" ","-",$mainProduct['pname'])?>" class="parallax-item max-w-md rounded-lg overflow-hidden" id="parallaxItem">
-      <div class="flex flex-row items-center w-[100%] object-cover">
-        <div class="flex-1 flex flex-col justify-center items-start p-2">
-          <h2 class="text-xl font-bold text-gray-900"><?= esc($mainProduct['pname']) ?></h2>
-          <p class="text-gray-700"><?= esc($mainProduct['cat_name']) ?></p>
-        </div>
-        <div class="flex-1 flex justify-center items-center">
-          <img alt="<?= $mainProduct['pname'] ?>" class="aspect-square w-auto h-[300px] md:w-[50vh] md:h-[300px] object-cover" loading="lazy"
-            src="<?= base_url("assets/SGV/Category/" . strtolower(str_replace(' ', '-', $mainProduct['cat_name'])) . "/" . strtolower(str_replace(' ', '-', $mainProduct['pname'])) . "/" . ($mainProduct['img'] ?? 'default.jpg')) ?>" />
-        </div>
-      </div>
-    </a>
-  </div>
-</section> -->
-
 
 <section class="page relative h-[80vh] md:h-[800px] w-full aspect-video overflow-hidden fade-in-up">
-  <div class="absolute inset-0 w-auto h-auto transition-opacity duration-1000 ease-in-out opacity-70">
-    <video loading="lazy" autoplay loop muted playsinline  class="md:aspect-video w-auto h-full md:h-[auto] md:w-full object-fit">
+  <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-70">
+    <video autoplay loop muted playsinline class="w-full h-full object-cover">
       <source src="<?= base_url('assets/SGV/video/slide2.mp4') ?>" type="video/mp4" />
     </video>
   </div>
 </section>
 
-<section class="page relative w-full h-auto fade-in-up select-none">
-   <h1 class="text-2xl md:text-4xl font-playfair font-bold text-center justify-center items-center text-gray-900 leading-tight mt-5 select-none">
-      Experience the Essence of Bali with Secret Garden
+<section class="page relative w-full h-auto bg-white py-20">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight mb-8">
+      Experience the Essence of Bali with <span class="font-bold">Secret Garden</span>
     </h1>
-  <div class="fix inset-0 mt-10 mb-10 flex flex-col text-center justify-center items-center  px-6 md:px-6">
-    <p class="max-w-2xl md:max-w-6xl text-white-100 text-xl md:text-4xl mb-8 text-justify justify-center items-center select-none">
-      Founded in Bali in 2016, Secret Garden offers natural body and wellness products inspired by the island’s rich botanical heritage. Our mission is to bring the calm and spirit of Bali into your daily rituals through sustainably crafted, plant-based skincare and aromatherapy. Each product reflects our deep respect for nature and commitment to holistic well-being.
-    </p>
 
-   
+    <div class="space-y-6 text-gray-700">
+      <p class="text-lg md:text-xl leading-relaxed">
+        Founded in Bali in 2016, <strong>Secret Garden</strong> offers natural body and wellness products inspired by the island’s rich botanical heritage.
+      </p>
+      <p class="text-lg md:text-xl leading-relaxed">
+        Our mission is to bring the calm and spirit of Bali into your daily rituals through sustainably crafted, plant-based skincare and aromatherapy.
+      </p>
+      <p class="text-lg md:text-xl leading-relaxed">
+        Each product reflects our deep respect for nature and commitment to holistic well-being.
+      </p>
+    </div>
+
+    <div class="mt-10 w-20 h-1 bg-black mx-auto rounded-full"></div>
   </div>
 </section>
 
 
-<script>
-  /* Parallax */
-  const box = document.getElementById('parallaxBox');
-  const item = document.getElementById('parallaxItem');
-  if(box && item){
-    box.addEventListener('mousemove', (e) => {
-      const rect = box.getBoundingClientRect();
-      const x = e.clientX - rect.left; 
-      const y = e.clientY - rect.top;  
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const deltaX = (x - centerX) / centerX;
-      const deltaY = (y - centerY) / centerY;
-      const rotateX = deltaY * 10; 
-      const rotateY = deltaX * -10;
-      item.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-    });
-    box.addEventListener('mouseleave', () => {
-      item.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-    });
-  }
 
-const slides = document.querySelectorAll('#slide-main .slide');
-  const dots = document.querySelectorAll('#slide-main [data-dot]');
-  const slider = document.getElementById('slide-main');
-  let current = 0;
-  let slideTimeout;
-  let isDragging = false;
-  let startX = 0;
-
-  function showSlide(index){
-    index = (index + slides.length) % slides.length;
-    slides.forEach((s,i)=>s.classList.toggle('active', i===index));
-    dots.forEach((d,i)=>d.classList.toggle('active', i===index));
-    current = index;
-
-    clearTimeout(slideTimeout);
-    const duration = parseInt(slides[current].dataset.duration) || 8000;
-    slideTimeout = setTimeout(()=>showSlide(current+1), duration);
-  }
-
-  // Dot click
-  dots.forEach(dot => dot.addEventListener('click', ()=>showSlide(parseInt(dot.dataset.dot))));
-
-  // Pause on hover
-  slider.addEventListener('mouseenter', ()=>clearTimeout(slideTimeout));
-  slider.addEventListener('mouseleave', ()=>showSlide(current));
-
-  // Drag / Swipe
-  slider.addEventListener('mousedown', e => { isDragging=true; startX=e.clientX; slider.style.cursor="grabbing"; });
-  slider.addEventListener('touchstart', e => { isDragging=true; startX=e.touches[0].clientX; });
-
-  slider.addEventListener('mouseup', e => {
-    if(!isDragging) return;
-    const diff = e.clientX - startX;
-    if(diff > 50) showSlide(current-1);
-    else if(diff < -50) showSlide(current+1);
-    isDragging = false;
-    slider.style.cursor="grab";
-  });
-  slider.addEventListener('touchend', e => {
-    if(!isDragging) return;
-    const diff = e.changedTouches[0].clientX - startX;
-    if(diff > 50) showSlide(current-1);
-    else if(diff < -50) showSlide(current+1);
-    isDragging = false;
-  });
-
-  // Initialize
-  showSlide(current);
-
-  // Fade-in on scroll
-  const faders=document.querySelectorAll('.fade-in-up');
-  const observer = new IntersectionObserver((entries, obs)=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        entry.target.classList.add('visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  },{threshold:0.1, rootMargin:"0px 0px -100px 0px"});
-  faders.forEach(fader=>observer.observe(fader));
-</script>
+<script src="<?= base_url("js/home.js"); ?>"></script>
 
 <?= $this->include('partials/footer'); ?>

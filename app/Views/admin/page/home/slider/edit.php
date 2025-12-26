@@ -7,20 +7,40 @@
     <!-- Preview -->
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Preview Saat Ini</label>
-      <?php if($slider['type'] === 'image'): ?>
-        <img src="<?= base_url($slider['src']) ?>" class="w-60 h-36 object-cover rounded">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Preview Desktop</label>
+      <?php if($slider['type'] === 'image' && $slider['srcD']): ?>
+        <img src="<?= base_url('public/assets/SGV/Page/Home/'.$slider['srcD']) ?>" class="w-60 h-36 object-cover rounded">
       <?php else: ?>
-        <video src="<?= base_url($slider['src']) ?>" class="w-60 h-36 rounded" muted autoplay loop></video>
+        <video src="<?= base_url('public/assets/SGV/Page/Home/'.$slider['srcD']) ?>" class="w-60 h-36 rounded" muted autoplay loop></video>
+      <?php endif; ?>
+    </div>
+    
+     <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Preview Mobile</label>
+      <?php if($slider['type'] === 'image' && $slider['srcM']): ?>
+        <img src="<?= base_url('public/assets/SGV/Page/Home/'.$slider['srcM']) ?>" class="w-60 h-36 object-cover rounded">
+      <?php else: ?>
+        <video src="<?= base_url('public/assets/SGV/Page/Home/'.$slider['srcM']) ?>" class="w-60 h-36 rounded" muted autoplay loop></video>
       <?php endif; ?>
     </div>
 
     <!-- File Baru -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">Ganti File (opsional)</label>
-      <input type="file" name="file" accept="image/*,video/*"
+      <label class="block text-sm font-medium text-gray-700">Change File Desktop
+        <span title="Maksimal 10MB, format MP4, resolusi 16:9" class="text-blue-500 cursor-pointer">ℹ️</span>
+      </label>
+      <input type="file" name="fileD" accept="image/*,video/*"
         class="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:ring focus:ring-blue-200" />
-      <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin ganti file</p>
+      <p class="text-xs text-gray-500 mt-1">Leave Blank If There No Change</p>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Change File Mobile 
+        <span title="Maksimal 10MB, format MP4, resolusi 16:9" class="text-blue-500 cursor-pointer">ℹ️</span>
+      </label>
+      <input type="file" name="fileM" accept="image/*,video/*"
+        class="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:ring focus:ring-blue-200" />
+      <p class="text-xs text-gray-500 mt-1">Leave Blank If There No Change</p>
     </div>
 
     <!-- Alt Text -->
@@ -49,3 +69,5 @@
     </div>
   </form>
   </div>
+
+  <?= view('adminpartial/footer') ?>

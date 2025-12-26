@@ -1,5 +1,4 @@
-<?php echo view('partials/header'); 
-
+<?php echo view('partials/header');
 function slugify($string)
 {
     return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string)));
@@ -12,8 +11,8 @@ function slugify($string)
 
 <!-- Hero -->
 <section class="relative w-full h-auto fade-in-up">
-  <img alt="Fragrance display" 
-       class="w-full object-cover max-h-[700px]" 
+  <img alt="Fragrance display"
+       class="w-full object-cover max-h-[700px]"
        src="<?= base_url('assets/SGV/fragrance.jpeg') ?>" />
 
   <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/70 to-white flex flex-col justify-center items-center text-center px-6 md:px-12">
@@ -47,10 +46,15 @@ function slugify($string)
           <a href="<?= site_url('category/' . str_replace(' ', '-', $img['name'])) ?>" 
              class="  overflow-hidden transform transition duration-300 ">
 
-            <!-- Gambar Produk -->
+            <?php if (!empty($img['img'])): ?>
             <img src="<?= base_url('assets/SGV/Category/' . $imgSlug . '/' . $img['img']) ?>"
                  alt="<?= esc($img['name']) ?>"
                  class="w-full h-64 object-cover"/>
+            <?php else: ?>
+              <div class=" flex flex-center justify-center w-full h-64 object-cover">
+                <p class="mt-32">No Image</p>
+              </div>
+            <?php endif; ?>
 
             <!-- Nama & Harga Produk -->
             <div class="p-4 text-center">
@@ -73,11 +77,10 @@ function slugify($string)
 </section>
 
 
-<!-- Section Kategori Produk -->
-<?php foreach ($categories as $catIndex => $category): ?>
-  <?php if (empty($category['products'])) continue; ?>
+
+<?php  foreach ($categories as $catIndex => $category): ?>
   <section class="bg-[#f4e4cc] h-[50vh] relative overflow-hidden flex items-center">
-    <div class="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-10 items-center">
+    <div class="max-w-full mx-auto px-6 py-12 grid grid-cols-2 gap-10 items-center">
       <!-- Teks -->
       <div class="text-center md:text-left text-black">
         <h2 class="text-2xl font-extrabold mb-4"><?= esc($category['name']) ?></h2>
@@ -89,10 +92,17 @@ function slugify($string)
       </div>
 
       <!-- Gambar -->
+      
       <div class="flex justify-center">
-        <img src="<?= base_url('assets/SGV/Category/' . $imgSlug . '/' . $img['img']) ?>" 
+        <?php if(!empty($images[$catIndex]['img'])) : ?>
+        <img src="<?= base_url('assets/SGV/Category/' . strtolower(str_replace(' ', '-', $category['name'])) . '/' . $images[$catIndex]['img']) ?>" 
              alt="<?= esc($category['name']) ?>" 
              class="max-h-[60vh] object-contain parallax-hover transition-transform duration-500 hover:scale-105"/>
+             <?php else: ?>
+              <div class=" flex flex-center justify-center w-full h-64 object-cover">
+                <p class="mt-32">No Image</p>
+              </div>
+            <?php endif; ?>
       </div>
     </div>
   </section>
@@ -203,7 +213,6 @@ if (items <= 4) {
 </script>
 
 <script>
-const slider = document.getElementById('slider-track');
 let isDown = false, startX, scrollLeft;
 
 // drag pakai mouse

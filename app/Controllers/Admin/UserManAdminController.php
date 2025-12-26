@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\RoleModel;
 use App\Models\ProfileModel;
+use App\Models\SubscribeModel;
 
 class UserManAdminController extends BaseController
 {
@@ -40,5 +41,26 @@ class UserManAdminController extends BaseController
         $userModel = new UserModel();
         $userModel->delete($id);
         return redirect()->to(base_url('admin/users'));
+    }
+
+    public function subscribe(){
+        $subscribeModel = new subscribeModel();
+        $data['subscribe'] = $subscribeModel->findAll();
+        $data['pageTitle'] = 'Subscribe';
+
+        return view('admin/users/subscribe', $data);
+    }
+    
+    public function unsub($id){
+        $subscribeModel = new subscribeModel();
+        $subscribeModel->update($id, [
+            'is_active'=> $this->request->getPost('is_active') ? 1 : 0,
+        ]);
+        return redirect()->to(base_url('admin/users/subscribe'));
+    }
+    public function delsub($id){
+        $subscribeModel = new subscribeModel();
+        $subscribeModel->delete($id);
+        return redirect()->to(base_url('admin/users/subscribe'));
     }
 }

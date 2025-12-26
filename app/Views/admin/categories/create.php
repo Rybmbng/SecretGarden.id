@@ -26,7 +26,9 @@
 
       <!-- Image Upload -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Image        
+          <span title="Maksimal 2MB, format JPG/PNG, resolusi 1080x1080px" class="text-blue-500 cursor-pointer">ℹ️</span>
+        </label>
         <input type="file" name="img" class="w-full border-gray-300 rounded-lg shadow-sm px-4 py-2">
         <!-- Optional preview -->
         <div id="previewContainer" class="mt-2 hidden">

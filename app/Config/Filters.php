@@ -12,7 +12,6 @@ use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
-
 class Filters extends BaseFilters
 {
     /**
@@ -36,6 +35,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'rolecheck' => \App\Filters\RoleCheck::class,
         'auth' => \App\Filters\AuthFilter::class,
+        'visitorlogger' => \App\Filters\VisitorLogger::class,
     ];
 
     /**

@@ -108,7 +108,7 @@ class EmailController extends BaseController
     public function inbox()
     {
         $emails = $this->emailModel->orderBy('date','DESC')->findAll();
-        return view('admin/email/inbox', ['emails' => $emails]);
+        return view('admin/email/inbox', ['emails' => $emails],['pageTitle' => 'Email']);
     }
 
     public function compose()

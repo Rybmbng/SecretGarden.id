@@ -18,6 +18,9 @@ class ProductAdminController extends BaseController
     protected $imageModel;
     protected $categoryModel;
     protected $db;
+    const WRITEPATH  = WRITEPATH;
+    const STATUSPATH = WRITEPATH . 'compress_status/';
+
 
     public function __construct()
     {
@@ -28,6 +31,7 @@ class ProductAdminController extends BaseController
         $this->imageModel          = new ProductImageModel();
         $this->categoryModel       = new CategoryModel();
         $this->db = \Config\Database::connect();
+        
 
     }
     public function index()
@@ -47,127 +51,129 @@ class ProductAdminController extends BaseController
         ]);
     }
 
-public function store()
-{
-    $db = \Config\Database::connect();
-    $db->transBegin();
-    $request = service('request');
+    public function store()
+    {
+        $db = \Config\Database::connect();
+        $db->transBegin();
+        $request = service('request');
 
-    try {
-   
-        $productName = $request->getPost('name');
-        $productSlug = url_title($productName, '-', true);
-        $category    = $this->categoryModel->find($request->getPost('category_id'));
-        $categoryPath = strtolower($category['path'] ?? 'default');
+        try {
+    
+            $productName = $request->getPost('name');
+            $productSlug = url_title($productName, '-', true);
+            $category    = $this->categoryModel->find($request->getPost('category_id'));
+            $categoryPath = strtolower($category['path'] ?? 'default');
 
-        $mainUploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
+            $mainUploadPath = FCPATH . "assets/SGV/Category/{$categoryPath}/{$productSlug}";
 
-        if (!is_dir($mainUploadPath)) {
-            mkdir($mainUploadPath, 0777, true);
-        }
-
-        $mainImageName = null;
-        $mainVideoName = null;
-        $mainImageFile = $request->getFile('main_images');
-        if ($mainImageFile && $mainImageFile->isValid() && !$mainImageFile->hasMoved()) {
-            $mainImageName = $mainImageFile->getRandomName();
-            $mainImageFile->move($mainUploadPath, $mainImageName);
-        }
-        $mainVideoFile = $request->getFile('main_videos');
-        if ($mainVideoFile && $mainVideoFile->isValid() && !$mainVideoFile->hasMoved()) {
-            $mainVideoName = $mainVideoFile->getRandomName();
-            $mainVideoFile->move($mainUploadPath, $mainVideoName);
-        }
-
-        $productData = [
-            'name'        => $productName,
-            'category_id' => $request->getPost('category_id'),
-            'description' => $request->getPost('description'),
-            'slug'        => $productSlug,
-            'main_images' => $mainImageName,
-            'main_videos' => $mainVideoName,
-        ];
-
-        if (!$this->productModel->insert($productData)) {
-            throw new \Exception('Gagal menyimpan produk utama.');
-        }
-        $productId = $this->productModel->getInsertID();
-
-        $variantNames  = $request->getPost('variant_name');
-        $variantPrices = $request->getPost('variant_price');
-        $variantSkus   = $request->getPost('variant_sku');
-        $variantStocks = $request->getPost('variant_stock');
-        $variantDescs  = $request->getPost('variant_desc');
-
-        foreach ($variantNames as $i => $name) {
-            $variantSlug = url_title($name, '-', true);
-            $variantUploadPath = $mainUploadPath . '/' . $variantSlug;
-            if (!is_dir($variantUploadPath)) mkdir($variantUploadPath, 0777, true);
-
-            $variantData = [
-                'product_id' => $productId,
-                'name'       => $name,
-                'price'      => $variantPrices[$i] ?? 0,
-                'sku'        => $variantSkus[$i] ?? '',
-                'stock'      => $variantStocks[$i] ?? 0,
-                'desc'       => $variantDescs[$i] ?? '',
-                'main'       => 0,
-            ];
-            if (!$this->variantModel->insert($variantData)) {
-                log_message('error', 'Gagal insert varian ke-' . $i);
-                continue;
+            if (!is_dir($mainUploadPath)) {
+                mkdir($mainUploadPath, 0777, true);
             }
-            $variantId = $this->variantModel->getInsertID();
 
-            $imageFiles = $request->getFiles()["variant_images_{$i}"] ?? [];
-            foreach ($imageFiles as $file) {
-                if ($file && $file->isValid() && !$file->hasMoved()) {
-                    $imageName = $file->getRandomName();
-                    $file->move($variantUploadPath, $imageName);
+            $mainImageName = null;
+            $mainVideoName = null;
+            $mainImageFile = $request->getFile('main_images');
+            if ($mainImageFile && $mainImageFile->isValid() && !$mainImageFile->hasMoved()) {
+                $mainImageName = $mainImageFile->getRandomName();
+                $mainImageFile->move($mainUploadPath, $mainImageName);
+            }
+            $mainVideoFile = $request->getFile('main_videos');
+            if ($mainVideoFile && $mainVideoFile->isValid() && !$mainVideoFile->hasMoved()) {
+                $mainVideoName = $mainVideoFile->getRandomName();
+                $mainVideoFile->move($mainUploadPath, $mainVideoName);
+            }
 
-                    $db->table('product_images')->insert([
-                        'product_id' => $productId,
-                        'variant_id' => $variantId,
-                        'image_path' => $imageName,
-                        'is_primary' => 0,
-                    ]);
+            $productData = [
+                'name'        => $productName,
+                'category_id' => $request->getPost('category_id'),
+                'description' => $request->getPost('description'),
+                'slug'        => $productSlug,
+                'main_images' => $mainImageName,
+                'main_videos' => $mainVideoName,
+            ];
+
+            if (!$this->productModel->insert($productData)) {
+                throw new \Exception('Gagal menyimpan produk utama.');
+            }
+            $productId = $this->productModel->getInsertID();
+
+            $variantNames  = $request->getPost('variant_name');
+            $variantPrices = $request->getPost('variant_price');
+            $variantSkus   = $request->getPost('variant_sku');
+            $variantStocks = $request->getPost('variant_stock');
+            $variantDescs  = $request->getPost('variant_desc');
+
+            foreach ($variantNames as $i => $name) {
+                $variantSlug = url_title($name, '-', true);
+                $variantUploadPath = $mainUploadPath . '/' . $variantSlug;
+                if (!is_dir($variantUploadPath)) mkdir($variantUploadPath, 0777, true);
+
+                $variantData = [
+                    'product_id' => $productId,
+                    'name'       => $name,
+                    'price'      => $variantPrices[$i] ?? 0,
+                    'sku'        => $variantSkus[$i] ?? '',
+                    'stock'      => $variantStocks[$i] ?? 0,
+                    'desc'       => $variantDescs[$i] ?? '',
+                    'main'       => 0,
+                ];
+                if (!$this->variantModel->insert($variantData)) {
+                    log_message('error', 'Gagal insert varian ke-' . $i);
+                    continue;
+                }
+                $variantId = $this->variantModel->getInsertID();
+
+                $imageFiles = $request->getFiles()["variant_images_{$i}"] ?? [];
+                foreach ($imageFiles as $file) {
+                    if ($file && $file->isValid() && !$file->hasMoved()) {
+                        $imageName = $file->getRandomName();
+                        $file->move($variantUploadPath, $imageName);
+
+                        $db->table('product_images')->insert([
+                            'product_id' => $productId,
+                            'variant_id' => $variantId,
+                            'image_path' => $imageName,
+                            'is_primary' => 0,
+                        ]);
+                    }
                 }
             }
-        }
 
-        // ====== INSERT SECTIONS ======
-        $sectionTypes   = $request->getPost('section_type');
-        $sectionHeaders = $request->getPost('section_header');
-        $sectionDetails = $request->getPost('section_detail');
+            // ====== INSERT SECTIONS ======
+            $sectionTypes   = $request->getPost('section_type');
+            $sectionHeaders = $request->getPost('section_header');
+            $sectionDetails = $request->getPost('section_detail');
 
-        foreach ($sectionTypes as $i => $type) {
-            if (!$type) continue;
+            foreach ($sectionTypes as $i => $type) {
+                if (!$type) continue;
 
-            if (!$this->sectionModel->insert([
-                'product_id' => $productId,
-                'type'       => $type,
-                'header'     => $sectionHeaders[$i] ?? '',
-            ])) {
-                log_message('error', 'Gagal insert section ke-' . $i);
-                continue;
+                if (!$this->sectionModel->insert([
+                    'product_id' => $productId,
+                    'type'       => $type,
+                    'header'     => $sectionHeaders[$i] ?? '',
+                ])) {
+                    log_message('error', 'Gagal insert section ke-' . $i);
+                    continue;
+                }
+
+                $sectionId = $this->sectionModel->getInsertID();
+                $this->sectionDetailModel->insert([
+                    'section_id' => $sectionId,
+                    'detail'     => $sectionDetails[$i] ?? '',
+                ]);
             }
 
-            $sectionId = $this->sectionModel->getInsertID();
-            $this->sectionDetailModel->insert([
-                'section_id' => $sectionId,
-                'detail'     => $sectionDetails[$i] ?? '',
-            ]);
+            $db->transCommit();
+            return redirect()->to('/admin/products/edit/' . $productId)
+                            ->with('success', 'Produk berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            log_message('error', 'Transaction rollback: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        $db->transCommit();
-        return redirect()->to('/admin/products/edit/' . $productId)
-                         ->with('success', 'Produk berhasil ditambahkan.');
-    } catch (\Throwable $e) {
-        $db->transRollback();
-        log_message('error', 'Transaction rollback: ' . $e->getMessage());
-        return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
-}
+
+
 
 public function edit($id)
 {
@@ -190,14 +196,6 @@ public function edit($id)
 
     $categories = $this->categoryModel->findAll();
 
-    // dd([
-    //     'product'    => $product,
-    //     'variants'   => $variants,
-    //     'imageMain'   => $mainImage,
-    //     'images'   => $variant['images'],
-    //     'sections'   => $sections,
-    //     'categories' => $categories,
-    // ]);
     return view('admin/products/edit', [
         'product'    => $product,
         'variants'   => $variants,

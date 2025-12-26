@@ -42,7 +42,6 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
 
-    <!-- Thumbnails (left) -->
     <aside class="hidden lg:flex lg:col-span-2 flex-col gap-3 max-h-[700px] overflow-y-auto pr-1" id="thumbnail-container" aria-label="Media thumbnails">
       <?php if ($videoSrc): ?>
         <div class="w-20 h-20 rounded-xl ring-fine overflow-hidden cursor-pointer group" data-kind="video" data-src="<?= $videoSrc ?>" tabindex="0" role="button" aria-label="Video thumbnail">
@@ -50,36 +49,30 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
         </div>
       <?php endif; ?>
       <?php foreach ($galleryImages as $img): $src = base_url($galleryPath . '/' . strtolower($img['image_path'])); ?>
-        <img src="<?= $src ?>" alt="Thumbnail" loading="lazy"
-             class="thumb-img w-20 h-20 object-cover rounded-xl ring-fine cursor-pointer hover:opacity-80" data-kind="image" data-src="<?= $src ?>">
+        <img src="<?= $src ?>" alt="Thumbnail-<?= esc($product['name']) ?>" loading="lazy"
+             class="thumb-img w-full h-full object-cover rounded-xl ring-fine cursor-pointer hover:opacity-80" data-kind="image" data-src="<?= $src ?>">
       <?php endforeach; ?>
     </aside>
 
-    <!-- Main media -->
-    <section class="lg:col-span-6 w-full max-w-[720px] mx-auto">
+    <section class="lg:col-span-6 w-full max-w-full mx-auto">
       <div class="relative w-full aspect-square md:aspect-[4/3] bg-white rounded-2xl ring-fine overflow-hidden">
-        <!-- Skeleton -->
-        <div id="media-skeleton" class="absolute inset-0 shimmer"></div>
+        <div id="media-skeleton" class="flex h-screen inset-0 shimmer"></div>
 
-        <!-- Image -->
         <img id="main-image"
              src="<?= base_url($galleryPath . '/' . strtolower($galleryImages[0]['image_path'] ?? 'default.jpg')) ?>"
-             alt="<?= esc($product['name']) ?>" class="w-full h-full object-contain opacity-0 transition-opacity duration-300" data-action="zoom">
+             alt="Image-<?= esc($product['name']) ?>" class="w-full h-full max-h-screen object-contain opacity-0 transition-opacity duration-300" data-action="zoom">
 
-        <!-- Video (hidden by default) -->
         <video id="main-video" class="w-full h-full object-contain hidden bg-black" controls playsinline preload="metadata">
           <?php if ($videoSrc): ?><source src="<?= $videoSrc ?>" type="video/mp4"><?php endif; ?>
           Browser Anda tidak mendukung video.
         </video>
 
-        <!-- Top-right actions -->
         <div class="absolute top-3 right-3 flex items-center gap-2">
           <button id="btn-share" class="btn-smooth glass px-3 py-1.5 rounded-full text-xs text-gray-700">Share</button>
           <button id="btn-wishlist" class="btn-smooth glass px-3 py-1.5 rounded-full text-xs text-gray-700" aria-pressed="false">♥ Wishlist</button>
         </div>
       </div>
 
-      <!-- Mobile thumbnails (below) -->
       <div class="lg:hidden flex gap-3 mt-4 overflow-x-auto" id="thumbnail-container-mobile">
         <?php if ($videoSrc): ?>
           <div class="min-w-[76px] h-20 rounded-xl ring-fine overflow-hidden cursor-pointer" data-kind="video" data-src="<?= $videoSrc ?>">
@@ -92,8 +85,6 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
         <?php endforeach; ?>
       </div>
     </section>
-
-    <!-- Product info -->
     <aside class="lg:col-span-4 space-y-6">
       <header>
         <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 leading-tight"><?= esc($product['name']) ?></h1>
@@ -102,7 +93,6 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
         </p>
       </header>
 
-      <!-- Price block -->
       <?php
         $initialPrice = (float)($variants[0]['price'] ?? 0);
         $initialOld   = (float)($variants[0]['old_price'] ?? 0);
@@ -120,8 +110,6 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
           <?php endif; ?>
         </div>
       </section>
-
-      <!-- Variants -->
       <?php if (!empty($variants)): ?>
       <section>
         <h3 class="uppercase text-[11px] font-semibold text-gray-500 tracking-[.18em] mb-2">Choose a Variant</h3>
@@ -142,8 +130,6 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
             </button>
           <?php endforeach; ?>
         </div>
-
-        <!-- Stock bar -->
         <div class="mt-3" id="stock-wrap" style="display: none;">
           <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
             <div id="stock-bar" class="h-1.5 bg-gray-900" style="width:30%"></div>
@@ -153,14 +139,12 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
       </section>
       <?php endif; ?>
 
-      <!-- Add to cart + wishlist -->
       <section class="flex items-center gap-3 pt-2">
         <a id="idcart" href="/cart/add/<?= esc($product['id']) ?>/<?= esc($variants[0]['id'] ?? 0) ?>"
            class="btn-smooth bg-black text-white px-6 py-3 rounded-full text-sm uppercase tracking-wide">Add to Cart</a>
         <button id="btn-buy" class="btn-smooth px-6 py-3 rounded-full text-sm uppercase tracking-wide ring-fine">Buy Now</button>
       </section>
 
-      <!-- Long description -->
       <?php if (!empty($product['description'])): ?>
       <section class="pt-4 text-[15px] leading-7 text-gray-700">
         <?= $product['description'] ?>
@@ -171,7 +155,7 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
 </div>
 <div class="max-width-full">
   <?php if(!empty($product['main_videos'])){?>
-<section class="page relative h-[80vh] md:h-[800px] w-full aspect-video overflow-hidden fade-in-up">
+<section class="page relative h-auto w-full md:h-auto aspect-video overflow-hidden fade-in-up">
   <div class="absolute inset-0 w-auto h-auto transition-opacity duration-1000 ease-in-out opacity-70">
     <video loading="lazy" autoplay loop muted playsinline  class="md:aspect-video w-auto h-full md:h-[auto] md:w-full object-fit">
       <source src="<?= base_url().'assets/SGV/Category/'.$categorySlug.'/'.$productSlug.'/'.$product["main_videos"]?>" type="video/mp4" />
@@ -179,18 +163,13 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
   </div>
 </section>
 <?php } ?>
-
 <section class="mt-16 md:mt-24 border-t pt-10 relative">
   <h2 class="text-lg text-center md:text-xl font-semibold mb-6">You Might Also Like</h2>
-
   <div class="relative">
-    <!-- Tombol Kiri -->
     <button id="scrollLeft"
       class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow hidden">
       &#8592;
     </button>
-
-    <!-- Wrapper agar bisa center jika sedikit item -->
     <div class="w-full">
       <div id="related-scroll"
            class="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth mx-auto max-w-full">
@@ -210,8 +189,6 @@ $videoSrc = !empty($product['video']) ? base_url($galleryPath . '/' . strtolower
         <?php endforeach; ?>
       </div>
     </div>
-
-    <!-- Tombol Kanan -->
     <button id="scrollRight"
       class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow hidden">
       &#8594;

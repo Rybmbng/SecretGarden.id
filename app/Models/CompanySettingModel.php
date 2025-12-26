@@ -7,6 +7,6 @@ class CompanySettingModel extends Model
     protected $table      = 'company_settings';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'name', 'logo', 'favicon', 'tagline',
+        'name', 'logo', 'favicon', 'tagline', 'font', 'base_color',
     ];
 }

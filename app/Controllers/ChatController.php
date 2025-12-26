@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\ProductModel;
 
 class ChatController extends BaseController
 {
@@ -49,7 +50,15 @@ class ChatController extends BaseController
                         if ($asking && $topic) {
                                 $productname = $data['entities']['product_name:product_name'][0]['value'] ?? null;
                                     if($productname){
-                                        $reply = "Produk '$productname' tersedia. Silakan cek detailnya di website.";
+                                        $productModel = new ProductModel();
+                                        $product = $productModel
+                                            ->select('product_variants.stock as stok')
+                                            ->join('product_variants', 'product_variants.product_id = products.id', 'inner')
+                                            ->join('categories', 'categories.id = products.category_id', 'inner')
+                                            ->where('products.name LIKE', "%{$productname}%")
+                                            ->groupBy('product_variants.id')
+                                            ->findall(1); 
+                                        $reply = "Product ".$productname." Tersisa ".$product['stok'] ;
                                     }else{
                                         $reply = "Produk '$productname' Tidak tersedia.";
                                     }

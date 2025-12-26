@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UserModel;
 use App\Models\AddressModel;
+use App\Models\ProfileModel;
 class ProfileController extends BaseController
 {
     function getUserProfileData(){

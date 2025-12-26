@@ -27,6 +27,27 @@ class HomeController extends BaseController
             'mainProduct'=>$mainProducts,
             'pageTitle'=> 'Home',
         ];
+        $this->cachePage(1000);
         return view('home', $data);
     }
+    public function index3d()
+    {
+
+        $sliderModel = new SliderModel();
+        $productModel = new ProductModel;
+
+        $slider = $sliderModel->getSliders();
+        $product = $productModel->sliderHome(4);
+        
+        // echo print_r($product);
+        // die();
+        $mainProducts = $productModel->mainProduct();
+        $data=[
+            'pageTitle'=> '3D Secret Garden',
+        ];
+        $this->cachePage(1000);
+        return view('3d', $data);
+    }
+
+    
 }

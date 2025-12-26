@@ -37,8 +37,8 @@
     <!-- Tabs -->
     <div class="flex justify-center gap-8 mb-6 text-sm">
       <button id="loginTab" class="tab-button active-tab">Login</button>
-      <button id="registerTab" class="tab-button">Register</button>
-      <button id="forgotTab" class="tab-button">Forgot</button>
+      <!-- <button id="registerTab" class="tab-button">Register</button> -->
+      <!-- <button id="forgotTab" class="tab-button">Forgot</button> -->
     </div>
 
 
@@ -87,10 +87,6 @@
       <div>
         <label class="block text-sm text-gray-600">Birthday</label>
         <input type="date" name="birthday" class="bubble-input">
-      </div>
-      <div>
-        <label class="block text-sm text-gray-600">Bio</label>
-        <textarea name="bio" placeholder="Tell us about yourself..." class="bubble-input"></textarea>
       </div>
       <div>
         <label class="block text-sm text-gray-600">Password</label>

@@ -94,10 +94,20 @@ class CategoryAdminController extends BaseController
     {
         $file = $this->request->getFile('img');
         $imgName = $this->request->getPost('old_img');
+        $path = url_title($this->request->getPost('name'), '-', true);
+        $safePath = preg_replace('/[^A-Za-z0-9_\-]/', '', $path);
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $imgName = $file->getRandomName();
-            $file->move('assets/SGV/Category/'. url_title($this->request->getPost('name'), '-', true).'/', $imgName);
+            
+            $folder = FCPATH . 'assets/SGV/Category/' . $safePath;
+
+            if (!is_dir($folder)) {
+                if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $folder));
+                }
+            }
+            $file->move($folder. url_title($this->request->getPost('name'), '-', true).'/', $imgName);
         }
         if (!$file->isValid()) {
         echo 'Upload error: ' . $file->getErrorString() . ' (' . $file->getError() . ')';

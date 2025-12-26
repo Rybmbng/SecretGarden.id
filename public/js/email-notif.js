@@ -1,0 +1,23 @@
+(function(){
+  function check(){
+    fetch(window.location.origin + '/admin/email/counts', {cache:'no-store'})
+      .then(r=>r.json())
+      .then(d=>{
+        if(!d) return;
+        var badge = document.querySelector('aside .text-red-600');
+        if(badge) badge.innerText = d.inbox || 0;
+        if(d.inbox>0){
+          var t = document.createElement('div');
+          t.textContent = '📩 You have ' + d.inbox + ' new message(s)';
+          t.style.position='fixed'; t.style.right='20px'; t.style.bottom='20px';
+          t.style.background='#111'; t.style.color='#fff'; t.style.padding='10px 14px';
+          t.style.borderRadius='8px'; t.style.boxShadow='0 6px 18px rgba(0,0,0,0.12)';
+          document.body.appendChild(t);
+          setTimeout(()=> t.remove(), 6000);
+        }
+      }).catch(()=>{});
+  }
+  setInterval(check, 15000);
+  // initial
+  check();
+})();

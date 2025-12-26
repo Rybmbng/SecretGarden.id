@@ -11,9 +11,7 @@ use CodeIgniter\Router\RouteCollection;
 // ===================
 
 $routes->get('/', 'HomeController::index');
-
-$routes->get('notifications/getNotifications', 'NotificationController::getNotifications');
-$routes->post('notifications/markAsRead/(:num)', 'NotificationController::markAsRead/$1');
+$routes->get('/3d', 'HomeController::index3d');
 
 $routes->post('auth/login', 'Auth::login');
 $routes->post('auth/register', 'Auth::register');
@@ -22,40 +20,51 @@ $routes->get('auth/delete/(:num)', 'Auth::delete/$1');
 $routes->post('auth/store', 'Auth::store');
 $routes->get('auth/check-identity', 'Auth::checkIdentity');
 
-
 $routes->post('chat/ai', 'ChatController::reply');
 
-$routes->get('products', 'ProductController::index');
-$routes->get('products/(:segment)', 'ProductController::detail/$1');
+$routes->group('', ['filter' => 'visitorlogger'], function($routes) {
+    // Products
+    $routes->get('products', 'ProductController::index');
+    $routes->get('products/(:any)', 'ProductController::detail/$1');
 
-$routes->get('brand', 'BrandController::index');
+    // Brand
+    $routes->get('brand', 'BrandController::index');
 
-$routes->get('category', 'CategoryController::index');
-$routes->get('category/(:segment)', 'CategoryController::detail/$1');
+    // Category
+    $routes->get('category', 'CategoryController::index');
+    $routes->get('category/(:any)', 'CategoryController::detail/$1');
+    $routes->get('category/(:any)/(:any)', 'CategoryController::details/$1/$2');
 
-$routes->get('services', 'HomeController::index');
+    // Services
+    $routes->get('services', 'HomeController::index');
+    $routes->get('services/contact-us', 'ContactController::index');
+    $routes->post('services/contact-us/send', 'ContactController::send');
+    $routes->get('services/coorporate-gift', 'CoorporategiftController::index');
 
-$routes->get('services/contactus', 'ContactController::index');
-$routes->post('services/contactus/send', 'ContactController::send');
+    // Find Us
+    $routes->get('findus', 'StoreController::index');
+    $routes->get('findus/(:any)', 'StoreController::detail/$1');
 
-$routes->get('services/cg', 'ServiceController::cg');
+    // Search
+    $routes->get('/search/query', 'SearchController::query');
 
-$routes->get('findus', 'StoreController::index');
-$routes->get('findus/(:any)', 'StoreController::detail/$1');
-
-$routes->get('search', 'SearchController::suggestion');
-$routes->get('search/suggestion', 'SearchController::suggestion');
+    // Page
+    $routes->get('page/(:segment)', 'PageController::view/$1');
+});
 
 $routes->get('cart', 'CartController::index');
 $routes->get('cart/add/(:num)/(:num)', 'CartController::add/$1/$2');
 $routes->get('cart/min/(:num)', 'CartController::min/$1');
 $routes->get('cart/remove/(:any)', 'CartController::remove/$1');
 
-$routes->get('profile', 'ProfileController::index');;
+$routes->get('profile', 'ProfileController::index');
 $routes->get('profile/(:segment)', 'ProfileController::index/$1');
 $routes->post('profile/update', 'ProfileController::update');
 
-$routes->get('page/(:segment)', 'PageController::view/$1');
+$routes->get('notifications/getNotifications', 'NotificationController::getNotifications');
+$routes->post('notifications/markAsRead/(:num)', 'NotificationController::markAsRead/$1');
+
+
 
 // ===================
 //  ADMIN Routes
@@ -92,20 +101,28 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
     $routes->get('users/edit/(:num)', 'UserManAdminController::edit/$1');
     $routes->post('users/update/(:num)', 'UserManAdminController::update/$1');
     $routes->get('users/delete/(:num)', 'UserManAdminController::delete/$1');
+    $routes->get('users/subscribe', 'UserManAdminController::subscribe');
 
     // Role Management
     $routes->get('roles', 'RoleController::index');
     $routes->post('roles/create', 'RoleController::create');
     $routes->get('roles/delete/(:num)', 'RoleController::delete/$1');
 
-    // menu Management
-    $routes->get('menu', 'MenuController::index');
-    $routes->post('menu/create', 'MenuController::create');
-    $routes->get('menu/delete/(:num)', 'MenuController::delete/$1');
-    $routes->post('menu/setRoleAccess', 'MenuController::setRoleAccess');
-    $routes->post('menu/updateOrder', 'MenuController::updateOrder');
-    $routes->post('menu/update/(:any)', 'MenuController::update/$1');
+    // menu Admin Management
+    $routes->get('setting/menu', 'MenuController::index');
+    $routes->post('setting/menu/create', 'MenuController::create');
+    $routes->get('setting/menu/delete/(:num)', 'MenuController::delete/$1');
+    $routes->post('setting/menu/setRoleAccess', 'MenuController::setRoleAccess');
+    $routes->post('setting/menu/updateOrder', 'MenuController::updateOrder');
+    $routes->post('setting/menu/update/(:any)', 'MenuController::update/$1');
     
+    // menu PublicManagement
+    $routes->get('setting/menupublic', 'MenuPublicController::index');
+    $routes->post('setting/menupublic/create', 'MenuPublicController::create');
+    $routes->get('setting/menupublic/delete/(:num)', 'MenuPublicController::delete/$1');
+    $routes->post('setting/menupublic/setRoleAccess', 'MenuPublicController::setRoleAccess');
+    $routes->post('setting/menupublic/updateOrder', 'MenuPublicController::updateOrder');
+    $routes->post('setting/menupublic/update/(:any)', 'MenuPublicController::update/$1');    
 
     // Company Management
     $routes->get('setting/company', 'CompanyController::index');
@@ -123,6 +140,12 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
     $routes->post('setting/email/test/smtp', 'EmailConfigController::testSmtp');
     $routes->post('setting/email/test/smtp-connection', 'EmailConfigController::testSmtpConnection');
 
+    // Mail Management
+    $routes->get('setting/notification', 'NotificationController::index');
+    $routes->post('setting/notification/store', 'NotificationController::store');
+    $routes->post('setting/notification/delete', 'NotificationController::delete');
+    $routes->post('setting/notification/update/(:num)', 'NotificationController::update/$1');
+    
     // Group admin email
     $routes->group('email', ['namespace' => 'App\Controllers\Admin'], function($routes) {
         $routes->get('sync', 'EmailController::sync');
@@ -158,12 +181,17 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
 
     //Home Management
     $routes->group('home', ['namespace' => 'App\Controllers\Admin'], function($routes) {
-        $routes->get('/', 'HomeAdminController::index');
+        $routes->get('/', 'HomeAdminController::slider');
         $routes->get('slider/create', 'HomeAdminController::createSlider');
         $routes->get('slider/edit/(:num)', 'HomeAdminController::editSlider/$1');
         $routes->post('slider/store', 'HomeAdminController::storeSlider');
         $routes->post('slider/update/(:num)', 'HomeAdminController::updateSlider/$1');
         $routes->get('slider/delete/(:num)', 'HomeAdminController::deleteSlider/$1');
+        $routes->post('slider/uploadChunk', 'HomeAdminController::uploadChunk');
+        $routes->post('slider/finalizeUpload', 'HomeAdminController::finalizeUpload');
+        $routes->get('slider/pollCompress/(:segment)/(:segment)', 'HomeAdminController::pollCompress/$1/$2'); 
+
+        
         });
     });
 
